@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itapemirim - Sistema de Gestão de Transportes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f0;
+            color: #333;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #FFD700;
+            color: #8B4513;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            background: #8B4513;
+            padding: 30px 20px;
+            text-align: center;
+            color: #FFD700;
+        }
+
+        .sidebar-header i {
+            font-size: 42px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 11px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 15px 0;
+            background: #FFD700;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            padding: 14px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #8B4513;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            margin: 1px 0;
+            font-size: 14px;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            width: 22px;
+            text-align: center;
+        }
+
+        .menu-item span {
+            flex: 1;
+        }
+
+        .menu-item:hover {
+            background: rgba(139, 69, 19, 0.1);
+            border-left-color: #8B4513;
+        }
+
+        .menu-item.active {
+            background: rgba(139, 69, 19, 0.15);
+            border-left-color: #8B4513;
+            font-weight: 700;
+        }
+
+        .menu-badge {
+            background: #8B4513;
+            color: #FFD700;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            background: rgba(139, 69, 19, 0.08);
+            text-align: center;
+            font-size: 11px;
+            color: #8B4513;
+            border-top: 2px solid rgba(139, 69, 19, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
+            border-left: 4px solid #FFD700;
+        }
+
+        .page-header-left h1 {
+            font-size: 24px;
+            color: #8B4513;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header-left h1 i {
+            color: #FFD700;
+            font-size: 26px;
+        }
+
+        .header-subtitle {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+            margin-left: 36px;
+        }
+
+        .page-header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-display {
+            color: #8B4513;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-display i {
+            color: #FFD700;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #FFD700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 36px;
+            color: #FFD700;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .stat-info h3 {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #8B4513;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn i {
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #8B4513;
+            color: #FFD700;
+        }
+
+        .btn-primary:hover {
+            background: #A0522D;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .btn-success {
+            background: #2E7D32;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1B5E20;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-warning {
+            background: #FFD700;
+            color: #8B4513;
+        }
+
+        .btn-warning:hover {
+            background: #FFC107;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: #C62828;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #B71C1C;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #1565C0;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #0D47A1;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 12px;
+            gap: 5px;
+        }
+
+        .btn-sm i {
+            font-size: 11px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #8B4513;
+            color: #FFD700;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th i {
+            margin-right: 5px;
+            font-size: 11px;
+        }
+
+        td {
+            padding: 13px 15px;
+            border-bottom: 1px solid #f0ebe3;
+            font-size: 13px;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #fffdf5;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge i {
+            font-size: 10px;
+        }
+
+        .badge-success { background: #2E7D32; color: white; }
+        .badge-warning { background: #FFD700; color: #8B4513; }
+        .badge-danger { background: #C62828; color: white; }
+        .badge-info { background: #1565C0; color: white; }
+        .badge-primary { background: #8B4513; color: #FFD700; }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #8B4513;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            font-size: 14px;
+            width: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e0d5c7;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #fafaf7;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+            background: white;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
+            border-bottom: 3px solid #FFD700;
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #FFD700;
+            color: #8B4513;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 8px;
+            color: #FFD700;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(139, 69, 19, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(139, 69, 19, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FFD700;
+        }
+
+        .modal-header h2 {
+            color: #8B4513;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h2 i {
+            color: #FFD700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            color: #C62828;
+            background: #fce4e4;
+        }
+
+        /* Search */
+        .search-box {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 16px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border: 2px solid #e0d5c7;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #FFD700;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab i {
+            font-size: 14px;
+        }
+
+        .tab.active {
+            color: #8B4513;
+            font-weight: 700;
+            border-bottom-color: #8B4513;
+        }
+
+        .tab:hover {
+            color: #8B4513;
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #fffdf5;
+            border-left: 4px solid #FFD700;
+            padding: 18px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            color: #8B4513;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .info-box p i {
+            color: #FFD700;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Preview WhatsApp */
+        .whatsapp-preview {
+            background: #e7ffdb;
+            border: 2px solid #25D366;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .whatsapp-preview h3 {
+            color: #075e54;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .whatsapp-preview pre {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            border: 1px solid #ddd;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Viagem/Troca items */
+        .item-list {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0ebe3;
+        }
+
+        .item-list:last-child {
+            border-bottom: none;
+        }
+
+        .item-list p {
+            margin: 4px 0;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-list p i {
+            color: #FFD700;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .separator {
+            border-top: 2px dashed #FFD700;
+            margin: 20px 0;
+        }
+
+        /* Responsivo */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .form-row-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            
+            .sidebar-header {
+                padding: 20px 10px;
+            }
+            
+            .sidebar-header i {
+                font-size: 24px;
+            }
+            
+            .sidebar-header h2,
+            .sidebar-header p,
+            .menu-item span:not(.menu-badge),
+            .sidebar-footer {
+                display: none;
+            }
+            
+            .menu-item {
+                justify-content: center;
+                padding: 15px;
+                gap: 0;
+            }
+            
+            .menu-item i {
+                font-size: 20px;
+                margin: 0;
+            }
+            
+            .menu-badge {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 60px;
+                padding: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-icon {
+                font-size: 28px;
+                min-width: 40px;
+            }
+            
+            .stat-info .number {
+                font-size: 22px;
+            }
+            
+            .grid-2, 
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .page-header-left h1 {
+                font-size: 20px;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-bus"></i>
+                <h2>ITAPEMIRIM</h2>
+                <p>Gestão de Transportes</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="menu-item active" onclick="showPage('dashboard', this)">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" onclick="showPage('motoristas', this)">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Motoristas</span>
+                    <span class="menu-badge" id="motoristasCount">0</span>
+                </div>
+                <div class="menu-item" onclick="showPage('onibus', this)">
+                    <i class="fas fa-bus-alt"></i>
+                    <span>Ônibus</span>
+                </div>
+                <div class="menu-item" onclick="showPage('rotas', this)">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Rotas</span>
+                </div>
+                <div class="menu-item" onclick="showPage('viagens', this)">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Viagens</span>
+                </div>
+                <div class="menu-item" onclick="showPage('compartilhar', this)">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>Compartilhar</span>
+                </div>
+                <div class="menu-item" onclick="showPage('trocas', this)">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Trocas</span>
+                    <span class="menu-badge" id="trocasPendentes">0</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <i class="far fa-copyright"></i> 2024 Itapemirim<br>
+                Todos os direitos reservados
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <div class="page active" id="dashboard-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-chart-pie"></i> Dashboard</h1>
+                        <div class="header-subtitle">Visão geral do sistema</div>
+                    </div>
+                    <div class="page-header-right">
+                        <div class="date-display">
+                            <i class="far fa-calendar-alt"></i>
+                            <span id="currentDate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-grid" id="dashboardStats"></div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span><i class="fas fa-clock"></i> Últimas Viagens</span>
+                        </div>
+                        <div id="ultimasViagens"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span><i class="fas fa-history"></i> Trocas Recentes</span>
+                        </div>
+                        <div id="trocasRecentes"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motoristas -->
+            <div class="page" id="motoristas-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-user-tie"></i> Motoristas</h1>
+                        <div class="header-subtitle">Cadastro e gerenciamento de motoristas</div>
+                    </div>
+                    <div class="page-header-right">
+                        <button class="btn btn-primary" onclick="abrirFormMotorista()">
+                            <i class="fas fa-plus-circle"></i> Novo Motorista
+                        </button>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar motorista por nome, CPF ou CNH..." onkeyup="filtrarMotoristas(this.value)">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Nome</th>
+                                <th><i class="fas fa-id-card"></i> CPF</th>
+                                <th><i class="fas fa-address-card"></i> CNH</th>
+                                <th><i class="fas fa-star"></i> Categoria</th>
+                                <th><i class="fas fa-phone"></i> Telefone</th>
+                                <th><i class="fas fa-circle"></i> Status</th>
+                                <th><i class="fas fa-cogs"></i> Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="motoristasTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ônibus -->
+            <div class="page" id="onibus-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-bus-alt"></i> Ônibus</h1>
+                        <div class="header-subtitle">Frota de veículos</div>
+                    </div>
+                    <div class="page-header-right">
+                        <button class="btn btn-primary" onclick="abrirFormOnibus()">
+                            <i class="fas fa-plus-circle"></i> Novo Ônibus
+                        </button>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar ônibus por placa, número ou modelo..." onkeyup="filtrarOnibus(this.value)">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-tag"></i> Placa</th>
+                                <th><i class="fas fa-hashtag"></i> Nº</th>
+                                <th><i class="fas fa-bus"></i> Modelo</th>
+                                <th><i class="fas fa-users"></i> Capacidade</th>
+                                <th><i class="fas fa-shapes"></i> Tipo</th>
+                                <th><i class="fas fa-circle"></i> Status</th>
+                                <th><i class="fas fa-cogs"></i> Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="onibusTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rotas -->
+            <div class="page" id="rotas-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-map-marked-alt"></i> Rotas Monotrip</h1>
+                        <div class="header-subtitle">Gerenciamento de rotas e paradas</div>
+                    </div>
+                    <div class="page-header-right">
+                        <button class="btn btn-primary" onclick="abrirFormRota()">
+                            <i class="fas fa-plus-circle"></i> Nova Rota
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-barcode"></i> Código</th>
+                                <th><i class="fas fa-map-pin"></i> Nome</th>
+                                <th><i class="fas fa-location-arrow"></i> Origem</th>
+                                <th><i class="fas fa-flag-checkered"></i> Destino</th>
+                                <th><i class="fas fa-ruler"></i> Distância</th>
+                                <th><i class="fas fa-stopwatch"></i> Tempo Est.</th>
+                                <th><i class="fas fa-cogs"></i> Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rotasTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Viagens -->
+            <div class="page" id="viagens-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-calendar-check"></i> Viagens</h1>
+                        <div class="header-subtitle">Controle de horários e percursos</div>
+                    </div>
+                    <div class="page-header-right">
+                        <button class="btn btn-primary" onclick="abrirFormViagem()">
+                            <i class="fas fa-plus-circle"></i> Nova Viagem
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="far fa-calendar-alt"></i> Data</th>
+                                <th><i class="fas fa-sign-out-alt"></i> Saída</th>
+                                <th><i class="fas fa-sign-in-alt"></i> Chegada</th>
+                                <th><i class="fas fa-user"></i> Motorista</th>
+                                <th><i class="fas fa-bus"></i> Ônibus</th>
+                                <th><i class="fas fa-map"></i> Rota</th>
+                                <th><i class="fas fa-circle"></i> Status</th>
+                                <th><i class="fas fa-cogs"></i> Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viagensTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Compartilhar -->
+            <div class="page" id="compartilhar-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fab fa-whatsapp"></i> Compartilhar Informações</h1>
+                        <div class="header-subtitle">Gerar relatório e enviar via WhatsApp</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-file-alt"></i> Relatório Completo do Sistema</span>
+                    </div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label><i class="fas fa-filter"></i> Filtrar por Data</label>
+                            <input type="date" class="form-control" id="filtroData" onchange="gerarPreviewWhatsApp()">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Filtrar por Motorista</label>
+                            <select class="form-control" id="filtroMotorista" onchange="gerarPreviewWhatsApp()">
+                                <option value="">Todos os motoristas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-bus"></i> Filtrar por Ônibus</label>
+                            <select class="form-control" id="filtroOnibus" onchange="gerarPreviewWhatsApp()">
+                                <option value="">Todos os ônibus</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="separator"></div>
+                    
+                    <div class="whatsapp-preview" id="whatsappPreview">
+                        <h3><i class="fab fa-whatsapp"></i> Pré-visualização da Mensagem</h3>
+                        <pre id="mensagemPreview">Selecione os filtros para gerar o relatório...</pre>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-whatsapp" onclick="enviarWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
+                        </button>
+                        <button class="btn btn-warning" onclick="editarMensagem()">
+                            <i class="fas fa-edit"></i> Editar Mensagem
+                        </button>
+                        <button class="btn btn-info" onclick="copiarMensagem()">
+                            <i class="fas fa-copy"></i> Copiar Texto
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trocas -->
+            <div class="page" id="trocas-page">
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1><i class="fas fa-exchange-alt"></i> Trocas de Motorista</h1>
+                        <div class="header-subtitle">Gerenciamento de substituições</div>
+                    </div>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarTabTrocas('ativas', this)">
+                        <i class="fas fa-play-circle"></i> Viagens Ativas
+                    </div>
+                    <div class="tab" onclick="mostrarTabTrocas('historico', this)">
+                        <i class="fas fa-history"></i> Histórico de Trocas
+                    </div>
+                </div>
+                <div id="trocasContent"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+
+    <script>
+        // ============ BANCO DE DADOS ============
+        let DB = {
+            motoristas: [],
+            onibus: [],
+            rotas: [],
+            viagens: [],
+            trocas: []
+        };
+
+        let nextId = {
+            motorista: 1,
+            onibus: 1,
+            rota: 1,
+            viagem: 1,
+            troca: 1
+        };
+
+        let mensagemEditavel = '';
+
+        // ============ FUNÇÕES DE NAVEGAÇÃO ============
+        function showPage(pageName, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageName + '-page').classList.add('active');
+            
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            if (element) element.classList.add('active');
+            
+            atualizarPagina(pageName);
+        }
+
+        function atualizarPagina(page) {
+            switch(page) {
+                case 'dashboard': carregarDashboard(); break;
+                case 'motoristas': listarMotoristas(); break;
+                case 'onibus': listarOnibus(); break;
+                case 'rotas': listarRotas(); break;
+                case 'viagens': listarViagens(); break;
+                case 'compartilhar': carregarCompartilhar(); break;
+                case 'trocas': carregarTrocas(); break;
+            }
+        }
+
+        // ============ DASHBOARD ============
+        function carregarDashboard() {
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo').length;
+            const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel').length;
+            const trocasPendentes = DB.trocas.filter(t => t.status === 'pendente').length;
+            
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                    <div class="stat-info">
+                        <h3>Motoristas Ativos</h3>
+                        <div class="number">${motoristasAtivos}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-bus-alt"></i></div>
+                    <div class="stat-info">
+                        <h3>Ônibus Disponíveis</h3>
+                        <div class="number">${onibusDisponiveis}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="stat-info">
+                        <h3>Rotas Cadastradas</h3>
+                        <div class="number">${DB.rotas.length}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="stat-info">
+                        <h3>Trocas Pendentes</h3>
+                        <div class="number">${trocasPendentes}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('dashboardStats').innerHTML = statsHTML;
+            
+            document.getElementById('ultimasViagens').innerHTML = DB.viagens.length === 0 
+                ? '<div class="empty-state"><i class="fas fa-bus"></i><p>Nenhuma viagem registrada</p></div>'
+                : DB.viagens.slice(-5).reverse().map(v => `
+                    <div class="item-list">
+                        <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(v.data)}</strong> - ${v.horarioSaida}</p>
+                        <p><i class="fas fa-user"></i> Motorista: ${getMotoristaNome(v.motoristaId)}</p>
+                        <p><span class="badge badge-info"><i class="fas fa-circle"></i> ${v.status}</span></p>
+                    </div>
+                `).join('');
+            
+            document.getElementById('trocasRecentes').innerHTML = DB.trocas.length === 0
+                ? '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div>'
+                : DB.trocas.slice(-5).reverse().map(t => `
+                    <div class="item-list">
+                        <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(t.data)}</strong></p>
+                        <p><i class="fas fa-exchange-alt"></i> ${getMotoristaNome(t.motoristaAnterior)} → ${getMotoristaNome(t.motoristaNovo)}</p>
+                        <p><span class="badge badge-${t.status === 'aprovada' ? 'success' : 'warning'}"><i class="fas fa-circle"></i> ${t.status}</span></p>
+                    </div>
+                `).join('');
+            
+            atualizarBadges();
+        }
+
+        function atualizarBadges() {
+            document.getElementById('motoristasCount').textContent = DB.motoristas.filter(m => m.status === 'ativo').length;
+            document.getElementById('trocasPendentes').textContent = DB.trocas.filter(t => t.status === 'pendente').length;
+        }
+
+        // ============ COMPARTILHAR ============
+        function carregarCompartilhar() {
+            // Preencher selects de filtro
+            const selectMotorista = document.getElementById('filtroMotorista');
+            selectMotorista.innerHTML = '<option value="">Todos os motoristas</option>' +
+                DB.motoristas.map(m => `<option value="${m.id}">${m.nome}</option>`).join('');
+            
+            const selectOnibus = document.getElementById('filtroOnibus');
+            selectOnibus.innerHTML = '<option value="">Todos os ônibus</option>' +
+                DB.onibus.map(o => `<option value="${o.id}">${o.placa} - ${o.modelo}</option>`).join('');
+            
+            gerarPreviewWhatsApp();
+        }
+
+        function gerarPreviewWhatsApp() {
+            const dataFiltro = document.getElementById('filtroData')?.value || '';
+            const motoristaFiltro = document.getElementById('filtroMotorista')?.value || '';
+            const onibusFiltro = document.getElementById('filtroOnibus')?.value || '';
+            
+            let mensagem = `🚌 *ITAPEMIRIM - Relatório de Transportes*\n`;
+            mensagem += `📅 *Data:* ${new Date().toLocaleDateString('pt-BR')}\n`;
+            mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            // Filtrar viagens
+            let viagensFiltradas = DB.viagens;
+            if (dataFiltro) {
+                viagensFiltradas = viagensFiltradas.filter(v => v.data === dataFiltro);
+            }
+            if (motoristaFiltro) {
+                viagensFiltradas = viagensFiltradas.filter(v => v.motoristaId === parseInt(motoristaFiltro));
+            }
+            if (onibusFiltro) {
+                viagensFiltradas = viagensFiltradas.filter(v => v.onibusId === parseInt(onibusFiltro));
+            }
+            
+            // Resumo
+            mensagem += `📊 *RESUMO GERAL*\n`;
+            mensagem += `👥 Motoristas ativos: ${DB.motoristas.filter(m => m.status === 'ativo').length}\n`;
+            mensagem += `🚌 Ônibus disponíveis: ${DB.onibus.filter(o => o.status === 'disponivel').length}\n`;
+            mensagem += `🗺️ Rotas cadastradas: ${DB.rotas.length}\n`;
+            mensagem += `🕒 Viagens no período: ${viagensFiltradas.length}\n`;
+            mensagem += `🔄 Trocas pendentes: ${DB.trocas.filter(t => t.status === 'pendente').length}\n\n`;
+            
+            // Viagens
+            if (viagensFiltradas.length > 0) {
+                mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+                mensagem += `🕒 *VIAGENS*\n\n`;
+                
+                viagensFiltradas.forEach((v, index) => {
+                    const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                    const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                    const rota = DB.rotas.find(r => r.id === v.rotaId);
+                    
+                    mensagem += `*Viagem ${index + 1}:*\n`;
+                    mensagem += `📅 Data: ${formatarData(v.data)}\n`;
+                    mensagem += `⏰ Horário: ${v.horarioSaida} → ${v.horarioChegada}\n`;
+                    mensagem += `👤 Motorista: ${motorista ? motorista.nome : 'N/A'}\n`;
+                    mensagem += `🚌 Ônibus: ${onibus ? onibus.placa + ' - ' + onibus.modelo : 'N/A'}\n`;
+                    mensagem += `🗺️ Rota: ${rota ? rota.codigo + ' - ' + rota.nome : 'N/A'}\n`;
+                    mensagem += `📌 Status: ${v.status}\n`;
+                    if (v.observacoes) {
+                        mensagem += `📝 Obs: ${v.observacoes}\n`;
+                    }
+                    mensagem += `\n`;
+                });
+            }
+            
+            // Motoristas
+            mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+            mensagem += `👥 *MOTORISTAS CADASTRADOS*\n\n`;
+            DB.motoristas.forEach((m, index) => {
+                mensagem += `${index + 1}. ${m.nome} - ${m.categoria} - ${m.status}\n`;
+                mensagem += `   📞 ${m.telefone} | ✉️ ${m.email}\n\n`;
+            });
+            
+            // Ônibus
+            mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+            mensagem += `🚌 *ÔNIBUS DA FROTA*\n\n`;
+            DB.onibus.forEach((o, index) => {
+                mensagem += `${index + 1}. ${o.placa} - ${o.modelo} (${o.capacidade} lugares)\n`;
+                mensagem += `   📌 Status: ${o.status} | Tipo: ${o.tipo}\n\n`;
+            });
+            
+            // Rotas
+            mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+            mensagem += `🗺️ *ROTAS DISPONÍVEIS*\n\n`;
+            DB.rotas.forEach((r, index) => {
+                mensagem += `${index + 1}. ${r.codigo} - ${r.nome}\n`;
+                mensagem += `   📍 ${r.origem} → ${r.destino}\n`;
+                mensagem += `   📏 ${r.distancia} km | ⏱️ ${r.tempoEstimado} min\n`;
+                if (r.pontosParada) {
+                    mensagem += `   🅿️ Paradas: ${r.pontosParada}\n`;
+                }
+                mensagem += `\n`;
+            });
+            
+            mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+            mensagem += `✅ *Relatório gerado automaticamente pelo Sistema Itapemirim*`;
+            
+            mensagemEditavel = mensagem;
+            document.getElementById('mensagemPreview').textContent = mensagem;
+        }
+
+        function editarMensagem() {
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-edit"></i> Editar Mensagem</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-file-alt"></i> Edite o texto abaixo:</label>
+                    <textarea class="form-control" id="mensagemEdit" rows="20" style="font-family: monospace;">${mensagemEditavel}</textarea>
+                </div>
+                <button class="btn btn-success" onclick="salvarEdicaoMensagem()" style="width:100%;">
+                    <i class="fas fa-save"></i> Salvar e Visualizar
+                </button>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarEdicaoMensagem() {
+            mensagemEditavel = document.getElementById('mensagemEdit').value;
+            document.getElementById('mensagemPreview').textContent = mensagemEditavel;
+            fecharModal();
+        }
+
+        function copiarMensagem() {
+            navigator.clipboard.writeText(mensagemEditavel).then(() => {
+                alert('✅ Mensagem copiada para a área de transferência!');
+            }).catch(() => {
+                alert('❌ Erro ao copiar mensagem. Tente novamente.');
+            });
+        }
+
+        function enviarWhatsApp() {
+            const textoCodificado = encodeURIComponent(mensagemEditavel);
+            const urlWhatsApp = `https://api.whatsapp.com/send?text=${textoCodificado}`;
+            window.open(urlWhatsApp, '_blank');
+        }
+
+        // ============ MOTORISTAS ============
+        function listarMotoristas() {
+            const tbody = document.getElementById('motoristasTableBody');
+            if (DB.motoristas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-user-tie"></i><p>Nenhum motorista cadastrado</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = DB.motoristas.map(m => `
+                <tr>
+                    <td><strong>${m.nome}</strong></td>
+                    <td>${m.cpf}</td>
+                    <td>${m.cnh}</td>
+                    <td>${m.categoria}</td>
+                    <td>${m.telefone}</td>
+                    <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarMotoristas(termo) {
+            const tbody = document.getElementById('motoristasTableBody');
+            const filtrados = DB.motoristas.filter(m => 
+                m.nome.toLowerCase().includes(termo.toLowerCase()) ||
+                m.cpf.includes(termo) ||
+                m.cnh.includes(termo)
+            );
+            tbody.innerHTML = filtrados.map(m => `
+                <tr>
+                    <td><strong>${m.nome}</strong></td>
+                    <td>${m.cpf}</td>
+                    <td>${m.cnh}</td>
+                    <td>${m.categoria}</td>
+                    <td>${m.telefone}</td>
+                    <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirFormMotorista(id = null) {
+            const motorista = id ? DB.motoristas.find(m => m.id === id) : null;
+            const titulo = motorista ? 'Editar Motorista' : 'Novo Motorista';
+            const iconTitulo = motorista ? 'fa-user-edit' : 'fa-user-plus';
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas ${iconTitulo}"></i> ${titulo}</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form onsubmit="salvarMotorista(event, ${id})">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nome Completo *</label>
+                            <input type="text" class="form-control" id="motoristaNome" value="${motorista ? motorista.nome : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> CPF *</label>
+                            <input type="text" class="form-control" id="motoristaCpf" value="${motorista ? motorista.cpf : ''}" required placeholder="000.000.000-00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-address-card"></i> CNH *</label>
+                            <input type="text" class="form-control" id="motoristaCnh" value="${motorista ? motorista.cnh : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-star"></i> Categoria CNH *</label>
+                            <select class="form-control" id="motoristaCategoria">
+                                <option ${motorista && motorista.categoria === 'B' ? 'selected' : ''}>B</option>
+                                <option ${motorista && motorista.categoria === 'C' ? 'selected' : ''}>C</option>
+                                <option ${motorista && motorista.categoria === 'D' ? 'selected' : ''}>D</option>
+                                <option ${motorista && motorista.categoria === 'E' ? 'selected' : ''}>E</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Telefone *</label>
+                            <input type="tel" class="form-control" id="motoristaTelefone" value="${motorista ? motorista.telefone : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email *</label>
+                            <input type="email" class="form-control" id="motoristaEmail" value="${motorista ? motorista.email : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-circle"></i> Status</label>
+                        <select class="form-control" id="motoristaStatus">
+                            <option value="ativo" ${motorista && motorista.status === 'ativo' ? 'selected' : ''}>✅ Ativo</option>
+                            <option value="inativo" ${motorista && motorista.status === 'inativo' ? 'selected' : ''}>❌ Inativo</option>
+                            <option value="ferias" ${motorista && motorista.status === 'ferias' ? 'selected' : ''}>🏖️ Férias</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Motorista
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarMotorista(event, id) {
+            event.preventDefault();
+            
+            const dados = {
+                nome: document.getElementById('motoristaNome').value,
+                cpf: document.getElementById('motoristaCpf').value,
+                cnh: document.getElementById('motoristaCnh').value,
+                categoria: document.getElementById('motoristaCategoria').value,
+                telefone: document.getElementById('motoristaTelefone').value,
+                email: document.getElementById('motoristaEmail').value,
+                status: document.getElementById('motoristaStatus').value
+            };
+            
+            if (id) {
+                const index = DB.motoristas.findIndex(m => m.id === id);
+                DB.motoristas[index] = { ...DB.motoristas[index], ...dados };
+            } else {
+                DB.motoristas.push({ ...dados, id: nextId.motorista++ });
+            }
+            
+            fecharModal();
+            listarMotoristas();
+            atualizarBadges();
+        }
+
+        function editarMotorista(id) { abrirFormMotorista(id); }
+
+        function excluirMotorista(id) {
+            if (confirm('Tem certeza que deseja excluir este motorista?')) {
+                DB.motoristas = DB.motoristas.filter(m => m.id !== id);
+                listarMotoristas();
+                atualizarBadges();
+            }
+        }
+
+        // ============ ÔNIBUS ============
+        function listarOnibus() {
+            const tbody = document.getElementById('onibusTableBody');
+            if (DB.onibus.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-bus-alt"></i><p>Nenhum ônibus cadastrado</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = DB.onibus.map(o => `
+                <tr>
+                    <td><strong>${o.placa}</strong></td>
+                    <td>${o.numero}</td>
+                    <td>${o.modelo}</td>
+                    <td><i class="fas fa-users"></i> ${o.capacidade} lugares</td>
+                    <td>${o.tipo}</td>
+                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarOnibus(termo) {
+            const tbody = document.getElementById('onibusTableBody');
+            const filtrados = DB.onibus.filter(o =>
+                o.placa.toLowerCase().includes(termo.toLowerCase()) ||
+                o.numero.includes(termo) ||
+                o.modelo.toLowerCase().includes(termo.toLowerCase())
+            );
+            tbody.innerHTML = filtrados.map(o => `
+                <tr>
+                    <td><strong>${o.placa}</strong></td>
+                    <td>${o.numero}</td>
+                    <td>${o.modelo}</td>
+                    <td><i class="fas fa-users"></i> ${o.capacidade} lugares</td>
+                    <td>${o.tipo}</td>
+                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirFormOnibus(id = null) {
+            const onibus = id ? DB.onibus.find(o => o.id === id) : null;
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas ${onibus ? 'fa-bus' : 'fa-bus-alt'}"></i> ${onibus ? 'Editar' : 'Novo'} Ônibus</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form onsubmit="salvarOnibus(event, ${id})">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Placa *</label>
+                            <input type="text" class="form-control" id="onibusPlaca" value="${onibus ? onibus.placa : ''}" required placeholder="ABC-1234">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-hashtag"></i> Número *</label>
+                            <input type="text" class="form-control" id="onibusNumero" value="${onibus ? onibus.numero : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-bus"></i> Modelo *</label>
+                        <input type="text" class="form-control" id="onibusModelo" value="${onibus ? onibus.modelo : ''}" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-users"></i> Capacidade (lugares) *</label>
+                            <input type="number" class="form-control" id="onibusCapacidade" value="${onibus ? onibus.capacidade : ''}" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-shapes"></i> Tipo *</label>
+                            <select class="form-control" id="onibusTipo">
+                                <option ${onibus && onibus.tipo === 'Convencional' ? 'selected' : ''}>Convencional</option>
+                                <option ${onibus && onibus.tipo === 'Articulado' ? 'selected' : ''}>Articulado</option>
+                                <option ${onibus && onibus.tipo === 'Micro' ? 'selected' : ''}>Micro</option>
+                                <option ${onibus && onibus.tipo === 'Double Decker' ? 'selected' : ''}>Double Decker</option>
+                            </select>
+                        </div>
+                    </div>
+                    ${id ? `
+                        <div class="form-group">
+                            <label><i class="fas fa-circle"></i> Status</label>
+                            <select class="form-control" id="onibusStatus">
+                                <option value="disponivel" ${onibus.status === 'disponivel' ? 'selected' : ''}>✅ Disponível</option>
+                                <option value="em_rota" ${onibus.status === 'em_rota' ? 'selected' : ''}>🚌 Em Rota</option>
+                                <option value="manutencao" ${onibus.status === 'manutencao' ? 'selected' : ''}>🔧 Manutenção</option>
+                            </select>
+                        </div>
+                    ` : ''}
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Ônibus
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarOnibus(event, id) {
+            event.preventDefault();
+            
+            const dados = {
+                placa: document.getElementById('onibusPlaca').value,
+                numero: document.getElementById('onibusNumero').value,
+                modelo: document.getElementById('onibusModelo').value,
+                capacidade: parseInt(document.getElementById('onibusCapacidade').value),
+                tipo: document.getElementById('onibusTipo').value,
+                status: id ? document.getElementById('onibusStatus').value : 'disponivel'
+            };
+            
+            if (id) {
+                const index = DB.onibus.findIndex(o => o.id === id);
+                DB.onibus[index] = { ...DB.onibus[index], ...dados };
+            } else {
+                DB.onibus.push({ ...dados, id: nextId.onibus++ });
+            }
+            
+            fecharModal();
+            listarOnibus();
+        }
+
+        function editarOnibus(id) { abrirFormOnibus(id); }
+
+        function excluirOnibus(id) {
+            if (confirm('Tem certeza que deseja excluir este ônibus?')) {
+                DB.onibus = DB.onibus.filter(o => o.id !== id);
+                listarOnibus();
+            }
+        }
+
+        // ============ ROTAS ============
+        function listarRotas() {
+            const tbody = document.getElementById('rotasTableBody');
+            if (DB.rotas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-map-marked-alt"></i><p>Nenhuma rota cadastrada</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = DB.rotas.map(r => `
+                <tr>
+                    <td><strong>${r.codigo}</strong></td>
+                    <td>${r.nome}</td>
+                    <td>${r.origem}</td>
+                    <td>${r.destino}</td>
+                    <td><i class="fas fa-ruler"></i> ${r.distancia} km</td>
+                    <td><i class="fas fa-clock"></i> ${r.tempoEstimado} min</td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-info btn-sm" onclick="verRota(${r.id})" title="Visualizar"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm" onclick="editarRota(${r.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirRota(${r.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirFormRota(id = null) {
+            const rota = id ? DB.rotas.find(r => r.id === id) : null;
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> ${rota ? 'Editar' : 'Nova'} Rota</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form onsubmit="salvarRota(event, ${id})">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-barcode"></i> Código *</label>
+                            <input type="text" class="form-control" id="rotaCodigo" value="${rota ? rota.codigo : ''}" required placeholder="R001">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-pin"></i> Nome da Rota *</label>
+                            <input type="text" class="form-control" id="rotaNome" value="${rota ? rota.nome : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-location-arrow"></i> Origem *</label>
+                            <input type="text" class="form-control" id="rotaOrigem" value="${rota ? rota.origem : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-flag-checkered"></i> Destino *</label>
+                            <input type="text" class="form-control" id="rotaDestino" value="${rota ? rota.destino : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-ruler"></i> Distância (km) *</label>
+                            <input type="number" step="0.1" class="form-control" id="rotaDistancia" value="${rota ? rota.distancia : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-stopwatch"></i> Tempo Estimado (min) *</label>
+                            <input type="number" class="form-control" id="rotaTempo" value="${rota ? rota.tempoEstimado : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pontos de Parada</label>
+                        <input type="text" class="form-control" id="rotaPontos" value="${rota ? rota.pontosParada : ''}" placeholder="Separe por vírgula (Ex: Centro, Shopping, Hospital)">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Rota
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarRota(event, id) {
+            event.preventDefault();
+            
+            const dados = {
+                codigo: document.getElementById('rotaCodigo').value,
+                nome: document.getElementById('rotaNome').value,
+                origem: document.getElementById('rotaOrigem').value,
+                destino: document.getElementById('rotaDestino').value,
+                distancia: parseFloat(document.getElementById('rotaDistancia').value),
+                tempoEstimado: parseInt(document.getElementById('rotaTempo').value),
+                pontosParada: document.getElementById('rotaPontos').value
+            };
+            
+            if (id) {
+                const index = DB.rotas.findIndex(r => r.id === id);
+                DB.rotas[index] = { ...DB.rotas[index], ...dados };
+            } else {
+                DB.rotas.push({ ...dados, id: nextId.rota++ });
+            }
+            
+            fecharModal();
+            listarRotas();
+        }
+
+        function verRota(id) {
+            const rota = DB.rotas.find(r => r.id === id);
+            if (!rota) return;
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> ${rota.codigo} - ${rota.nome}</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div>
+                    <div class="info-box">
+                        <p><i class="fas fa-location-arrow"></i> <strong>Origem:</strong> ${rota.origem}</p>
+                        <p><i class="fas fa-flag-checkered"></i> <strong>Destino:</strong> ${rota.destino}</p>
+                        <p><i class="fas fa-ruler"></i> <strong>Distância:</strong> ${rota.distancia} km</p>
+                        <p><i class="fas fa-clock"></i> <strong>Tempo Estimado:</strong> ${rota.tempoEstimado} minutos</p>
+                    </div>
+                    <h4 style="color:#8B4513;margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> Pontos de Parada:</h4>
+                    ${rota.pontosParada ? rota.pontosParada.split(',').map(p => `
+                        <div style="padding:10px;background:#fffdf5;margin:5px 0;border-radius:5px;display:flex;align-items:center;gap:10px;">
+                            <i class="fas fa-bus" style="color:#FFD700;"></i> ${p.trim()}
+                        </div>
+                    `).join('') : '<p>Nenhum ponto cadastrado</p>'}
+                </div>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function editarRota(id) { abrirFormRota(id); }
+
+        function excluirRota(id) {
+            if (confirm('Tem certeza que deseja excluir esta rota?')) {
+                DB.rotas = DB.rotas.filter(r => r.id !== id);
+                listarRotas();
+            }
+        }
+
+        // ============ VIAGENS ============
+        function listarViagens() {
+            const tbody = document.getElementById('viagensTableBody');
+            if (DB.viagens.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-calendar-check"></i><p>Nenhuma viagem cadastrada</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = DB.viagens.map(v => {
+                const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                const rota = DB.rotas.find(r => r.id === v.rotaId);
+                
+                return `
+                    <tr>
+                        <td><strong><i class="far fa-calendar-alt"></i> ${formatarData(v.data)}</strong></td>
+                        <td><i class="fas fa-sign-out-alt"></i> ${v.horarioSaida}</td>
+                        <td><i class="fas fa-sign-in-alt"></i> ${v.horarioChegada}</td>
+                        <td>${motorista ? motorista.nome : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${onibus ? onibus.placa : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${rota ? rota.codigo : '<span style="color:#999;">N/A</span>'}</td>
+                        <td><span class="badge badge-${v.status === 'programada' ? 'info' : v.status === 'em_andamento' ? 'warning' : v.status === 'concluida' ? 'success' : 'danger'}"><i class="fas fa-circle"></i> ${v.status}</span></td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="btn btn-warning btn-sm" onclick="editarViagem(${v.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirViagem(${v.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function abrirFormViagem(id = null) {
+            const viagem = id ? DB.viagens.find(v => v.id === id) : null;
+            const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo');
+            const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel' || (viagem && o.id === viagem.onibusId));
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-calendar-plus"></i> ${viagem ? 'Editar' : 'Nova'} Viagem</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form onsubmit="salvarViagem(event, ${id})">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="far fa-calendar-alt"></i> Data *</label>
+                            <input type="date" class="form-control" id="viagemData" value="${viagem ? viagem.data : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-out-alt"></i> Horário Saída *</label>
+                            <input type="time" class="form-control" id="viagemSaida" value="${viagem ? viagem.horarioSaida : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-in-alt"></i> Horário Chegada *</label>
+                            <input type="time" class="form-control" id="viagemChegada" value="${viagem ? viagem.horarioChegada : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user-tie"></i> Motorista *</label>
+                            <select class="form-control" id="viagemMotorista" required>
+                                <option value="">Selecione um motorista</option>
+                                ${motoristasAtivos.map(m => `<option value="${m.id}" ${viagem && viagem.motoristaId === m.id ? 'selected' : ''}>${m.nome} - Cat. ${m.categoria}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-bus"></i> Ônibus *</label>
+                            <select class="form-control" id="viagemOnibus" required>
+                                <option value="">Selecione um ônibus</option>
+                                ${onibusDisponiveis.map(o => `<option value="${o.id}" ${viagem && viagem.onibusId === o.id ? 'selected' : ''}>${o.placa} - ${o.modelo}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map"></i> Rota *</label>
+                            <select class="form-control" id="viagemRota" required>
+                                <option value="">Selecione uma rota</option>
+                                ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.codigo} - ${r.nome}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    ${id ? `
+                        <div class="form-group">
+                            <label><i class="fas fa-circle"></i> Status</label>
+                            <select class="form-control" id="viagemStatus">
+                                <option value="programada" ${viagem.status === 'programada' ? 'selected' : ''}>📋 Programada</option>
+                                <option value="em_andamento" ${viagem.status === 'em_andamento' ? 'selected' : ''}>🚌 Em Andamento</option>
+                                <option value="concluida" ${viagem.status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
+                                <option value="cancelada" ${viagem.status === 'cancelada' ? 'selected' : ''}>❌ Cancelada</option>
+                            </select>
+                        </div>
+                    ` : ''}
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> Observações</label>
+                        <textarea class="form-control" id="viagemObs" rows="3" placeholder="Observações adicionais...">${viagem ? viagem.observacoes : ''}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Viagem
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarViagem(event, id) {
+            event.preventDefault();
+            
+            const motoristaId = parseInt(document.getElementById('viagemMotorista').value);
+            const onibusId = parseInt(document.getElementById('viagemOnibus').value);
+            const rotaId = parseInt(document.getElementById('viagemRota').value);
+            
+            if (!motoristaId || !onibusId || !rotaId) {
+                alert('Por favor, preencha todos os campos obrigatórios!');
+                return;
+            }
+            
+            const dados = {
+                motoristaId: motoristaId,
+                onibusId: onibusId,
+                rotaId: rotaId,
+                data: document.getElementById('viagemData').value,
+                horarioSaida: document.getElementById('viagemSaida').value,
+                horarioChegada: document.getElementById('viagemChegada').value,
+                observacoes: document.getElementById('viagemObs').value,
+                status: id ? document.getElementById('viagemStatus').value : 'programada'
+            };
+            
+            if (id) {
+                const index = DB.viagens.findIndex(v => v.id === id);
+                DB.viagens[index] = { ...DB.viagens[index], ...dados };
+            } else {
+                DB.viagens.push({ ...dados, id: nextId.viagem++ });
+                
+                const onibus = DB.onibus.find(o => o.id === dados.onibusId);
+                if (onibus && onibus.status === 'disponivel') {
+                    onibus.status = 'em_rota';
+                }
+            }
+            
+            fecharModal();
+            listarViagens();
+        }
+
+        function editarViagem(id) { abrirFormViagem(id); }
+
+        function excluirViagem(id) {
+            if (confirm('Tem certeza que deseja excluir esta viagem?')) {
+                DB.viagens = DB.viagens.filter(v => v.id !== id);
+                listarViagens();
+            }
+        }
+
+        // ============ TROCAS ============
+        function carregarTrocas() {
+            mostrarTabTrocas('ativas', document.querySelector('#trocas-page .tab.active'));
+        }
+
+        function mostrarTabTrocas(tab, element) {
+            document.querySelectorAll('#trocas-page .tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            
+            const content = document.getElementById('trocasContent');
+            
+            if (tab === 'ativas') {
+                const viagensAtivas = DB.viagens.filter(v => v.status === 'programada' || v.status === 'em_andamento');
+                
+                content.innerHTML = `
+                    <div class="card-grid" style="margin-top:20px;">
+                        ${viagensAtivas.length === 0 
+                            ? '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-bus"></i><p>Nenhuma viagem ativa no momento</p></div>'
+                            : viagensAtivas.map(v => {
+                                const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                                const rota = DB.rotas.find(r => r.id === v.rotaId);
+                                const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                                return `
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <span><i class="fas fa-road"></i> Viagem #${v.id}</span>
+                                            <span class="badge badge-${v.status === 'programada' ? 'info' : 'warning'}"><i class="fas fa-circle"></i> ${v.status}</span>
+                                        </div>
+                                        <div class="item-list" style="border:none;">
+                                            <p><i class="far fa-calendar-alt"></i> <strong>Data:</strong> ${formatarData(v.data)}</p>
+                                            <p><i class="fas fa-clock"></i> <strong>Saída:</strong> ${v.horarioSaida} | <strong>Chegada:</strong> ${v.horarioChegada}</p>
+                                            <p><i class="fas fa-user"></i> <strong>Motorista:</strong> ${motorista ? motorista.nome : 'N/A'}</p>
+                                            <p><i class="fas fa-bus"></i> <strong>Ônibus:</strong> ${onibus ? onibus.placa : 'N/A'}</p>
+                                            <p><i class="fas fa-map"></i> <strong>Rota:</strong> ${rota ? rota.nome : 'N/A'}</p>
+                                        </div>
+                                        <button class="btn btn-warning" onclick="abrirTroca(${v.id})" style="width:100%;margin-top:15px;">
+                                            <i class="fas fa-exchange-alt"></i> Trocar Motorista
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')
+                        }
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="table-container" style="margin-top:20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><i class="far fa-calendar-alt"></i> Data/Hora</th>
+                                    <th><i class="fas fa-user"></i> Motorista Anterior</th>
+                                    <th><i class="fas fa-user-check"></i> Novo Motorista</th>
+                                    <th><i class="fas fa-info-circle"></i> Motivo</th>
+                                    <th><i class="fas fa-circle"></i> Status</th>
+                                    <th><i class="fas fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${DB.trocas.length === 0 
+                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div></td></tr>'
+                                    : DB.trocas.map(t => `
+                                        <tr>
+                                            <td><strong>${formatarData(t.data)}</strong> ${t.hora}</td>
+                                            <td>${getMotoristaNome(t.motoristaAnterior)}</td>
+                                            <td>${getMotoristaNome(t.motoristaNovo)}</td>
+                                            <td>${t.motivo}</td>
+                                            <td><span class="badge badge-${t.status === 'aprovada' ? 'success' : t.status === 'pendente' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${t.status}</span></td>
+                                            <td>
+                                                ${t.status === 'pendente' ? `
+                                                    <div class="actions-cell">
+                                                        <button class="btn btn-success btn-sm" onclick="aprovarTroca(${t.id})" title="Aprovar"><i class="fas fa-check"></i></button>
+                                                        <button class="btn btn-danger btn-sm" onclick="rejeitarTroca(${t.id})" title="Rejeitar"><i class="fas fa-times"></i></button>
+                                                    </div>
+                                                ` : '<span style="color:#999;">-</span>'}
+                                            </td>
+                                        </tr>
+                                    `).join('')
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+
+        function abrirTroca(viagemId) {
+            const viagem = DB.viagens.find(v => v.id === viagemId);
+            if (!viagem) return;
+            
+            const motoristaAtual = DB.motoristas.find(m => m.id === viagem.motoristaId);
+            const motoristasDisponiveis = DB.motoristas.filter(m => m.status === 'ativo' && m.id !== viagem.motoristaId);
+            
+            if (motoristasDisponiveis.length === 0) {
+                alert('Não há motoristas disponíveis para troca no momento!');
+                return;
+            }
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Trocar Motorista - Viagem #${viagem.id}</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="info-box">
+                    <p><i class="fas fa-user"></i> <strong>Motorista Atual:</strong> ${motoristaAtual ? motoristaAtual.nome : 'N/A'}</p>
+                    <p><i class="far fa-calendar-alt"></i> <strong>Data:</strong> ${formatarData(viagem.data)}</p>
+                    <p><i class="fas fa-clock"></i> <strong>Horário:</strong> ${viagem.horarioSaida} → ${viagem.horarioChegada}</p>
+                </div>
+                <form onsubmit="salvarTroca(event, ${viagemId})">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-check"></i> Novo Motorista *</label>
+                        <select class="form-control" id="trocaNovoMotorista" required>
+                            <option value="">Selecione um motorista disponível</option>
+                            ${motoristasDisponiveis.map(m => `<option value="${m.id}">${m.nome} - Categoria ${m.categoria}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-info-circle"></i> Motivo da Troca *</label>
+                        <textarea class="form-control" id="trocaMotivo" required rows="3" placeholder="Descreva o motivo da substituição..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-exchange-alt"></i> Confirmar Troca de Motorista
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarTroca(event, viagemId) {
+            event.preventDefault();
+            
+            const viagem = DB.viagens.find(v => v.id === viagemId);
+            const novoMotoristaId = parseInt(document.getElementById('trocaNovoMotorista').value);
+            const motivo = document.getElementById('trocaMotivo').value;
+            
+            const troca = {
+                id: nextId.troca++,
+                viagemId: viagemId,
+                motoristaAnterior: viagem.motoristaId,
+                motoristaNovo: novoMotoristaId,
+                data: new Date().toISOString().split('T')[0],
+                hora: new Date().toLocaleTimeString(),
+                motivo: motivo,
+                status: 'pendente'
+            };
+            
+            DB.trocas.unshift(troca);
+            viagem.motoristaId = novoMotoristaId;
+            viagem.observacoes += `\n🔄 Troca de motorista: ${motivo}`;
+            
+            fecharModal();
+            carregarTrocas();
+            atualizarBadges();
+            alert('✅ Troca registrada com sucesso! Aguardando aprovação.');
+        }
+
+        function aprovarTroca(id) {
+            const troca = DB.trocas.find(t => t.id === id);
+            if (troca) {
+                troca.status = 'aprovada';
+                carregarTrocas();
+                atualizarBadges();
+            }
+        }
+
+        function rejeitarTroca(id) {
+            const troca = DB.trocas.find(t => t.id === id);
+            if (troca) {
+                troca.status = 'rejeitada';
+                
+                const viagem = DB.viagens.find(v => v.id === troca.viagemId);
+                if (viagem) {
+                    viagem.motoristaId = troca.motoristaAnterior;
+                }
+                
+                carregarTrocas();
+                atualizarBadges();
+            }
+        }
+
+        // ============ FUNÇÕES AUXILIARES ============
+        function getMotoristaNome(id) {
+            const motorista = DB.motoristas.find(m => m.id === id);
+            return motorista ? motorista.nome : 'Desconhecido';
+        }
+
+        function formatarData(data) {
+            if (!data) return '';
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('modal')) {
+                fecharModal();
+            }
+        }
+
+        // ============ INICIALIZAÇÃO ============
+        carregarDashboard();
+    </script>
+</body>
+</html>
