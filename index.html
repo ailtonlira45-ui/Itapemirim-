@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Multi-Flex Marcopolo G7 1200 – Leve</title>
+    <title>Multi-Flex Marcopolo G7 1200 – Rápido</title>
     <style>
         * {
             margin: 0;
@@ -28,7 +28,6 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.03);
         }
         .cabecalho {
             text-align: center;
@@ -98,6 +97,7 @@
             min-height: 0;
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
+            will-change: auto;
         }
         .botao-multiflex .icone-svg {
             width: 50%;
@@ -105,10 +105,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
         }
         .botao-multiflex .icone-svg svg {
             width: 100%;
             height: 100%;
+            pointer-events: none;
         }
         .botao-multiflex .label-botao {
             font-size: clamp(5px, 1vw, 7px);
@@ -117,30 +119,22 @@
             text-align: center;
             line-height: 1;
             font-weight: 600;
+            pointer-events: none;
         }
-        .botao-multiflex.pressionado {
-            color: #ffaa00 !important;
-            border-color: #ff8800 !important;
-            background: linear-gradient(180deg, #3d2e1a 0%, #1a140e 100%) !important;
-            box-shadow: 0 0 30px rgba(255,136,0,0.6), 0 0 60px rgba(255,136,0,0.3) !important;
-            transform: scale(0.96);
-            z-index: 5;
-            transition: none;
-        }
-        .botao-multiflex.pressionado .label-botao {
-            color: #ffcc00 !important;
-        }
+        /* Estado ATIVO - sem transition para resposta instantânea */
         .botao-multiflex.ativo {
             color: #00ff66 !important;
             border-color: #00ff44 !important;
             background: linear-gradient(180deg, #1f3124 0%, #0d1a10 100%) !important;
             box-shadow: 0 0 25px rgba(0,255,100,0.5), 0 0 50px rgba(0,255,100,0.2) !important;
             z-index: 4;
-            transition: none;
+            transition: none !important;
+            animation: none !important;
         }
         .botao-multiflex.ativo .label-botao {
             color: #00ff66 !important;
         }
+        /* Luz de Salão - amarelo */
         .botao-multiflex[data-funcao="luz-salao"].ativo {
             color: #ffff00 !important;
             border-color: #ffdd00 !important;
@@ -150,12 +144,24 @@
         .botao-multiflex[data-funcao="luz-salao"].ativo .label-botao {
             color: #ffff00 !important;
         }
-        .botao-multiflex.estagio1 { color: #00ccff !important; }
-        .botao-multiflex.estagio1.ativo { border-color: #00aadd !important; }
-        .botao-multiflex.estagio2 { color: #0099ff !important; }
-        .botao-multiflex.estagio2.ativo { border-color: #0077dd !important; }
-        .botao-multiflex.estagio3 { color: #0066ff !important; }
-        .botao-multiflex.estagio3.ativo { border-color: #0044dd !important; }
+        /* Ventilador estágios */
+        .botao-multiflex.estagio1.ativo { color: #00ccff !important; border-color: #00aadd !important; }
+        .botao-multiflex.estagio2.ativo { color: #0099ff !important; border-color: #0077dd !important; }
+        .botao-multiflex.estagio3.ativo { color: #0066ff !important; border-color: #0044dd !important; }
+        /* Estado PRESSIONADO - sem transition */
+        .botao-multiflex.pressionado {
+            color: #ffaa00 !important;
+            border-color: #ff8800 !important;
+            background: linear-gradient(180deg, #3d2e1a 0%, #1a140e 100%) !important;
+            box-shadow: 0 0 30px rgba(255,136,0,0.6), 0 0 60px rgba(255,136,0,0.3) !important;
+            transform: scale(0.96);
+            z-index: 5;
+            transition: none !important;
+            animation: none !important;
+        }
+        .botao-multiflex.pressionado .label-botao {
+            color: #ffcc00 !important;
+        }
         .status-painel {
             display: flex;
             justify-content: space-around;
@@ -183,7 +189,6 @@
             border-radius: 2px;
             background: #1a1a1a;
             border: 1px solid #333;
-            transition: none;
         }
         .led.power {
             background: #00ff66;
@@ -250,6 +255,7 @@
             poltronas:'poltronas', ventilador:'ventilador', wifi:'wifi', 
             banheiro:'banheiro', usb:'usb', itinerario:'itinerario', monitor:'monitor'
         };
+
         function toggle(id, btn) {
             if (id === 'ventilador') {
                 estadoSistema.ventilador = (estadoSistema.ventilador + 1) % 4;
@@ -270,37 +276,78 @@
             atualizarLEDs();
             return estadoSistema[c];
         }
+
         function atualizarLEDs() {
             const luz = estadoSistema.luzSalao || estadoSistema.salao || estadoSistema.noturna || estadoSistema.neblina || estadoSistema.degrau || estadoSistema.poltronas;
-            const l1 = document.getElementById('statusLuzes').querySelector('.led');
-            const l2 = document.getElementById('statusWiFi').querySelector('.led');
-            const l3 = document.getElementById('statusUSB').querySelector('.led');
-            const l4 = document.getElementById('statusVent').querySelector('.led');
-            if (luz) { l1.style.background = '#00ff66'; l1.style.borderColor = '#00ff88'; l1.style.boxShadow = '0 0 8px #00ff66'; }
-            else { l1.style.background = '#1a1a1a'; l1.style.borderColor = '#333'; l1.style.boxShadow = 'inset 0 0 3px black'; }
-            if (estadoSistema.wifi) { l2.style.background = '#00ff66'; l2.style.borderColor = '#00ff88'; l2.style.boxShadow = '0 0 8px #00ff66'; }
-            else { l2.style.background = '#1a1a1a'; l2.style.borderColor = '#333'; l2.style.boxShadow = 'inset 0 0 3px black'; }
-            if (estadoSistema.usb) { l3.style.background = '#00ff66'; l3.style.borderColor = '#00ff88'; l3.style.boxShadow = '0 0 8px #00ff66'; }
-            else { l3.style.background = '#1a1a1a'; l3.style.borderColor = '#333'; l3.style.boxShadow = 'inset 0 0 3px black'; }
-            if (estadoSistema.ventilador > 0) { l4.style.background = '#00ccff'; l4.style.borderColor = '#00ddff'; l4.style.boxShadow = '0 0 8px #00ccff'; }
-            else { l4.style.background = '#1a1a1a'; l4.style.borderColor = '#333'; l4.style.boxShadow = 'inset 0 0 3px black'; }
+            const leds = {
+                luzes: document.getElementById('statusLuzes').querySelector('.led'),
+                wifi: document.getElementById('statusWiFi').querySelector('.led'),
+                usb: document.getElementById('statusUSB').querySelector('.led'),
+                vent: document.getElementById('statusVent').querySelector('.led')
+            };
+            const on = { bg: '#00ff66', border: '#00ff88', shadow: '0 0 8px #00ff66' };
+            const off = { bg: '#1a1a1a', border: '#333', shadow: 'inset 0 0 3px black' };
+            const s = (el, state) => {
+                if (state) { el.style.background = on.bg; el.style.borderColor = on.border; el.style.boxShadow = on.shadow; }
+                else { el.style.background = off.bg; el.style.borderColor = off.border; el.style.boxShadow = off.shadow; }
+            };
+            s(leds.luzes, luz);
+            s(leds.wifi, estadoSistema.wifi);
+            s(leds.usb, estadoSistema.usb);
+            s(leds.vent, estadoSistema.ventilador > 0);
+            if (estadoSistema.ventilador > 0) {
+                leds.vent.style.background = '#00ccff';
+                leds.vent.style.borderColor = '#00ddff';
+                leds.vent.style.boxShadow = '0 0 8px #00ccff';
+            }
         }
+
         document.querySelectorAll('.botao-multiflex').forEach(btn => {
             const id = btn.dataset.funcao;
-            btn.addEventListener('pointerdown', e => {
+            let isPressed = false;
+
+            btn.addEventListener('pointerdown', function(e) {
                 e.preventDefault();
-                btn.classList.add('pressionado');
-                if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10);
+                if (!isPressed) {
+                    isPressed = true;
+                    this.classList.add('pressionado');
+                    if (window.navigator && window.navigator.vibrate) {
+                        window.navigator.vibrate(10);
+                    }
+                }
             });
-            btn.addEventListener('pointerup', e => {
+
+            btn.addEventListener('pointerup', function(e) {
                 e.preventDefault();
-                btn.classList.remove('pressionado');
-                const s = toggle(id, btn);
-                if (id !== 'ventilador') btn.classList.toggle('ativo', s);
+                if (isPressed) {
+                    isPressed = false;
+                    this.classList.remove('pressionado');
+                    const estado = toggle(id, this);
+                    if (id !== 'ventilador') {
+                        if (estado) {
+                            this.classList.add('ativo');
+                        } else {
+                            this.classList.remove('ativo');
+                        }
+                    }
+                }
             });
-            btn.addEventListener('pointerleave', () => btn.classList.remove('pressionado'));
-            btn.addEventListener('pointercancel', () => btn.classList.remove('pressionado'));
+
+            btn.addEventListener('pointerleave', function() {
+                if (isPressed) {
+                    isPressed = false;
+                    this.classList.remove('pressionado');
+                }
+            });
+
+            btn.addEventListener('pointercancel', function() {
+                if (isPressed) {
+                    isPressed = false;
+                    this.classList.remove('pressionado');
+                }
+            });
         });
+
         atualizarLEDs();
     </script>
 </body>
