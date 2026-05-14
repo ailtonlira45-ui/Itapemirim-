@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Multi-Flex Marcopolo G7 1200 – Lupa Fluorescente</title>
+    <title>Multi-Flex Marcopolo G7 1200 – Leve</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: #0a0a0a;
             display: flex;
@@ -20,11 +19,8 @@
             width: 100vw;
             overflow: hidden;
             font-family: 'Segoe UI', 'Arial', sans-serif;
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px),
-                radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
         }
-
         .container-principal {
             background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
             width: 100vw;
@@ -32,52 +28,28 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 
-                inset 0 2px 4px rgba(255,255,255,0.03),
-                0 0 0 2px #2a2a2a,
-                0 0 0 5px #111,
-                0 0 0 8px #2a2a2a;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.03);
         }
-
-        .container-principal::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 30px;
-            right: 30px;
-            height: 3px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                #ff8800 20%, 
-                #ffaa00 50%, 
-                #ff8800 80%, 
-                transparent 100%);
-            border-radius: 2px;
-            box-shadow: 0 0 15px rgba(255,136,0,0.4);
-            z-index: 10;
-        }
-
         .cabecalho {
             text-align: center;
-            padding: 8px 10px 4px 10px;
+            padding: 6px 10px 3px 10px;
             border-bottom: 1px solid #222;
             flex-shrink: 0;
-            background: linear-gradient(180deg, rgba(30,30,30,1) 0%, rgba(20,20,20,1) 100%);
+            background: #1a1a1a;
         }
         .marca-marcopolo {
             color: #ff8800;
             font-size: clamp(12px, 2.5vw, 16px);
             font-weight: 900;
-            letter-spacing: 6px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255,136,0,0.4);
             line-height: 1;
         }
         .modelo-g7 {
             color: #ccc;
             font-size: clamp(14px, 3vw, 20px);
             font-weight: 300;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             font-style: italic;
             line-height: 1.2;
         }
@@ -85,44 +57,30 @@
             color: #ff8800;
             font-weight: 700;
         }
-
         .painel-multiflex {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px;
+            padding: 3px;
         }
-
         .grid-multiflex {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 4px;
+            gap: 3px;
             width: 100%;
             height: 100%;
         }
-
-        /* BOTÃO QUADRADO COM EFEITO DE LUPA FLUORESCENTE */
         .botao-multiflex {
             width: 100%;
             height: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 2px solid #333;
-            background: 
-                radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.08) 0%, transparent 60%),
-                linear-gradient(180deg, 
-                    rgba(30,30,30,1) 0%, 
-                    rgba(18,18,18,1) 50%,
-                    rgba(10,10,10,1) 100%);
+            background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
             color: #888;
             cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 6px 14px rgba(0,0,0,0.6),
-                0 2px 4px rgba(0,0,0,0.4),
-                inset 0 1px 2px rgba(255,255,255,0.05),
-                inset 0 -2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.04);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -131,277 +89,122 @@
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 0.5px;
-            gap: 4px;
+            gap: 3px;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             outline: none;
-            padding: 6px;
+            padding: 4px;
             min-width: 0;
             min-height: 0;
-            overflow: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
-
-        /* Efeito de lupa - brilho central */
-        .botao-multiflex::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle at center, 
-                rgba(255,255,255,0.06) 0%, 
-                rgba(255,255,255,0.02) 40%,
-                transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 2;
-            transition: all 0.3s ease;
-        }
-
-        /* LED indicador quadrangular no topo */
-        .botao-multiflex::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 7px;
-            height: 7px;
-            border-radius: 2px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            box-shadow: 
-                inset 0 0 3px black,
-                0 0 4px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            z-index: 3;
-        }
-
         .botao-multiflex .icone-svg {
-            width: 52%;
-            height: 52%;
+            width: 50%;
+            height: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            z-index: 1;
-            transition: all 0.2s ease;
         }
         .botao-multiflex .icone-svg svg {
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
         }
         .botao-multiflex .label-botao {
-            font-size: clamp(6px, 1.2vw, 8px);
+            font-size: clamp(5px, 1vw, 7px);
             color: #999;
-            letter-spacing: 0.8px;
-            transition: color 0.2s;
+            letter-spacing: 0.5px;
             text-align: center;
             line-height: 1;
-            position: relative;
-            z-index: 1;
             font-weight: 600;
         }
-
-        /* Estado pressionado - FLUORESCENTE LARANJA COM LUPA */
         .botao-multiflex.pressionado {
-            color: #ffaa00;
-            border-color: #ff8800;
-            background: 
-                radial-gradient(ellipse at 50% 40%, rgba(255,136,0,0.3) 0%, transparent 60%),
-                linear-gradient(180deg, 
-                    rgba(60,35,10,1) 0%, 
-                    rgba(40,20,5,1) 50%,
-                    rgba(20,10,3,1) 100%);
-            box-shadow: 
-                0 4px 8px rgba(0,0,0,0.7),
-                0 0 40px rgba(255,136,0,0.8),
-                0 0 80px rgba(255,136,0,0.5),
-                0 0 120px rgba(255,136,0,0.3),
-                inset 0 1px 2px rgba(255,200,100,0.3),
-                inset 0 -2px 4px rgba(0,0,0,0.4);
-            transform: scale(0.94);
+            color: #ffaa00 !important;
+            border-color: #ff8800 !important;
+            background: linear-gradient(180deg, #3d2e1a 0%, #1a140e 100%) !important;
+            box-shadow: 0 0 30px rgba(255,136,0,0.6), 0 0 60px rgba(255,136,0,0.3) !important;
+            transform: scale(0.96);
             z-index: 5;
-            animation: vibrar 0.1s ease infinite;
-        }
-        .botao-multiflex.pressionado::before {
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle at center, 
-                rgba(255,200,100,0.4) 0%, 
-                rgba(255,136,0,0.2) 40%,
-                transparent 70%);
-        }
-        .botao-multiflex.pressionado::after {
-            background: #ffaa00;
-            border-color: #ffcc00;
-            box-shadow: 
-                0 0 14px #ffaa00,
-                0 0 25px rgba(255,170,0,0.9),
-                0 0 40px rgba(255,170,0,0.6),
-                inset 0 1px 1px rgba(255,255,255,0.4);
+            transition: none;
         }
         .botao-multiflex.pressionado .label-botao {
-            color: #ffcc00;
+            color: #ffcc00 !important;
         }
-
-        /* Animação de vibração */
-        @keyframes vibrar {
-            0%, 100% { transform: scale(0.94) translate(0, 0); }
-            25% { transform: scale(0.94) translate(-1px, 1px); }
-            50% { transform: scale(0.94) translate(1px, -1px); }
-            75% { transform: scale(0.94) translate(-1px, -1px); }
-        }
-
-        /* Estado ativo - FLUORESCENTE VERDE COM LUPA */
         .botao-multiflex.ativo {
-            color: #00ff66;
-            border-color: #00ff44;
-            background: 
-                radial-gradient(ellipse at 50% 40%, rgba(0,255,100,0.25) 0%, transparent 60%),
-                linear-gradient(180deg, 
-                    rgba(15,45,22,1) 0%, 
-                    rgba(8,30,12,1) 50%,
-                    rgba(3,15,6,1) 100%);
-            box-shadow: 
-                0 6px 12px rgba(0,0,0,0.7),
-                0 0 30px rgba(0,255,100,0.7),
-                0 0 60px rgba(0,255,100,0.4),
-                0 0 90px rgba(0,255,100,0.2),
-                inset 0 1px 2px rgba(100,255,150,0.3),
-                inset 0 -2px 4px rgba(0,0,0,0.4);
+            color: #00ff66 !important;
+            border-color: #00ff44 !important;
+            background: linear-gradient(180deg, #1f3124 0%, #0d1a10 100%) !important;
+            box-shadow: 0 0 25px rgba(0,255,100,0.5), 0 0 50px rgba(0,255,100,0.2) !important;
             z-index: 4;
-        }
-        .botao-multiflex.ativo::before {
-            width: 75%;
-            height: 75%;
-            background: radial-gradient(circle at center, 
-                rgba(100,255,150,0.3) 0%, 
-                rgba(0,255,100,0.15) 40%,
-                transparent 70%);
-        }
-        .botao-multiflex.ativo::after {
-            background: #00ff66;
-            border-color: #00ff88;
-            box-shadow: 
-                0 0 14px #00ff66,
-                0 0 25px rgba(0,255,100,0.9),
-                0 0 40px rgba(0,255,100,0.6),
-                inset 0 1px 1px rgba(255,255,255,0.4);
+            transition: none;
         }
         .botao-multiflex.ativo .label-botao {
-            color: #00ff66;
+            color: #00ff66 !important;
         }
-
-        /* Botão LUZ DE SALÃO com brilho extra */
         .botao-multiflex[data-funcao="luz-salao"].ativo {
-            color: #ffff00;
-            border-color: #ffdd00;
-            background: 
-                radial-gradient(ellipse at 50% 40%, rgba(255,255,0,0.3) 0%, transparent 60%),
-                linear-gradient(180deg, 
-                    rgba(50,50,10,1) 0%, 
-                    rgba(35,35,5,1) 50%,
-                    rgba(15,15,3,1) 100%);
-            box-shadow: 
-                0 6px 12px rgba(0,0,0,0.7),
-                0 0 40px rgba(255,255,0,0.9),
-                0 0 80px rgba(255,255,0,0.6),
-                0 0 120px rgba(255,255,0,0.4),
-                0 0 160px rgba(255,255,0,0.2),
-                inset 0 1px 2px rgba(255,255,200,0.4),
-                inset 0 -2px 4px rgba(0,0,0,0.4);
+            color: #ffff00 !important;
+            border-color: #ffdd00 !important;
+            background: linear-gradient(180deg, #3d3d0a 0%, #1a1a03 100%) !important;
+            box-shadow: 0 0 40px rgba(255,255,0,0.7), 0 0 80px rgba(255,255,0,0.3) !important;
         }
-        .botao-multiflex[data-funcao="luz-salao"].ativo::before {
-            width: 90%;
-            height: 90%;
-            background: radial-gradient(circle at center, 
-                rgba(255,255,200,0.5) 0%, 
-                rgba(255,255,0,0.3) 40%,
-                transparent 70%);
+        .botao-multiflex[data-funcao="luz-salao"].ativo .label-botao {
+            color: #ffff00 !important;
         }
-        .botao-multiflex[data-funcao="luz-salao"].ativo::after {
-            background: #ffff00;
-            border-color: #ffff88;
-            box-shadow: 
-                0 0 16px #ffff00,
-                0 0 30px rgba(255,255,0,0.9),
-                0 0 50px rgba(255,255,0,0.6),
-                inset 0 1px 1px rgba(255,255,255,0.5);
-        }
-
-        /* Estágios do ventilador */
-        .botao-multiflex.estagio1 { color: #00ccff; }
-        .botao-multiflex.estagio1.ativo { border-color: #00aadd; }
-        .botao-multiflex.estagio1.ativo::after { background: #00ccff; border-color: #00ddff; box-shadow: 0 0 14px #00ccff, 0 0 25px rgba(0,204,255,0.9), 0 0 40px rgba(0,204,255,0.6); }
-        .botao-multiflex.estagio2 { color: #0099ff; }
-        .botao-multiflex.estagio2.ativo { border-color: #0077dd; }
-        .botao-multiflex.estagio2.ativo::after { background: #0099ff; border-color: #00aaff; box-shadow: 0 0 14px #0099ff, 0 0 25px rgba(0,153,255,0.9), 0 0 40px rgba(0,153,255,0.6); }
-        .botao-multiflex.estagio3 { color: #0066ff; }
-        .botao-multiflex.estagio3.ativo { border-color: #0044dd; }
-        .botao-multiflex.estagio3.ativo::after { background: #0066ff; border-color: #0077ff; box-shadow: 0 0 14px #0066ff, 0 0 25px rgba(0,102,255,0.9), 0 0 40px rgba(0,102,255,0.6); }
-
+        .botao-multiflex.estagio1 { color: #00ccff !important; }
+        .botao-multiflex.estagio1.ativo { border-color: #00aadd !important; }
+        .botao-multiflex.estagio2 { color: #0099ff !important; }
+        .botao-multiflex.estagio2.ativo { border-color: #0077dd !important; }
+        .botao-multiflex.estagio3 { color: #0066ff !important; }
+        .botao-multiflex.estagio3.ativo { border-color: #0044dd !important; }
         .status-painel {
             display: flex;
             justify-content: space-around;
             align-items: center;
             background: #0a0a0a;
-            padding: 6px 8px;
+            padding: 4px 6px;
             border-top: 1px solid #222;
             flex-shrink: 0;
-            gap: 6px;
+            gap: 4px;
         }
         .indicador-led {
             text-align: center;
             color: #888;
-            font-size: 0.55em;
+            font-size: 0.5em;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
         .led {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 2px;
             background: #1a1a1a;
             border: 1px solid #333;
-            box-shadow: inset 0 0 3px black;
-            transition: all 0.3s ease;
+            transition: none;
         }
         .led.power {
             background: #00ff66;
             border-color: #00ff88;
-            box-shadow: 0 0 8px #00ff66, 0 0 14px rgba(0,255,100,0.6);
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 6px #00ff66;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.35; }
-        }
-
         @media (orientation: landscape) {
             .grid-multiflex {
                 grid-template-columns: repeat(6, 1fr);
                 grid-template-rows: repeat(2, 1fr);
-                gap: 3px;
+                gap: 2px;
             }
             .painel-multiflex {
-                padding: 3px;
+                padding: 2px;
             }
             .botao-multiflex {
-                border-radius: 10px;
+                border-radius: 8px;
             }
             .botao-multiflex .icone-svg {
-                width: 55%;
-                height: 55%;
-            }
-            .botao-multiflex .label-botao {
-                font-size: clamp(5px, 1.5vw, 7px);
+                width: 52%;
+                height: 52%;
             }
         }
     </style>
@@ -412,29 +215,22 @@
             <div class="marca-marcopolo">MARCOPOLO</div>
             <div class="modelo-g7">G7 <span>1200</span></div>
         </div>
-
         <div class="painel-multiflex">
             <div class="grid-multiflex" id="gridBotoes">
-                <!-- Linha 1 -->
-                <button class="botao-multiflex" data-funcao="luz-salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><defs><radialGradient id="luzSalao" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="currentColor" stop-opacity="1"/><stop offset="100%" stop-color="currentColor" stop-opacity="0.3"/></radialGradient></defs><circle cx="24" cy="22" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="22" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="22" r="4" fill="url(#luzSalao)"/><path d="M24 4 L24 10 M24 34 L24 44 M4 22 L10 22 M38 22 L44 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M10 10 L14 14 M34 34 L38 38 M10 34 L14 30 M34 10 L38 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg></div><span class="label-botao">Luz Salão</span></button>
-                <button class="botao-multiflex" data-funcao="salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><line x1="24" y1="6" x2="24" y2="14" stroke="currentColor" stroke-width="2.5"/><circle cx="14" cy="22" r="6" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="6" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="34" cy="22" r="6" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></div><span class="label-botao">Salão</span></button>
-                <button class="botao-multiflex" data-funcao="noturna"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M24 4 Q12 16 12 28 Q12 40 24 44 Q36 40 36 28 Q36 16 24 4 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="22" r="3" fill="currentColor"/></svg></div><span class="label-botao">Noturna</span></button>
-                <button class="botao-multiflex" data-funcao="neblina"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M15 30 Q21 34 24 30 Q27 34 33 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="10" x2="24" y2="6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Neblina</span></button>
-
-                <!-- Linha 2 -->
-                <button class="botao-multiflex" data-funcao="degrau"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="9" y="32" width="30" height="5" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="13" y="23" width="22" height="5" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="17" y="14" width="14" height="5" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="14" r="2.5" fill="currentColor"/><circle cx="16" cy="23" r="2.5" fill="currentColor"/></svg></div><span class="label-botao">Degrau</span></button>
-                <button class="botao-multiflex" data-funcao="poltronas"><div class="icone-svg"><svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="13" width="12" height="15" rx="2.5"/><rect x="27" y="13" width="12" height="15" rx="2.5"/><path d="M13 13 L13 8 M35 13 L35 8" stroke-linecap="round"/><line x1="19" y1="10" x2="29" y2="10"/><circle cx="15" cy="20" r="2" fill="currentColor"/><circle cx="33" cy="20" r="2" fill="currentColor"/></g></svg></div><span class="label-botao">Poltronas</span></button>
-                <button class="botao-multiflex" data-funcao="ventilador"><div class="icone-svg" id="iconeVentilador"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 11 L24 17 M24 31 L24 37 M11 24 L17 24 M31 24 L37 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><text x="24" y="22" text-anchor="middle" fill="currentColor" font-size="15" font-weight="bold" id="numVent">1</text></svg></div><span class="label-botao" id="labelVent">Vent 1</span></button>
-                <button class="botao-multiflex" data-funcao="wifi"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M10 20 Q24 6 38 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M18 27 Q24 17 30 27" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="37" r="4" fill="currentColor"/></svg></div><span class="label-botao">Wi-Fi</span></button>
-
-                <!-- Linha 3 -->
-                <button class="botao-multiflex" data-funcao="banheiro"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="14" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 10 L24 16 M24 32 L24 38 M10 24 L16 24 M32 24 L38 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Banheiro</span></button>
-                <button class="botao-multiflex" data-funcao="usb"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="15" y="13" width="18" height="20" rx="3.5" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="20" y="7" width="8" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="19" y1="19" x2="29" y2="19" stroke="currentColor" stroke-width="2"/><line x1="19" y1="24" x2="29" y2="24" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="29" r="2.5" fill="currentColor"/></svg></div><span class="label-botao">USB</span></button>
-                <button class="botao-multiflex" data-funcao="itinerario"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="14" y="11" width="20" height="26" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="18" y1="18" x2="30" y2="18" stroke="currentColor" stroke-width="2"/><line x1="18" y1="24" x2="30" y2="24" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="33" r="2.5" fill="currentColor"/></svg></div><span class="label-botao">Itiner.</span></button>
-                <button class="botao-multiflex" data-funcao="monitor"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="9" y="11" width="30" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="16" y1="35" x2="32" y2="35" stroke="currentColor" stroke-width="2.5"/><line x1="24" y1="35" x2="24" y2="42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Monitor</span></button>
+                <button class="botao-multiflex" data-funcao="luz-salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="22" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="22" r="4" fill="currentColor"/><path d="M24 6 L24 12 M24 32 L24 42 M8 22 L14 22 M34 22 L42 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Luz Salão</span></button>
+                <button class="botao-multiflex" data-funcao="salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><line x1="24" y1="8" x2="24" y2="14" stroke="currentColor" stroke-width="2.5"/><circle cx="14" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="34" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></div><span class="label-botao">Salão</span></button>
+                <button class="botao-multiflex" data-funcao="noturna"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M24 6 Q14 16 14 28 Q14 38 24 42 Q34 38 34 28 Q34 16 24 6 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="22" r="2.5" fill="currentColor"/></svg></div><span class="label-botao">Noturna</span></button>
+                <button class="botao-multiflex" data-funcao="neblina"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="21" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M16 29 Q21 33 24 29 Q27 33 32 29" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="12" x2="24" y2="8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Neblina</span></button>
+                <button class="botao-multiflex" data-funcao="degrau"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="10" y="32" width="28" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="14" y="24" width="20" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="18" y="16" width="12" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="16" r="2" fill="currentColor"/><circle cx="16" cy="24" r="2" fill="currentColor"/></svg></div><span class="label-botao">Degrau</span></button>
+                <button class="botao-multiflex" data-funcao="poltronas"><div class="icone-svg"><svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.5"><rect x="10" y="14" width="10" height="14" rx="2"/><rect x="28" y="14" width="10" height="14" rx="2"/><path d="M13 14 L13 10 M35 14 L35 10" stroke-linecap="round"/><line x1="19" y1="12" x2="29" y2="12"/><circle cx="15" cy="20" r="1.5" fill="currentColor"/><circle cx="33" cy="20" r="1.5" fill="currentColor"/></g></svg></div><span class="label-botao">Poltronas</span></button>
+                <button class="botao-multiflex" data-funcao="ventilador"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 12 L24 17 M24 31 L24 36 M12 24 L17 24 M31 24 L36 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><text x="24" y="22" text-anchor="middle" fill="currentColor" font-size="13" font-weight="bold" id="numVent">1</text></svg></div><span class="label-botao" id="labelVent">Vent 1</span></button>
+                <button class="botao-multiflex" data-funcao="wifi"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M12 20 Q24 8 36 20" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="M17 26 Q24 18 31 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><circle cx="24" cy="36" r="3" fill="currentColor"/></svg></div><span class="label-botao">Wi-Fi</span></button>
+                <button class="botao-multiflex" data-funcao="banheiro"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 11 L24 16 M24 32 L24 37 M11 24 L16 24 M32 24 L37 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Banheiro</span></button>
+                <button class="botao-multiflex" data-funcao="usb"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="16" y="14" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="21" y="8" width="6" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="20" y1="19" x2="28" y2="19" stroke="currentColor" stroke-width="2"/><line x1="20" y1="23" x2="28" y2="23" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="28" r="1.8" fill="currentColor"/></svg></div><span class="label-botao">USB</span></button>
+                <button class="botao-multiflex" data-funcao="itinerario"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="15" y="12" width="18" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="19" y1="18" x2="29" y2="18" stroke="currentColor" stroke-width="2"/><line x1="19" y1="24" x2="29" y2="24" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="32" r="2" fill="currentColor"/></svg></div><span class="label-botao">Itiner.</span></button>
+                <button class="botao-multiflex" data-funcao="monitor"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="22" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="17" y1="34" x2="31" y2="34" stroke="currentColor" stroke-width="2.5"/><line x1="24" y1="34" x2="24" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Monitor</span></button>
             </div>
         </div>
-
         <div class="status-painel">
             <div class="indicador-led"><div class="led power"></div><span>Power</span></div>
             <div class="indicador-led" id="statusLuzes"><div class="led"></div><span>Luzes</span></div>
@@ -443,84 +239,69 @@
             <div class="indicador-led" id="statusVent"><div class="led"></div><span>Vent.</span></div>
         </div>
     </div>
-
     <script>
-        (function() {
-            const estadoSistema = {
-                luzSalao: false,
-                salao: false, noturna: false, neblina: false, degrau: false,
-                poltronas: false, ventilador: 0, wifi: false, banheiro: false,
-                usb: false, itinerario: false, monitor: false
-            };
-
-            const mapa = {
-                'luz-salao':'luzSalao',
-                salao:'salao', noturna:'noturna', neblina:'neblina', degrau:'degrau',
-                poltronas:'poltronas', ventilador:'ventilador', wifi:'wifi', 
-                banheiro:'banheiro', usb:'usb', itinerario:'itinerario', monitor:'monitor'
-            };
-
-            function toggle(id, btn) {
-                if (id === 'ventilador') {
-                    estadoSistema.ventilador = (estadoSistema.ventilador + 1) % 4;
-                    const estagio = estadoSistema.ventilador;
-                    btn.classList.remove('estagio1', 'estagio2', 'estagio3', 'ativo');
-                    const numVent = document.getElementById('numVent');
-                    const labelVent = document.getElementById('labelVent');
-                    if (estagio === 0) {
-                        if (numVent) numVent.textContent = '1';
-                        if (labelVent) labelVent.textContent = 'Vent 1';
-                    } else if (estagio === 1) {
-                        btn.classList.add('ativo', 'estagio1');
-                        if (numVent) numVent.textContent = '1';
-                        if (labelVent) labelVent.textContent = 'Vent 1';
-                    } else if (estagio === 2) {
-                        btn.classList.add('ativo', 'estagio2');
-                        if (numVent) numVent.textContent = '2';
-                        if (labelVent) labelVent.textContent = 'Vent 2';
-                    } else if (estagio === 3) {
-                        btn.classList.add('ativo', 'estagio3');
-                        if (numVent) numVent.textContent = '3';
-                        if (labelVent) labelVent.textContent = 'Vent 3';
-                    }
-                    atualizarLEDs();
-                    return estagio > 0;
-                }
-                const chave = mapa[id];
-                if (chave === undefined) return false;
-                estadoSistema[chave] = !estadoSistema[chave];
-                const novoEstado = estadoSistema[chave];
+        const estadoSistema = {
+            luzSalao: false, salao: false, noturna: false, neblina: false, degrau: false,
+            poltronas: false, ventilador: 0, wifi: false, banheiro: false,
+            usb: false, itinerario: false, monitor: false
+        };
+        const mapa = {
+            'luz-salao':'luzSalao', salao:'salao', noturna:'noturna', neblina:'neblina', degrau:'degrau',
+            poltronas:'poltronas', ventilador:'ventilador', wifi:'wifi', 
+            banheiro:'banheiro', usb:'usb', itinerario:'itinerario', monitor:'monitor'
+        };
+        function toggle(id, btn) {
+            if (id === 'ventilador') {
+                estadoSistema.ventilador = (estadoSistema.ventilador + 1) % 4;
+                const e = estadoSistema.ventilador;
+                btn.classList.remove('estagio1', 'estagio2', 'estagio3', 'ativo');
+                const n = document.getElementById('numVent');
+                const l = document.getElementById('labelVent');
+                if (e === 0) { if(n)n.textContent='1'; if(l)l.textContent='Vent 1'; }
+                else if (e === 1) { btn.classList.add('ativo','estagio1'); if(n)n.textContent='1'; if(l)l.textContent='Vent 1'; }
+                else if (e === 2) { btn.classList.add('ativo','estagio2'); if(n)n.textContent='2'; if(l)l.textContent='Vent 2'; }
+                else if (e === 3) { btn.classList.add('ativo','estagio3'); if(n)n.textContent='3'; if(l)l.textContent='Vent 3'; }
                 atualizarLEDs();
-                return novoEstado;
+                return e > 0;
             }
-
-            function atualizarLEDs() {
-                const luz = estadoSistema.luzSalao || estadoSistema.salao || estadoSistema.noturna || estadoSistema.neblina || estadoSistema.degrau || estadoSistema.poltronas;
-                const ledLuz = document.getElementById('statusLuzes').querySelector('.led');
-                const ledWifi = document.getElementById('statusWiFi').querySelector('.led');
-                const ledUsb = document.getElementById('statusUSB').querySelector('.led');
-                const ledVent = document.getElementById('statusVent').querySelector('.led');
-                if (luz) { ledLuz.style.background = '#00ff66'; ledLuz.style.borderColor = '#00ff88'; ledLuz.style.boxShadow = '0 0 10px #00ff66, 0 0 16px rgba(0,255,100,0.7)'; }
-                else { ledLuz.style.background = '#1a1a1a'; ledLuz.style.borderColor = '#333'; ledLuz.style.boxShadow = 'inset 0 0 3px black'; }
-                if (estadoSistema.wifi) { ledWifi.style.background = '#00ff66'; ledWifi.style.borderColor = '#00ff88'; ledWifi.style.boxShadow = '0 0 10px #00ff66, 0 0 16px rgba(0,255,100,0.7)'; }
-                else { ledWifi.style.background = '#1a1a1a'; ledWifi.style.borderColor = '#333'; ledWifi.style.boxShadow = 'inset 0 0 3px black'; }
-                if (estadoSistema.usb) { ledUsb.style.background = '#00ff66'; ledUsb.style.borderColor = '#00ff88'; ledUsb.style.boxShadow = '0 0 10px #00ff66, 0 0 16px rgba(0,255,100,0.7)'; }
-                else { ledUsb.style.background = '#1a1a1a'; ledUsb.style.borderColor = '#333'; ledUsb.style.boxShadow = 'inset 0 0 3px black'; }
-                if (estadoSistema.ventilador > 0) { ledVent.style.background = '#00ccff'; ledVent.style.borderColor = '#00ddff'; ledVent.style.boxShadow = '0 0 10px #00ccff, 0 0 16px rgba(0,204,255,0.7)'; }
-                else { ledVent.style.background = '#1a1a1a'; ledVent.style.borderColor = '#333'; ledVent.style.boxShadow = 'inset 0 0 3px black'; }
-            }
-
-            document.querySelectorAll('.botao-multiflex').forEach(btn => {
-                const id = btn.dataset.funcao;
-                btn.addEventListener('mousedown', e => { e.preventDefault(); btn.classList.add('pressionado'); navigator.vibrate?.(15); });
-                btn.addEventListener('mouseup', e => { e.preventDefault(); btn.classList.remove('pressionado'); const s = toggle(id, btn); if (id !== 'ventilador') btn.classList.toggle('ativo', s); });
-                btn.addEventListener('mouseleave', () => btn.classList.remove('pressionado'));
-                btn.addEventListener('touchstart', e => { e.preventDefault(); btn.classList.add('pressionado'); navigator.vibrate?.(15); });
-                btn.addEventListener('touchend', e => { e.preventDefault(); btn.classList.remove('pressionado'); const s = toggle(id, btn); if (id !== 'ventilador') btn.classList.toggle('ativo', s); });
-            });
-
+            const c = mapa[id];
+            if (c === undefined) return false;
+            estadoSistema[c] = !estadoSistema[c];
             atualizarLEDs();
-        })();
+            return estadoSistema[c];
+        }
+        function atualizarLEDs() {
+            const luz = estadoSistema.luzSalao || estadoSistema.salao || estadoSistema.noturna || estadoSistema.neblina || estadoSistema.degrau || estadoSistema.poltronas;
+            const l1 = document.getElementById('statusLuzes').querySelector('.led');
+            const l2 = document.getElementById('statusWiFi').querySelector('.led');
+            const l3 = document.getElementById('statusUSB').querySelector('.led');
+            const l4 = document.getElementById('statusVent').querySelector('.led');
+            if (luz) { l1.style.background = '#00ff66'; l1.style.borderColor = '#00ff88'; l1.style.boxShadow = '0 0 8px #00ff66'; }
+            else { l1.style.background = '#1a1a1a'; l1.style.borderColor = '#333'; l1.style.boxShadow = 'inset 0 0 3px black'; }
+            if (estadoSistema.wifi) { l2.style.background = '#00ff66'; l2.style.borderColor = '#00ff88'; l2.style.boxShadow = '0 0 8px #00ff66'; }
+            else { l2.style.background = '#1a1a1a'; l2.style.borderColor = '#333'; l2.style.boxShadow = 'inset 0 0 3px black'; }
+            if (estadoSistema.usb) { l3.style.background = '#00ff66'; l3.style.borderColor = '#00ff88'; l3.style.boxShadow = '0 0 8px #00ff66'; }
+            else { l3.style.background = '#1a1a1a'; l3.style.borderColor = '#333'; l3.style.boxShadow = 'inset 0 0 3px black'; }
+            if (estadoSistema.ventilador > 0) { l4.style.background = '#00ccff'; l4.style.borderColor = '#00ddff'; l4.style.boxShadow = '0 0 8px #00ccff'; }
+            else { l4.style.background = '#1a1a1a'; l4.style.borderColor = '#333'; l4.style.boxShadow = 'inset 0 0 3px black'; }
+        }
+        document.querySelectorAll('.botao-multiflex').forEach(btn => {
+            const id = btn.dataset.funcao;
+            btn.addEventListener('pointerdown', e => {
+                e.preventDefault();
+                btn.classList.add('pressionado');
+                if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10);
+            });
+            btn.addEventListener('pointerup', e => {
+                e.preventDefault();
+                btn.classList.remove('pressionado');
+                const s = toggle(id, btn);
+                if (id !== 'ventilador') btn.classList.toggle('ativo', s);
+            });
+            btn.addEventListener('pointerleave', () => btn.classList.remove('pressionado'));
+            btn.addEventListener('pointercancel', () => btn.classList.remove('pressionado'));
+        });
+        atualizarLEDs();
     </script>
 </body>
 </html>
