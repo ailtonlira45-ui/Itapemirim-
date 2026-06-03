@@ -1,354 +1,282 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Multi-Flex Marcopolo G7 1200 – Rápido</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #0a0a0a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
-        }
-        .container-principal {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .cabecalho {
-            text-align: center;
-            padding: 6px 10px 3px 10px;
-            border-bottom: 1px solid #222;
-            flex-shrink: 0;
-            background: #1a1a1a;
-        }
-        .marca-marcopolo {
-            color: #ff8800;
-            font-size: clamp(12px, 2.5vw, 16px);
-            font-weight: 900;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-        .modelo-g7 {
-            color: #ccc;
-            font-size: clamp(14px, 3vw, 20px);
-            font-weight: 300;
-            letter-spacing: 3px;
-            font-style: italic;
-            line-height: 1.2;
-        }
-        .modelo-g7 span {
-            color: #ff8800;
-            font-weight: 700;
-        }
-        .painel-multiflex {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3px;
-        }
-        .grid-multiflex {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 3px;
-            width: 100%;
-            height: 100%;
-        }
-        .botao-multiflex {
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            border: 2px solid #333;
-            background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
-            color: #888;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.04);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            gap: 3px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            padding: 4px;
-            min-width: 0;
-            min-height: 0;
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            will-change: auto;
-        }
-        .botao-multiflex .icone-svg {
-            width: 50%;
-            height: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-        .botao-multiflex .icone-svg svg {
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .botao-multiflex .label-botao {
-            font-size: clamp(5px, 1vw, 7px);
-            color: #999;
-            letter-spacing: 0.5px;
-            text-align: center;
-            line-height: 1;
-            font-weight: 600;
-            pointer-events: none;
-        }
-        /* Estado ATIVO - sem transition para resposta instantânea */
-        .botao-multiflex.ativo {
-            color: #00ff66 !important;
-            border-color: #00ff44 !important;
-            background: linear-gradient(180deg, #1f3124 0%, #0d1a10 100%) !important;
-            box-shadow: 0 0 25px rgba(0,255,100,0.5), 0 0 50px rgba(0,255,100,0.2) !important;
-            z-index: 4;
-            transition: none !important;
-            animation: none !important;
-        }
-        .botao-multiflex.ativo .label-botao {
-            color: #00ff66 !important;
-        }
-        /* Luz de Salão - amarelo */
-        .botao-multiflex[data-funcao="luz-salao"].ativo {
-            color: #ffff00 !important;
-            border-color: #ffdd00 !important;
-            background: linear-gradient(180deg, #3d3d0a 0%, #1a1a03 100%) !important;
-            box-shadow: 0 0 40px rgba(255,255,0,0.7), 0 0 80px rgba(255,255,0,0.3) !important;
-        }
-        .botao-multiflex[data-funcao="luz-salao"].ativo .label-botao {
-            color: #ffff00 !important;
-        }
-        /* Ventilador estágios */
-        .botao-multiflex.estagio1.ativo { color: #00ccff !important; border-color: #00aadd !important; }
-        .botao-multiflex.estagio2.ativo { color: #0099ff !important; border-color: #0077dd !important; }
-        .botao-multiflex.estagio3.ativo { color: #0066ff !important; border-color: #0044dd !important; }
-        /* Estado PRESSIONADO - sem transition */
-        .botao-multiflex.pressionado {
-            color: #ffaa00 !important;
-            border-color: #ff8800 !important;
-            background: linear-gradient(180deg, #3d2e1a 0%, #1a140e 100%) !important;
-            box-shadow: 0 0 30px rgba(255,136,0,0.6), 0 0 60px rgba(255,136,0,0.3) !important;
-            transform: scale(0.96);
-            z-index: 5;
-            transition: none !important;
-            animation: none !important;
-        }
-        .botao-multiflex.pressionado .label-botao {
-            color: #ffcc00 !important;
-        }
-        .status-painel {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: #0a0a0a;
-            padding: 4px 6px;
-            border-top: 1px solid #222;
-            flex-shrink: 0;
-            gap: 4px;
-        }
-        .indicador-led {
-            text-align: center;
-            color: #888;
-            font-size: 0.5em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-        .led {
-            width: 6px;
-            height: 6px;
-            border-radius: 2px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-        }
-        .led.power {
-            background: #00ff66;
-            border-color: #00ff88;
-            box-shadow: 0 0 6px #00ff66;
-        }
-        @media (orientation: landscape) {
-            .grid-multiflex {
-                grid-template-columns: repeat(6, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                gap: 2px;
-            }
-            .painel-multiflex {
-                padding: 2px;
-            }
-            .botao-multiflex {
-                border-radius: 8px;
-            }
-            .botao-multiflex .icone-svg {
-                width: 52%;
-                height: 52%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>💊 Remédio 2º Plano | Alarme Garantido</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(150deg, #eef6ff 0%, #d4e7ff 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      touch-action: manipulation;
+    }
+    .app-container {
+      max-width: 560px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 42px;
+      box-shadow: 0 30px 55px rgba(0, 40, 70, 0.28);
+      padding: 26px 20px 30px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    h1 { display: flex; align-items: center; gap: 8px; font-size: 2rem; font-weight: 700; color: #083c58; }
+    .subtitle { color: #1f5b83; font-weight: 500; margin-bottom: 18px; padding-left: 12px; border-left: 5px solid #2b8fd9; background: linear-gradient(to right, #e1f0fd, transparent); }
+    .bg-badge {
+      background: #1e7e34; color: white; font-size: 0.7rem; padding: 3px 12px; border-radius: 20px; margin-left: 8px; font-weight: bold;
+    }
+    .card { background: #f6faff; border-radius: 28px; padding: 18px; margin-bottom: 22px; box-shadow: 0 8px 20px rgba(0,120,180,0.08); border: 1px solid #cee5fa; }
+    .input-group { margin-bottom: 14px; }
+    label { font-weight: 700; font-size: 0.85rem; color: #0e4b6e; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+    .row-input { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    input, select { background: white; border: 1.5px solid #c7def7; border-radius: 20px; padding: 12px 14px; font-size: 1rem; outline: none; font-weight: 500; color: #0b2f44; flex: 1 1 130px; }
+    input:focus, select:focus { border-color: #0f7bc2; box-shadow: 0 0 0 4px rgba(15,123,194,0.2); }
+    .mode-selector { display: flex; gap: 12px; margin-bottom: 10px; }
+    .mode-btn { flex: 1; background: #e9f2fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; color: #1d4b6b; cursor: pointer; text-align: center; }
+    .mode-btn.active { background: #0f7bc2; color: white; border-color: #0a5b8c; }
+    .interval-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .interval-chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; color: #134b6e; }
+    .interval-chip.selected { background: #1e81c4; color: white; border-color: #0e5b8c; }
+    .btn { background: linear-gradient(135deg, #208ad4, #0d5a92); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 10px 18px rgba(10,70,120,0.3); flex: 1; }
+    .btn-outline { background: white; color: #0f5b8c; border: 1.5px solid #1e81c4; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .list-item { background: white; border-radius: 22px; padding: 14px; margin-bottom: 12px; border: 1px solid #dbecfb; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+    .med-name { font-weight: 800; font-size: 1.1rem; color: #043753; }
+    .med-schedule { background: #e2efff; padding: 4px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+    .action-btns { display: flex; gap: 6px; }
+    .icon-btn { background: white; border: 1px solid #d2e5fa; font-size: 1.1rem; padding: 8px 12px; border-radius: 30px; cursor: pointer; font-weight: 600; }
+    .delete-btn { color: #b13b3b; }
+    .alarm-off-btn { background: #ffe9e9; border-color: #f5c6c6; color: #b33a3a; }
+    .empty-message { color: #6287a5; padding: 28px; text-align: center; }
+    .footer-note { font-size: 0.7rem; color: #4a6f8c; text-align: center; margin-top: 8px; }
+  </style>
 </head>
 <body>
-    <div class="container-principal">
-        <div class="cabecalho">
-            <div class="marca-marcopolo">MARCOPOLO</div>
-            <div class="modelo-g7">G7 <span>1200</span></div>
-        </div>
-        <div class="painel-multiflex">
-            <div class="grid-multiflex" id="gridBotoes">
-                <button class="botao-multiflex" data-funcao="luz-salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="22" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="22" r="4" fill="currentColor"/><path d="M24 6 L24 12 M24 32 L24 42 M8 22 L14 22 M34 22 L42 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Luz Salão</span></button>
-                <button class="botao-multiflex" data-funcao="salao"><div class="icone-svg"><svg viewBox="0 0 48 48"><line x1="24" y1="8" x2="24" y2="14" stroke="currentColor" stroke-width="2.5"/><circle cx="14" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="24" cy="24" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="34" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></div><span class="label-botao">Salão</span></button>
-                <button class="botao-multiflex" data-funcao="noturna"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M24 6 Q14 16 14 28 Q14 38 24 42 Q34 38 34 28 Q34 16 24 6 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="22" r="2.5" fill="currentColor"/></svg></div><span class="label-botao">Noturna</span></button>
-                <button class="botao-multiflex" data-funcao="neblina"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="21" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M16 29 Q21 33 24 29 Q27 33 32 29" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="12" x2="24" y2="8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Neblina</span></button>
-                <button class="botao-multiflex" data-funcao="degrau"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="10" y="32" width="28" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="14" y="24" width="20" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="18" y="16" width="12" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="16" r="2" fill="currentColor"/><circle cx="16" cy="24" r="2" fill="currentColor"/></svg></div><span class="label-botao">Degrau</span></button>
-                <button class="botao-multiflex" data-funcao="poltronas"><div class="icone-svg"><svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.5"><rect x="10" y="14" width="10" height="14" rx="2"/><rect x="28" y="14" width="10" height="14" rx="2"/><path d="M13 14 L13 10 M35 14 L35 10" stroke-linecap="round"/><line x1="19" y1="12" x2="29" y2="12"/><circle cx="15" cy="20" r="1.5" fill="currentColor"/><circle cx="33" cy="20" r="1.5" fill="currentColor"/></g></svg></div><span class="label-botao">Poltronas</span></button>
-                <button class="botao-multiflex" data-funcao="ventilador"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 12 L24 17 M24 31 L24 36 M12 24 L17 24 M31 24 L36 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><text x="24" y="22" text-anchor="middle" fill="currentColor" font-size="13" font-weight="bold" id="numVent">1</text></svg></div><span class="label-botao" id="labelVent">Vent 1</span></button>
-                <button class="botao-multiflex" data-funcao="wifi"><div class="icone-svg"><svg viewBox="0 0 48 48"><path d="M12 20 Q24 8 36 20" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="M17 26 Q24 18 31 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><circle cx="24" cy="36" r="3" fill="currentColor"/></svg></div><span class="label-botao">Wi-Fi</span></button>
-                <button class="botao-multiflex" data-funcao="banheiro"><div class="icone-svg"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 11 L24 16 M24 32 L24 37 M11 24 L16 24 M32 24 L37 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Banheiro</span></button>
-                <button class="botao-multiflex" data-funcao="usb"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="16" y="14" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="21" y="8" width="6" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="20" y1="19" x2="28" y2="19" stroke="currentColor" stroke-width="2"/><line x1="20" y1="23" x2="28" y2="23" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="28" r="1.8" fill="currentColor"/></svg></div><span class="label-botao">USB</span></button>
-                <button class="botao-multiflex" data-funcao="itinerario"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="15" y="12" width="18" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="19" y1="18" x2="29" y2="18" stroke="currentColor" stroke-width="2"/><line x1="19" y1="24" x2="29" y2="24" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="32" r="2" fill="currentColor"/></svg></div><span class="label-botao">Itiner.</span></button>
-                <button class="botao-multiflex" data-funcao="monitor"><div class="icone-svg"><svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="22" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="17" y1="34" x2="31" y2="34" stroke="currentColor" stroke-width="2.5"/><line x1="24" y1="34" x2="24" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><span class="label-botao">Monitor</span></button>
-            </div>
-        </div>
-        <div class="status-painel">
-            <div class="indicador-led"><div class="led power"></div><span>Power</span></div>
-            <div class="indicador-led" id="statusLuzes"><div class="led"></div><span>Luzes</span></div>
-            <div class="indicador-led" id="statusWiFi"><div class="led"></div><span>Wi-Fi</span></div>
-            <div class="indicador-led" id="statusUSB"><div class="led"></div><span>USB</span></div>
-            <div class="indicador-led" id="statusVent"><div class="led"></div><span>Vent.</span></div>
-        </div>
+<div class="app-container">
+  <h1>💊 Remédio 2º Plano <span class="bg-badge">tela desligada</span></h1>
+  <div class="subtitle">⏱️ Alarme toca mesmo com celular bloqueado</div>
+
+  <div class="card">
+    <div class="input-group">
+      <label>📋 Nome do remédio</label>
+      <input type="text" id="medName" placeholder="Ex: Paracetamol" autocomplete="off" maxlength="40">
     </div>
-    <script>
-        const estadoSistema = {
-            luzSalao: false, salao: false, noturna: false, neblina: false, degrau: false,
-            poltronas: false, ventilador: 0, wifi: false, banheiro: false,
-            usb: false, itinerario: false, monitor: false
-        };
-        const mapa = {
-            'luz-salao':'luzSalao', salao:'salao', noturna:'noturna', neblina:'neblina', degrau:'degrau',
-            poltronas:'poltronas', ventilador:'ventilador', wifi:'wifi', 
-            banheiro:'banheiro', usb:'usb', itinerario:'itinerario', monitor:'monitor'
-        };
+    <div class="mode-selector">
+      <button id="modeFixed" class="mode-btn active">🕒 Horário fixo</button>
+      <button id="modeInterval" class="mode-btn">🔁 Intervalo</button>
+    </div>
+    <div id="panelFixedTime">
+      <div class="input-group"><label>⏰ Horário</label><input type="time" id="medTimeFixed"></div>
+    </div>
+    <div id="panelInterval" style="display:none;">
+      <label>⏳ A cada:</label>
+      <div class="interval-options">
+        <span class="interval-chip" data-hours="4">4h</span>
+        <span class="interval-chip" data-hours="6">6h</span>
+        <span class="interval-chip selected" data-hours="8">8h</span>
+        <span class="interval-chip" data-hours="12">12h</span>
+        <span class="interval-chip" data-hours="24">24h</span>
+      </div>
+    </div>
+    <button class="btn" id="addReminderBtn" style="margin-top:14px;">➕ Adicionar</button>
+  </div>
 
-        function toggle(id, btn) {
-            if (id === 'ventilador') {
-                estadoSistema.ventilador = (estadoSistema.ventilador + 1) % 4;
-                const e = estadoSistema.ventilador;
-                btn.classList.remove('estagio1', 'estagio2', 'estagio3', 'ativo');
-                const n = document.getElementById('numVent');
-                const l = document.getElementById('labelVent');
-                if (e === 0) { if(n)n.textContent='1'; if(l)l.textContent='Vent 1'; }
-                else if (e === 1) { btn.classList.add('ativo','estagio1'); if(n)n.textContent='1'; if(l)l.textContent='Vent 1'; }
-                else if (e === 2) { btn.classList.add('ativo','estagio2'); if(n)n.textContent='2'; if(l)l.textContent='Vent 2'; }
-                else if (e === 3) { btn.classList.add('ativo','estagio3'); if(n)n.textContent='3'; if(l)l.textContent='Vent 3'; }
-                atualizarLEDs();
-                return e > 0;
-            }
-            const c = mapa[id];
-            if (c === undefined) return false;
-            estadoSistema[c] = !estadoSistema[c];
-            atualizarLEDs();
-            return estadoSistema[c];
-        }
+  <div>
+    <div style="display:flex; justify-content:space-between;"><h3>📌 Lembretes</h3><span id="activeCount">0</span></div>
+    <div id="remindersList"><div class="empty-message">Nenhum lembrete.</div></div>
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button class="btn btn-outline" id="clearAllBtn">🗑️ Limpar</button>
+      <button class="btn btn-outline" id="stopAllAlarmsBtn">🔕 Silenciar</button>
+    </div>
+  </div>
+  <div class="footer-note">🔒 Com a tela apagada, o som e a notificação aparecerão.</div>
+</div>
 
-        function atualizarLEDs() {
-            const luz = estadoSistema.luzSalao || estadoSistema.salao || estadoSistema.noturna || estadoSistema.neblina || estadoSistema.degrau || estadoSistema.poltronas;
-            const leds = {
-                luzes: document.getElementById('statusLuzes').querySelector('.led'),
-                wifi: document.getElementById('statusWiFi').querySelector('.led'),
-                usb: document.getElementById('statusUSB').querySelector('.led'),
-                vent: document.getElementById('statusVent').querySelector('.led')
-            };
-            const on = { bg: '#00ff66', border: '#00ff88', shadow: '0 0 8px #00ff66' };
-            const off = { bg: '#1a1a1a', border: '#333', shadow: 'inset 0 0 3px black' };
-            const s = (el, state) => {
-                if (state) { el.style.background = on.bg; el.style.borderColor = on.border; el.style.boxShadow = on.shadow; }
-                else { el.style.background = off.bg; el.style.borderColor = off.border; el.style.boxShadow = off.shadow; }
-            };
-            s(leds.luzes, luz);
-            s(leds.wifi, estadoSistema.wifi);
-            s(leds.usb, estadoSistema.usb);
-            s(leds.vent, estadoSistema.ventilador > 0);
-            if (estadoSistema.ventilador > 0) {
-                leds.vent.style.background = '#00ccff';
-                leds.vent.style.borderColor = '#00ddff';
-                leds.vent.style.boxShadow = '0 0 8px #00ccff';
-            }
-        }
+<script>
+  (function() {
+    const STORAGE_KEY = 'bg_medicine_reminders';
+    let reminders = [];
+    let currentMode = 'fixed';
+    let selectedIntervalHours = 8;
+    let wakeLock = null;
+    let intervalCheckerId = null;
 
-        document.querySelectorAll('.botao-multiflex').forEach(btn => {
-            const id = btn.dataset.funcao;
-            let isPressed = false;
+    // Elementos
+    const medNameInput = document.getElementById('medName');
+    const medTimeFixed = document.getElementById('medTimeFixed');
+    const modeFixedBtn = document.getElementById('modeFixed');
+    const modeIntervalBtn = document.getElementById('modeInterval');
+    const panelFixed = document.getElementById('panelFixedTime');
+    const panelInterval = document.getElementById('panelInterval');
+    const addBtn = document.getElementById('addReminderBtn');
+    const remindersListDiv = document.getElementById('remindersList');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const stopAllAlarmsBtn = document.getElementById('stopAllAlarmsBtn');
+    const activeCountSpan = document.getElementById('activeCount');
+    const intervalChips = document.querySelectorAll('.interval-chip');
 
-            btn.addEventListener('pointerdown', function(e) {
-                e.preventDefault();
-                if (!isPressed) {
-                    isPressed = true;
-                    this.classList.add('pressionado');
-                    if (window.navigator && window.navigator.vibrate) {
-                        window.navigator.vibrate(10);
-                    }
-                }
-            });
+    // Service Worker
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('data:application/javascript,' + encodeURIComponent(
+          `self.addEventListener('install', e => self.skipWaiting());
+           self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+           self.addEventListener('message', e => {
+             if (e.data && e.data.action === 'triggerAlarm') {
+               const { name, time } = e.data;
+               self.registration.showNotification('💊 Hora do remédio: ' + name, {
+                 body: 'Tomar agora • ' + time,
+                 icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="45" fill="%231e81c4"/%3E%3Ctext x="50" y="70" font-size="60" text-anchor="middle" fill="white"%3E💊%3C/text%3E%3C/svg%3E',
+                 vibrate: [200, 100, 200, 100, 200],
+                 tag: 'med-reminder',
+                 requireInteraction: true
+               });
+             }
+           });`
+        )).then(reg => console.log('SW registrado')).catch(() => {});
+      }
+    }
 
-            btn.addEventListener('pointerup', function(e) {
-                e.preventDefault();
-                if (isPressed) {
-                    isPressed = false;
-                    this.classList.remove('pressionado');
-                    const estado = toggle(id, this);
-                    if (id !== 'ventilador') {
-                        if (estado) {
-                            this.classList.add('ativo');
-                        } else {
-                            this.classList.remove('ativo');
-                        }
-                    }
-                }
-            });
+    function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').then(lock => {
+          wakeLock = lock;
+          wakeLock.addEventListener('release', () => {});
+        }).catch(() => {});
+      }
+    }
 
-            btn.addEventListener('pointerleave', function() {
-                if (isPressed) {
-                    isPressed = false;
-                    this.classList.remove('pressionado');
-                }
-            });
+    // Modo
+    function setMode(mode) {
+      currentMode = mode;
+      modeFixedBtn.classList.toggle('active', mode==='fixed');
+      modeIntervalBtn.classList.toggle('active', mode==='interval');
+      panelFixed.style.display = mode==='fixed' ? 'block' : 'none';
+      panelInterval.style.display = mode==='interval' ? 'block' : 'none';
+    }
+    modeFixedBtn.onclick = ()=> setMode('fixed');
+    modeIntervalBtn.onclick = ()=> setMode('interval');
+    intervalChips.forEach(c => c.onclick = function(){
+      intervalChips.forEach(c=>c.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedIntervalHours = parseInt(this.dataset.hours);
+    });
 
-            btn.addEventListener('pointercancel', function() {
-                if (isPressed) {
-                    isPressed = false;
-                    this.classList.remove('pressionado');
-                }
-            });
+    function load() {
+      try { reminders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { reminders = []; }
+    }
+    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders)); }
+
+    function playSound() {
+      try {
+        const ctx = new (window.AudioContext||window.webkitAudioContext)();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type='square'; o.frequency.value=800; g.gain.value=0.4;
+        o.start(); o.stop(ctx.currentTime+0.5);
+      } catch(e){}
+    }
+
+    function triggerViaServiceWorker(reminder) {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          action: 'triggerAlarm',
+          name: reminder.name,
+          time: reminder.time
         });
+      }
+      playSound();
+    }
 
-        atualizarLEDs();
-    </script>
+    function checkReminders() {
+      const now = new Date();
+      const cur = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      reminders.forEach(r => {
+        if (r.time === cur && r._lastTriggered !== cur) {
+          triggerViaServiceWorker(r);
+          r._lastTriggered = cur;
+        } else if (r._lastTriggered && r._lastTriggered !== cur) delete r._lastTriggered;
+      });
+    }
+
+    function startChecker() {
+      if (intervalCheckerId) clearInterval(intervalCheckerId);
+      checkReminders();
+      intervalCheckerId = setInterval(checkReminders, 10000);
+    }
+
+    function render() {
+      if (!reminders.length) {
+        remindersListDiv.innerHTML = '<div class="empty-message">✨ Nenhum.</div>';
+        activeCountSpan.textContent = '0';
+        return;
+      }
+      const sorted = [...reminders].sort((a,b)=>a.time.localeCompare(b.time));
+      remindersListDiv.innerHTML = sorted.map(r=>`
+        <div class="list-item">
+          <div><div class="med-name">💊 ${escapeHtml(r.name)}</div><div class="med-schedule">🕒 ${r.time} ${r.intervalInfo||''}</div></div>
+          <div class="action-btns">
+            <button class="icon-btn" onclick="window.app.edit('${r.id}')">✏️</button>
+            <button class="icon-btn alarm-off-btn" onclick="window.app.silence('${r.id}')">🔕</button>
+            <button class="icon-btn delete-btn" onclick="window.app.del('${r.id}')">🗑️</button>
+          </div>
+        </div>`).join('');
+      activeCountSpan.textContent = reminders.length;
+    }
+
+    function escapeHtml(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+    function add() {
+      const name = medNameInput.value.trim();
+      if (!name) return alert('Nome obrigatório');
+      let time;
+      let intervalInfo = null;
+      if (currentMode === 'fixed') {
+        time = medTimeFixed.value;
+        if (!time) return alert('Horário obrigatório');
+      } else {
+        const n = new Date();
+        n.setMinutes(n.getMinutes()+selectedIntervalHours*60);
+        time = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+        intervalInfo = `${selectedIntervalHours}h`;
+      }
+      reminders.push({ id: Date.now().toString(36)+Math.random().toString(36).substr(2,5), name, time, intervalInfo });
+      save(); render(); medNameInput.value=''; if(currentMode==='fixed') medTimeFixed.value='';
+    }
+
+    window.app = {
+      edit: (id)=>{
+        const r = reminders.find(r=>r.id===id); if(!r) return;
+        const nt = prompt('Novo horário (HH:MM):', r.time);
+        if(nt && /^([01]\d|2[0-3]):[0-5]\d$/.test(nt)){ r.time=nt; delete r._lastTriggered; save(); render(); }
+      },
+      del: (id)=>{ reminders=reminders.filter(r=>r.id!==id); save(); render(); },
+      silence: ()=>{ alert('Alarme silenciado.'); }
+    };
+
+    addBtn.onclick = add;
+    clearAllBtn.onclick = ()=>{ if(confirm('Limpar todos?')){ reminders=[]; save(); render(); } };
+    stopAllAlarmsBtn.onclick = ()=>{ alert('Alarmes interrompidos.'); };
+
+    function init() {
+      registerServiceWorker();
+      requestWakeLock();
+      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') requestWakeLock(); });
+      load(); render();
+      setMode('fixed');
+      if(medTimeFixed) medTimeFixed.value = `${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
+      startChecker();
+      Notification.requestPermission();
+    }
+    window.addEventListener('DOMContentLoaded', init);
+  })();
+</script>
 </body>
 </html>
