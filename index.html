@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,42 +26,45 @@
       box-shadow: 0 30px 60px rgba(0, 40, 80, 0.25);
       padding: 24px 20px 30px;
     }
-    h1 { display: flex; align-items: center; gap: 10px; font-size: 1.9rem; font-weight: 800; color: #063251; margin-bottom: 4px; }
-    .badge { background: #0f7bc2; color: white; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
-    .subtitle { color: #1e5a7a; margin-bottom: 20px; padding-left: 14px; border-left: 4px solid #1e81c4; font-weight: 500; }
+    h1 { font-size: 1.9rem; font-weight: 800; color: #063251; margin-bottom: 10px; text-align: center; }
+    .alert-box {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      padding: 12px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      text-align: center;
+    }
     .card { background: #f4f9ff; border-radius: 28px; padding: 18px; margin-bottom: 20px; border: 1px solid #d2e6fa; }
-    label { font-weight: 700; font-size: 0.85rem; color: #0c4260; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-    input, select { width: 100%; background: white; border: 1.5px solid #c5ddf7; border-radius: 18px; padding: 12px 14px; font-size: 1rem; outline: none; margin-bottom: 12px; }
+    label { font-weight: 700; font-size: 0.85rem; color: #0c4260; display: block; margin-bottom: 6px; }
+    input { width: 100%; background: white; border: 1.5px solid #c5ddf7; border-radius: 18px; padding: 12px 14px; font-size: 1rem; outline: none; margin-bottom: 12px; }
     .mode-selector { display: flex; gap: 10px; margin-bottom: 14px; }
-    .mode-btn { flex: 1; background: #e3f0fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer; text-align: center; }
+    .mode-btn { flex: 1; background: #e3f0fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer; text-align: center; transition: 0.3s; }
     .mode-btn.active { background: #0f7bc2; color: white; }
-    .interval-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; }
+    .chip-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
     .chip.selected { background: #1e81c4; color: white; }
-    .sound-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-bottom: 14px; }
-    .sound-option { background: white; border: 2px solid #d2e6fa; border-radius: 18px; padding: 10px 6px; text-align: center; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
-    .sound-option.selected { border-color: #0f7bc2; background: #e6f4ff; }
-    .btn { background: linear-gradient(135deg, #1e8ad4, #0c558b); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; width: 100%; margin-top: 8px; font-size: 1rem; }
-    .btn-outline { background: white; color: #0f5b8c; border: 1.5px solid #1e81c4; }
-    .list-item { background: white; border-radius: 20px; padding: 14px; margin-bottom: 10px; border: 1px solid #daeafa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-    .med-info { font-weight: 700; }
-    .action-row { display: flex; gap: 6px; }
-    .icon-btn { background: #f0f6fe; border: 1px solid #cde2fa; border-radius: 20px; padding: 6px 12px; cursor: pointer; font-weight: 600; }
-    .delete-btn { color: #c44; }
-    .test-btn { background: #fbbf24; color: #000; border: none; }
-    .status-bar { background: #e8f4e8; padding: 8px 14px; border-radius: 20px; margin-bottom: 12px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+    .btn { background: linear-gradient(135deg, #1e8ad4, #0c558b); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; cursor: pointer; width: 100%; margin-top: 8px; font-size: 1rem; }
+    .btn-green { background: linear-gradient(135deg, #38a169, #2f855a); }
+    .btn-red { background: linear-gradient(135deg, #e53e3e, #c53030); }
+    .btn-yellow { background: linear-gradient(135deg, #d69e2e, #b7791f); }
+    .list-item { background: white; border-radius: 20px; padding: 14px; margin-bottom: 10px; border: 1px solid #daeafa; display: flex; justify-content: space-between; align-items: center; }
+    .icon-btn { background: #f0f6fe; border: 1px solid #cde2fa; border-radius: 20px; padding: 6px 12px; cursor: pointer; font-weight: 600; margin-left: 4px; }
+    .status { padding: 8px 12px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; text-align: center; }
+    .status.success { background: #c6f6d5; color: #22543d; }
+    .status.error { background: #fed7d7; color: #742a2a; }
   </style>
 </head>
 <body>
 <div class="app-container">
-  <h1>💊 Alarme Remédio <span class="badge">tela bloqueada</span></h1>
-  <div class="subtitle">🔊 Toca mesmo com celular bloqueado</div>
-
-  <div class="status-bar" id="statusMsg">🟢 Pronto para alarmes</div>
+  <h1>💊 Alarme de Remédio</h1>
+  
+  <div id="statusMsg" class="status">🔄 Carregando...</div>
 
   <div class="card">
     <label>📋 Nome do remédio</label>
-    <input type="text" id="medName" placeholder="Ex: Dipirona" autocomplete="off">
+    <input type="text" id="medName" placeholder="Ex: Dipirona 500mg" autocomplete="off">
 
     <div class="mode-selector">
       <button id="modeFixed" class="mode-btn active">🕒 Horário fixo</button>
@@ -72,316 +75,203 @@
       <label>⏰ Horário do alarme</label>
       <input type="time" id="medTime">
     </div>
+    
     <div id="panelInterval" style="display:none;">
       <label>⏳ Tomar a cada:</label>
-      <div class="interval-options">
-        <span class="chip" data-h="4">4h</span><span class="chip" data-h="6">6h</span>
-        <span class="chip selected" data-h="8">8h</span><span class="chip" data-h="12">12h</span><span class="chip" data-h="24">24h</span>
+      <div class="chip-container">
+        <span class="chip" data-h="4">4h</span>
+        <span class="chip" data-h="6">6h</span>
+        <span class="chip selected" data-h="8">8h</span>
+        <span class="chip" data-h="12">12h</span>
+        <span class="chip" data-h="24">24h</span>
       </div>
     </div>
 
-    <label>🔊 Som do alarme</label>
-    <div class="sound-grid" id="soundGrid">
-      <div class="sound-option selected" data-sound="beep">🔔 Beep</div>
-      <div class="sound-option" data-sound="melody">🎵 Melodia</div>
-      <div class="sound-option" data-sound="siren">🚨 Sirene</div>
-      <div class="sound-option" data-sound="bell">🛎️ Sino</div>
-      <div class="sound-option" data-sound="buzz">📳 Vibração</div>
-    </div>
     <button class="btn" id="addBtn">➕ Adicionar lembrete</button>
-    <button class="btn test-btn" id="testSoundBtn" style="margin-top:6px;">🔊 Testar som</button>
+    <button class="btn btn-yellow" id="testBtn">🔊 Testar alarme</button>
   </div>
 
   <div>
-    <h3>📌 Seus lembretes <span id="countBadge">0</span></h3>
-    <div id="listContainer"><div style="color:#7b98b3; padding:20px;">Nenhum.</div></div>
-    <div style="display:flex; gap:8px; margin-top:12px;">
-      <button class="btn btn-outline" id="clearBtn">🗑️ Limpar</button>
-      <button class="btn btn-outline" id="silenceBtn">🔕 Parar alarme</button>
-    </div>
+    <h3>📌 Lembretes ativos: <span id="countBadge">0</span></h3>
+    <div id="listContainer"><div style="color:#7b98b3; padding:20px;">Nenhum lembrete.</div></div>
+    <button class="btn btn-red" id="stopAlarmBtn">🔕 Parar alarme</button>
+    <button class="btn btn-green" id="installBtn" style="display:none;">📲 Instalar App</button>
   </div>
 </div>
 
 <script>
-  (function() {
-    const STORE = 'med_alarms_v3';
-    let reminders = [];
-    let mode = 'fixed';
-    let intervalHours = 8;
-    let selectedSound = 'beep';
-    let alarmInterval = null;
-    let currentAlarmId = null;
-    let audioContext = null;
-    let wakeLock = null;
-    let serviceWorkerReg = null;
-
-    // Elementos
-    const nameInp = document.getElementById('medName');
-    const timeInp = document.getElementById('medTime');
-    const fixedBtn = document.getElementById('modeFixed');
-    const intervalBtn = document.getElementById('modeInterval');
-    const panelFixed = document.getElementById('panelFixed');
-    const panelInterval = document.getElementById('panelInterval');
-    const addBtn = document.getElementById('addBtn');
-    const listContainer = document.getElementById('listContainer');
-    const countBadge = document.getElementById('countBadge');
-    const clearBtn = document.getElementById('clearBtn');
-    const silenceBtn = document.getElementById('silenceBtn');
-    const testBtn = document.getElementById('testSoundBtn');
-    const soundGrid = document.getElementById('soundGrid');
-    const statusMsg = document.getElementById('statusMsg');
-
-    // Registrar Service Worker
-    async function registerSW() {
-      if ('serviceWorker' in navigator) {
-        try {
-          const swCode = `
-            self.addEventListener('install', e => self.skipWaiting());
-            self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-            self.addEventListener('message', e => {
-              if (e.data && e.data.action === 'showNotification') {
-                const { name, time } = e.data;
-                self.registration.showNotification('💊 HORA DO REMÉDIO: ' + name, {
-                  body: '⏰ ' + time + ' - Toque para abrir',
-                  icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="45" fill="%23e53e3e"/%3E%3Ctext x="50" y="70" font-size="60" text-anchor="middle" fill="white"%3E💊%3C/text%3E%3C/svg%3E',
-                  vibrate: [300, 100, 300, 100, 300],
-                  tag: 'med-alarm',
-                  requireInteraction: true,
-                  silent: false
-                });
-              }
-            });
-          `;
-          const blob = new Blob([swCode], { type: 'application/javascript' });
-          serviceWorkerReg = await navigator.serviceWorker.register(URL.createObjectURL(blob));
-          statusMsg.innerHTML = '🟢 Alarme funcionando (tela bloqueada)';
-        } catch(e) {
-          statusMsg.innerHTML = '⚠️ Service Worker não registrado';
+  // Registrar Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => {
+        console.log('✅ Service Worker registrado!');
+        document.getElementById('statusMsg').className = 'status success';
+        document.getElementById('statusMsg').textContent = '✅ Alarme funcionando - Pode desligar a tela';
+        
+        // Solicitar permissão de notificação
+        if (Notification.permission === 'default') {
+          Notification.requestPermission();
         }
-      }
-    }
+      })
+      .catch(err => {
+        console.error('❌ Service Worker falhou:', err);
+        document.getElementById('statusMsg').className = 'status error';
+        document.getElementById('statusMsg').textContent = '❌ Erro no Service Worker';
+      });
+  }
 
-    // Wake Lock para manter ativo
-    async function requestWakeLock() {
-      if ('wakeLock' in navigator) {
-        try {
-          wakeLock = await navigator.wakeLock.request('screen');
-          wakeLock.addEventListener('release', () => {});
-        } catch(e) {}
-      }
-    }
+  let reminders = JSON.parse(localStorage.getItem('alarms') || '[]');
+  let alarmCheckInterval = null;
 
-    // Modo
-    fixedBtn.onclick = ()=> { mode='fixed'; fixedBtn.classList.add('active'); intervalBtn.classList.remove('active'); panelFixed.style.display='block'; panelInterval.style.display='none'; };
-    intervalBtn.onclick = ()=> { mode='interval'; intervalBtn.classList.add('active'); fixedBtn.classList.remove('active'); panelFixed.style.display='none'; panelInterval.style.display='block'; };
+  function saveReminders() {
+    localStorage.setItem('alarms', JSON.stringify(reminders));
+  }
 
-    // Interval chips
-    document.querySelectorAll('.chip').forEach(c => c.onclick = function(){
-      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
-      this.classList.add('selected');
-      intervalHours = parseInt(this.dataset.h);
-    });
-
-    // Som
-    soundGrid.querySelectorAll('.sound-option').forEach(opt => opt.onclick = function(){
-      soundGrid.querySelectorAll('.sound-option').forEach(o=>o.classList.remove('selected'));
-      this.classList.add('selected');
-      selectedSound = this.dataset.sound;
-    });
-
-    // Audio Context
-    function getAudioContext() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-      return audioContext;
-    }
-
-    function stopAlarm() {
-      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
-      if (audioContext) { audioContext.close(); audioContext = null; }
-      currentAlarmId = null;
-    }
-
-    function playSoundPattern(soundType) {
-      stopAlarm();
-      const ctx = getAudioContext();
-      const now = ctx.currentTime;
-
-      function tone(freq, start, duration, type='square', vol=0.3) {
-        try {
-          const o = ctx.createOscillator(), g = ctx.createGain();
-          o.type = type; o.frequency.value = freq;
-          g.gain.setValueAtTime(vol, start);
-          g.gain.exponentialRampToValueAtTime(0.001, start+duration);
-          o.connect(g); g.connect(ctx.destination);
-          o.start(start); o.stop(start+duration);
-        } catch(e) {}
-      }
-
-      if (soundType === 'beep') {
-        for(let i=0;i<3;i++) tone(880, now+i*0.3, 0.25);
-      } else if (soundType === 'melody') {
-        tone(523, now, 0.2); tone(659, now+0.2, 0.2); tone(784, now+0.4, 0.3);
-      } else if (soundType === 'siren') {
-        for(let i=0;i<5;i++){ tone(600+i*120, now+i*0.2, 0.25,'sawtooth',0.25); }
-      } else if (soundType === 'bell') {
-        tone(1200, now, 0.15); tone(1000, now+0.15, 0.25);
-      } else if (soundType === 'buzz') {
-        tone(120, now, 0.8,'square',0.5);
-      }
-    }
-
-    function triggerAlarm(reminder) {
-      stopAlarm();
-      currentAlarmId = reminder.id;
-      
-      // Tocar som imediatamente
-      playSoundPattern(selectedSound);
-      
-      // Repetir som a cada 3 segundos
-      alarmInterval = setInterval(() => {
-        playSoundPattern(selectedSound);
-      }, 3000);
-
-      // Notificação via Service Worker
-      if (serviceWorkerReg && serviceWorkerReg.active) {
-        serviceWorkerReg.active.postMessage({
-          action: 'showNotification',
-          name: reminder.name,
-          time: reminder.time
-        });
-      }
-
-      // Notificação direta
-      if (Notification.permission === 'granted') {
-        new Notification(`💊 ${reminder.name}`, { 
-          body: `HORA DE TOMAR! ${reminder.time}`,
-          vibrate: [300, 100, 300],
-          tag: 'med',
-          requireInteraction: true
-        });
-      }
-
-      // Vibrar se disponível
-      if (navigator.vibrate) {
-        navigator.vibrate([300, 100, 300, 100, 300]);
-      }
-    }
-
-    testBtn.onclick = ()=> { 
-      getAudioContext();
-      playSoundPattern(selectedSound); 
-      alert('Som de teste tocando.');
-    };
+  function renderList() {
+    const container = document.getElementById('listContainer');
+    const badge = document.getElementById('countBadge');
     
-    silenceBtn.onclick = ()=>{ 
-      stopAlarm(); 
-      alert('Alarme silenciado.'); 
-    };
-
-    // Dados
-    function load() { 
-      try { reminders = JSON.parse(localStorage.getItem(STORE)) || []; } catch { reminders = []; } 
+    if (!reminders.length) {
+      container.innerHTML = '<div style="color:#7b98b3; padding:20px;">Nenhum lembrete.</div>';
+      badge.textContent = '0';
+      return;
     }
-    function save() { localStorage.setItem(STORE, JSON.stringify(reminders)); }
+    
+    badge.textContent = reminders.length;
+    container.innerHTML = reminders.map(r => `
+      <div class="list-item">
+        <div>
+          <strong>💊 ${r.name}</strong><br>
+          <small>🕒 ${r.time}</small>
+        </div>
+        <div>
+          <button class="icon-btn" onclick="editReminder('${r.id}')">✏️</button>
+          <button class="icon-btn" onclick="deleteReminder('${r.id}')" style="color:red;">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
 
-    function check() {
-      const now = new Date();
-      const cur = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      reminders.forEach(r => {
-        if (r.time === cur && r._last !== cur) {
-          triggerAlarm(r);
-          r._last = cur;
-        } else if (r._last && r._last !== cur) delete r._last;
+  function editReminder(id) {
+    const rem = reminders.find(r => r.id === id);
+    if (!rem) return;
+    const newTime = prompt('Novo horário (HH:MM):', rem.time);
+    if (newTime && /^\d{2}:\d{2}$/.test(newTime)) {
+      rem.time = newTime;
+      saveReminders();
+      renderList();
+    }
+  }
+
+  function deleteReminder(id) {
+    reminders = reminders.filter(r => r.id !== id);
+    saveReminders();
+    renderList();
+  }
+
+  // Enviar alarmes para o Service Worker
+  function sendAlarmsToSW() {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_ALARMS',
+        alarms: reminders
       });
     }
+  }
 
-    // Verificar a cada 5 segundos
-    setInterval(() => {
-      check();
-      requestWakeLock();
-    }, 5000);
-
-    function render() {
-      if (!reminders.length) {
-        listContainer.innerHTML = '<div style="color:#7b98b3;">Nenhum lembrete.</div>';
-        countBadge.textContent = '0';
-        return;
-      }
-      countBadge.textContent = reminders.length;
-      listContainer.innerHTML = reminders.sort((a,b)=>a.time.localeCompare(b.time)).map(r=>`
-        <div class="list-item">
-          <div><strong>💊 ${r.name}</strong> · 🕒 ${r.time} ${r.int||''}</div>
-          <div class="action-row">
-            <button class="icon-btn" onclick="window.app.edit('${r.id}')">✏️</button>
-            <button class="icon-btn delete-btn" onclick="window.app.del('${r.id}')">🗑️</button>
-          </div>
-        </div>`).join('');
+  document.getElementById('addBtn').addEventListener('click', () => {
+    const name = document.getElementById('medName').value.trim();
+    if (!name) return alert('Digite o nome do remédio');
+    
+    let time;
+    const mode = document.getElementById('modeFixed').classList.contains('active') ? 'fixed' : 'interval';
+    
+    if (mode === 'fixed') {
+      time = document.getElementById('medTime').value;
+      if (!time) return alert('Selecione o horário');
+    } else {
+      const interval = parseInt(document.querySelector('.chip.selected').dataset.h);
+      const d = new Date();
+      d.setMinutes(d.getMinutes() + interval * 60);
+      time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     }
+    
+    reminders.push({
+      id: Date.now().toString(),
+      name,
+      time,
+      created: new Date().toISOString()
+    });
+    
+    saveReminders();
+    renderList();
+    sendAlarmsToSW();
+    document.getElementById('medName').value = '';
+  });
 
-    window.app = {
-      edit: (id)=>{
-        const r = reminders.find(r=>r.id===id); if(!r) return;
-        const t = prompt('Novo horário HH:MM', r.time);
-        if(t && /^\d{2}:\d{2}$/.test(t)) { r.time=t; delete r._last; save(); render(); }
-      },
-      del: (id)=>{
-        if(currentAlarmId===id) stopAlarm();
-        reminders=reminders.filter(r=>r.id!==id); save(); render();
-      }
-    };
-
-    addBtn.onclick = ()=>{
-      const name = nameInp.value.trim();
-      if(!name) return alert('Nome obrigatório');
-      let time, intInfo=null;
-      if(mode==='fixed'){
-        time = timeInp.value;
-        if(!time) return alert('Horário obrigatório');
-      } else {
-        const d = new Date(); d.setMinutes(d.getMinutes()+intervalHours*60);
-        time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-        intInfo = `${intervalHours}h`;
-      }
-      reminders.push({ id: Date.now().toString(36), name, time, int: intInfo });
-      save(); render(); nameInp.value=''; if(mode==='fixed') timeInp.value='';
-    };
-
-    clearBtn.onclick = ()=>{ 
-      if(confirm('Limpar todos?')){ 
-        reminders=[]; save(); render(); stopAlarm(); 
-      } 
-    };
-
-    // Inicialização
-    async function init(){
-      await registerSW();
-      await requestWakeLock();
-      
-      // Manter Wake Lock ativo
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          requestWakeLock();
-        }
+  document.getElementById('testBtn').addEventListener('click', () => {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'TEST_ALARM'
       });
-
-      load(); render();
-      if(timeInp) timeInp.value = `${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-      
-      // Solicitar permissão de notificação
-      if (Notification.permission === 'default') {
-        await Notification.requestPermission();
-      }
-      
-      check();
+      alert('🔊 Alarme de teste enviado! Verifique as notificações.');
+    } else {
+      alert('❌ Service Worker não está pronto. Recarregue a página.');
     }
+  });
 
-    window.addEventListener('DOMContentLoaded', init);
-  })();
+  document.getElementById('stopAlarmBtn').addEventListener('click', () => {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'STOP_ALARM'
+      });
+    }
+    alert('✅ Alarme parado!');
+  });
+
+  // Modo
+  document.getElementById('modeFixed').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('modeInterval').classList.remove('active');
+    document.getElementById('panelFixed').style.display = 'block';
+    document.getElementById('panelInterval').style.display = 'none';
+  });
+
+  document.getElementById('modeInterval').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('modeFixed').classList.remove('active');
+    document.getElementById('panelFixed').style.display = 'none';
+    document.getElementById('panelInterval').style.display = 'block';
+  });
+
+  // Chips
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // Inicializar
+  renderList();
+  document.getElementById('medTime').value = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
+  
+  // Enviar alarmes para SW a cada 30 segundos
+  setInterval(sendAlarmsToSW, 30000);
+  sendAlarmsToSW();
+
+  // Instalar PWA
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+    document.getElementById('installBtn').style.display = 'block';
+  });
+
+  document.getElementById('installBtn').addEventListener('click', () => {
+    if (window.deferredPrompt) {
+      window.deferredPrompt.prompt();
+    }
+  });
 </script>
 </body>
 </html>
