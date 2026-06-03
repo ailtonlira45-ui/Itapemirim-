@@ -5,273 +5,759 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>💊 Alarme Remédio | Tela Bloqueada</title>
+  <title>💊 Alarme Remédio - Completo</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      background: linear-gradient(150deg, #e8f4ff 0%, #d0e3ff 100%);
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+      padding: 15px;
     }
-    .app-container {
-      max-width: 580px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 42px;
-      box-shadow: 0 30px 60px rgba(0, 40, 80, 0.25);
-      padding: 24px 20px 30px;
+    
+    .container {
+      max-width: 550px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
-    h1 { font-size: 1.9rem; font-weight: 800; color: #063251; margin-bottom: 10px; text-align: center; }
-    .alert-box {
-      background: #fff3cd;
-      border: 2px solid #ffc107;
-      padding: 12px;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      font-weight: 600;
+    
+    h1 {
       text-align: center;
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 5px;
     }
-    .card { background: #f4f9ff; border-radius: 28px; padding: 18px; margin-bottom: 20px; border: 1px solid #d2e6fa; }
-    label { font-weight: 700; font-size: 0.85rem; color: #0c4260; display: block; margin-bottom: 6px; }
-    input { width: 100%; background: white; border: 1.5px solid #c5ddf7; border-radius: 18px; padding: 12px 14px; font-size: 1rem; outline: none; margin-bottom: 12px; }
-    .mode-selector { display: flex; gap: 10px; margin-bottom: 14px; }
-    .mode-btn { flex: 1; background: #e3f0fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer; text-align: center; transition: 0.3s; }
-    .mode-btn.active { background: #0f7bc2; color: white; }
-    .chip-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-    .chip.selected { background: #1e81c4; color: white; }
-    .btn { background: linear-gradient(135deg, #1e8ad4, #0c558b); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; cursor: pointer; width: 100%; margin-top: 8px; font-size: 1rem; }
-    .btn-green { background: linear-gradient(135deg, #38a169, #2f855a); }
-    .btn-red { background: linear-gradient(135deg, #e53e3e, #c53030); }
-    .btn-yellow { background: linear-gradient(135deg, #d69e2e, #b7791f); }
-    .list-item { background: white; border-radius: 20px; padding: 14px; margin-bottom: 10px; border: 1px solid #daeafa; display: flex; justify-content: space-between; align-items: center; }
-    .icon-btn { background: #f0f6fe; border: 1px solid #cde2fa; border-radius: 20px; padding: 6px 12px; cursor: pointer; font-weight: 600; margin-left: 4px; }
-    .status { padding: 8px 12px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; text-align: center; }
-    .status.success { background: #c6f6d5; color: #22543d; }
-    .status.error { background: #fed7d7; color: #742a2a; }
+    
+    .subtitulo {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    .alerta-alarme {
+      background: #ff0000;
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 15px 0;
+      font-size: 22px;
+      font-weight: bold;
+      display: none;
+      animation: piscar 0.5s infinite;
+    }
+    
+    @keyframes piscar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .status-badge {
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 10px 0;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .status-ok { background: #d4edda; color: #155724; }
+    .status-erro { background: #f8d7da; color: #721c24; }
+    .status-aviso { background: #fff3cd; color: #856404; }
+    
+    .secao {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      border: 1px solid #dee2e6;
+    }
+    
+    .secao h3 {
+      color: #495057;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    
+    label {
+      display: block;
+      color: #495057;
+      font-weight: bold;
+      margin: 8px 0 4px;
+      font-size: 14px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #dee2e6;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      outline: none;
+      transition: border 0.3s;
+    }
+    
+    input:focus {
+      border-color: #667eea;
+    }
+    
+    .modo-botoes {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    
+    .modo-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    
+    .modo-btn.ativo {
+      background: #667eea;
+      color: white;
+    }
+    
+    .intervalos {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin: 10px 0;
+    }
+    
+    .intervalo-btn {
+      padding: 10px 5px;
+      border: 2px solid #dee2e6;
+      background: white;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 12px;
+    }
+    
+    .intervalo-btn.ativo {
+      background: #28a745;
+      color: white;
+      border-color: #28a745;
+    }
+    
+    .sons-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 10px 0;
+    }
+    
+    .som-btn {
+      padding: 12px 8px;
+      border: 2px solid #dee2e6;
+      background: white;
+      border-radius: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    
+    .som-btn.ativo {
+      background: #ffc107;
+      border-color: #ff9800;
+      color: #333;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 6px 0;
+      transition: transform 0.2s;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .btn-primario { background: #667eea; color: white; }
+    .btn-sucesso { background: #28a745; color: white; }
+    .btn-perigo { background: #dc3545; color: white; }
+    .btn-alerta { background: #ffc107; color: #333; }
+    .btn-info { background: #17a2b8; color: white; }
+    
+    .lembrete-card {
+      background: white;
+      border: 2px solid #dee2e6;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+    
+    .lembrete-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .lembrete-info h4 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .lembrete-hora {
+      background: #e9ecef;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 14px;
+      color: #495057;
+      display: inline-block;
+    }
+    
+    .lembrete-acoes {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .btn-pequeno {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .btn-editar { background: #ffc107; color: #333; }
+    .btn-desligar { background: #fd7e14; color: white; }
+    .btn-excluir { background: #dc3545; color: white; }
+    
+    .painel {
+      display: none;
+    }
+    
+    .painel.visivel {
+      display: block;
+    }
   </style>
 </head>
 <body>
-<div class="app-container">
-  <h1>💊 Alarme de Remédio</h1>
+
+<div class="container">
+  <h1>💊 Alarme Remédio</h1>
+  <p class="subtitulo">⏰ Funciona com tela bloqueada</p>
   
-  <div id="statusMsg" class="status">🔄 Carregando...</div>
+  <!-- Alerta visual do alarme -->
+  <div id="alertaAlarme" class="alerta-alarme">
+    🚨 HORA DO REMÉDIO! 🚨
+  </div>
+  
+  <!-- Status do sistema -->
+  <div id="statusSistema" class="status-badge status-aviso">
+    ⏳ Inicializando sistema...
+  </div>
 
-  <div class="card">
-    <label>📋 Nome do remédio</label>
-    <input type="text" id="medName" placeholder="Ex: Dipirona 500mg" autocomplete="off">
-
-    <div class="mode-selector">
-      <button id="modeFixed" class="mode-btn active">🕒 Horário fixo</button>
-      <button id="modeInterval" class="mode-btn">🔁 Intervalo</button>
-    </div>
-
-    <div id="panelFixed">
-      <label>⏰ Horário do alarme</label>
-      <input type="time" id="medTime">
+  <!-- Seção: Adicionar Remédio -->
+  <div class="secao">
+    <h3>📋 Adicionar Remédio</h3>
+    
+    <label>💊 Nome do remédio:</label>
+    <input type="text" id="nomeRemedio" placeholder="Ex: Dipirona 500mg">
+    
+    <label>⏰ Modo do alarme:</label>
+    <div class="modo-botoes">
+      <button id="modoFixo" class="modo-btn ativo" onclick="mudarModo('fixo')">
+        🕒 Horário Fixo
+      </button>
+      <button id="modoIntervalo" class="modo-btn" onclick="mudarModo('intervalo')">
+        🔁 Intervalo
+      </button>
     </div>
     
-    <div id="panelInterval" style="display:none;">
-      <label>⏳ Tomar a cada:</label>
-      <div class="chip-container">
-        <span class="chip" data-h="4">4h</span>
-        <span class="chip" data-h="6">6h</span>
-        <span class="chip selected" data-h="8">8h</span>
-        <span class="chip" data-h="12">12h</span>
-        <span class="chip" data-h="24">24h</span>
-      </div>
+    <!-- Painel Horário Fixo -->
+    <div id="painelFixo" class="painel visivel">
+      <label>🕐 Escolha o horário:</label>
+      <input type="time" id="horaFixa">
     </div>
-
-    <button class="btn" id="addBtn">➕ Adicionar lembrete</button>
-    <button class="btn btn-yellow" id="testBtn">🔊 Testar alarme</button>
+    
+    <!-- Painel Intervalo -->
+    <div id="painelIntervalo" class="painel">
+      <label>⏱️ Tomar a cada:</label>
+      <div class="intervalos">
+        <button class="intervalo-btn" onclick="selecionarIntervalo(4, this)">4h</button>
+        <button class="intervalo-btn" onclick="selecionarIntervalo(6, this)">6h</button>
+        <button class="intervalo-btn ativo" onclick="selecionarIntervalo(8, this)">8h</button>
+        <button class="intervalo-btn" onclick="selecionarIntervalo(12, this)">12h</button>
+        <button class="intervalo-btn" onclick="selecionarIntervalo(24, this)">24h</button>
+      </div>
+      <p style="font-size:12px; color:#666; margin-top:8px;">
+        ⏱️ Próximo alarme será calculado automaticamente
+      </p>
+    </div>
+    
+    <label>🔊 Som do alarme:</label>
+    <div class="sons-grid">
+      <button class="som-btn ativo" onclick="selecionarSom('beep', this)">🔔 Beep</button>
+      <button class="som-btn" onclick="selecionarSom('melodia', this)">🎵 Melodia</button>
+      <button class="som-btn" onclick="selecionarSom('sirene', this)">🚨 Sirene</button>
+      <button class="som-btn" onclick="selecionarSom('sino', this)">🛎️ Sino</button>
+      <button class="som-btn" onclick="selecionarSom('vibracao', this)">📳 Vibração</button>
+      <button class="som-btn" onclick="selecionarSom('eletronico', this)">🎹 Eletrônico</button>
+    </div>
+    
+    <button class="btn btn-primario" onclick="testarSom()">
+      🔊 Testar Som Selecionado
+    </button>
+    
+    <button class="btn btn-sucesso" onclick="adicionarLembrete()">
+      ➕ Adicionar Lembrete
+    </button>
   </div>
 
-  <div>
-    <h3>📌 Lembretes ativos: <span id="countBadge">0</span></h3>
-    <div id="listContainer"><div style="color:#7b98b3; padding:20px;">Nenhum lembrete.</div></div>
-    <button class="btn btn-red" id="stopAlarmBtn">🔕 Parar alarme</button>
-    <button class="btn btn-green" id="installBtn" style="display:none;">📲 Instalar App</button>
+  <!-- Seção: Lembretes Ativos -->
+  <div class="secao">
+    <h3>📌 Seus Lembretes <span id="contador" style="color:#667eea;">(0)</span></h3>
+    <div id="listaLembretes">
+      <p style="color:#999; text-align:center;">Nenhum lembrete adicionado</p>
+    </div>
   </div>
+
+  <!-- Botões de Controle -->
+  <button class="btn btn-perigo" onclick="pararAlarme()">
+    🔕 Parar Alarme Atual
+  </button>
+  
+  <button class="btn btn-info" onclick="testarAlarmeAgora()">
+    🧪 Testar Alarme Agora
+  </button>
+  
+  <button class="btn btn-alerta" onclick="limparTodos()">
+    🗑️ Limpar Todos os Lembretes
+  </button>
 </div>
 
 <script>
-  // Registrar Service Worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => {
-        console.log('✅ Service Worker registrado!');
-        document.getElementById('statusMsg').className = 'status success';
-        document.getElementById('statusMsg').textContent = '✅ Alarme funcionando - Pode desligar a tela';
-        
-        // Solicitar permissão de notificação
-        if (Notification.permission === 'default') {
-          Notification.requestPermission();
-        }
-      })
-      .catch(err => {
-        console.error('❌ Service Worker falhou:', err);
-        document.getElementById('statusMsg').className = 'status error';
-        document.getElementById('statusMsg').textContent = '❌ Erro no Service Worker';
-      });
+// ============ ESTADO DO APP ============
+let lembretes = [];
+let modoAtual = 'fixo'; // 'fixo' ou 'intervalo'
+let intervaloSelecionado = 8; // horas
+let somSelecionado = 'beep';
+let alarmeAtivo = false;
+let intervaloAlarme = null;
+let audioContext = null;
+
+// ============ CARREGAR DADOS ============
+try {
+  const dados = localStorage.getItem('app_remedios_completo');
+  if (dados) lembretes = JSON.parse(dados);
+} catch(e) {
+  lembretes = [];
+}
+
+// ============ FUNÇÕES DE SOM ============
+function getAudioContext() {
+  if (!audioContext || audioContext.state === 'closed') {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-
-  let reminders = JSON.parse(localStorage.getItem('alarms') || '[]');
-  let alarmCheckInterval = null;
-
-  function saveReminders() {
-    localStorage.setItem('alarms', JSON.stringify(reminders));
+  if (audioContext.state === 'suspended') {
+    audioContext.resume();
   }
+  return audioContext;
+}
 
-  function renderList() {
-    const container = document.getElementById('listContainer');
-    const badge = document.getElementById('countBadge');
+function tocarSom(tipo) {
+  try {
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
     
-    if (!reminders.length) {
-      container.innerHTML = '<div style="color:#7b98b3; padding:20px;">Nenhum lembrete.</div>';
-      badge.textContent = '0';
+    function beep(freq, inicio, duracao, tipoOnda = 'square', volume = 0.3) {
+      const osc = ctx.createOscillator();
+      const ganho = ctx.createGain();
+      osc.connect(ganho);
+      ganho.connect(ctx.destination);
+      osc.type = tipoOnda;
+      osc.frequency.value = freq;
+      ganho.gain.setValueAtTime(volume, inicio);
+      ganho.gain.exponentialRampToValueAtTime(0.001, inicio + duracao);
+      osc.start(inicio);
+      osc.stop(inicio + duracao);
+    }
+    
+    switch(tipo) {
+      case 'beep':
+        beep(880, now, 0.3);
+        beep(880, now + 0.4, 0.3);
+        beep(880, now + 0.8, 0.3);
+        break;
+        
+      case 'melodia':
+        beep(523, now, 0.2, 'sine', 0.4);
+        beep(659, now + 0.2, 0.2, 'sine', 0.4);
+        beep(784, now + 0.4, 0.3, 'sine', 0.4);
+        beep(1047, now + 0.6, 0.2, 'sine', 0.4);
+        break;
+        
+      case 'sirene':
+        for(let i = 0; i < 8; i++) {
+          beep(400 + (i * 100), now + (i * 0.15), 0.15, 'sawtooth', 0.3);
+        }
+        break;
+        
+      case 'sino':
+        beep(1200, now, 0.15, 'triangle', 0.5);
+        beep(1000, now + 0.15, 0.2, 'triangle', 0.4);
+        beep(800, now + 0.3, 0.25, 'triangle', 0.3);
+        break;
+        
+      case 'vibracao':
+        beep(100, now, 0.5, 'square', 0.8);
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+        break;
+        
+      case 'eletronico':
+        beep(440, now, 0.1, 'square', 0.3);
+        beep(660, now + 0.1, 0.1, 'square', 0.3);
+        beep(880, now + 0.2, 0.2, 'square', 0.3);
+        beep(1100, now + 0.3, 0.1, 'square', 0.3);
+        break;
+    }
+  } catch(e) {
+    console.log('Erro no som:', e);
+  }
+}
+
+// ============ FUNÇÕES DE NOTIFICAÇÃO ============
+function mostrarNotificacao(nome, hora) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    // Notificação principal
+    new Notification('💊 HORA DO REMÉDIO!', {
+      body: `${nome} - ${hora}\nToque para abrir o app`,
+      icon: '💊',
+      badge: '💊',
+      vibrate: [500, 200, 500, 200, 500],
+      requireInteraction: true,
+      silent: false,
+      tag: 'alarme-principal'
+    });
+    
+    // Notificação de reforço após 5 segundos
+    setTimeout(() => {
+      new Notification('🚨 NÃO ESQUEÇA O REMÉDIO!', {
+        body: `${nome} - Tome agora!`,
+        vibrate: [300, 100, 300, 100, 300],
+        requireInteraction: true,
+        tag: 'alarme-reforco'
+      });
+    }, 5000);
+  }
+}
+
+// ============ SISTEMA DE ALARME ============
+function iniciarAlarme(nome, hora) {
+  if (alarmeAtivo) return;
+  
+  alarmeAtivo = true;
+  
+  // Mostrar alerta visual
+  const alertaDiv = document.getElementById('alertaAlarme');
+  alertaDiv.style.display = 'block';
+  alertaDiv.textContent = `🚨 ${nome} - ${hora} 🚨`;
+  
+  // Função de disparo
+  function dispararAlarme() {
+    tocarSom(somSelecionado);
+    mostrarNotificacao(nome, hora);
+    
+    // Vibrar
+    if (navigator.vibrate) {
+      navigator.vibrate([500, 200, 500, 200, 500]);
+    }
+    
+    // Manter tela ativa
+    if ('wakeLock' in navigator) {
+      navigator.wakeLock.request('screen').catch(() => {});
+    }
+  }
+  
+  // Disparar imediatamente
+  dispararAlarme();
+  
+  // Repetir a cada 5 segundos por 2 minutos
+  let contador = 0;
+  intervaloAlarme = setInterval(() => {
+    contador++;
+    if (contador >= 24) { // 24 * 5 = 120 segundos
+      pararAlarme();
       return;
     }
-    
-    badge.textContent = reminders.length;
-    container.innerHTML = reminders.map(r => `
-      <div class="list-item">
-        <div>
-          <strong>💊 ${r.name}</strong><br>
-          <small>🕒 ${r.time}</small>
-        </div>
-        <div>
-          <button class="icon-btn" onclick="editReminder('${r.id}')">✏️</button>
-          <button class="icon-btn" onclick="deleteReminder('${r.id}')" style="color:red;">🗑️</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function editReminder(id) {
-    const rem = reminders.find(r => r.id === id);
-    if (!rem) return;
-    const newTime = prompt('Novo horário (HH:MM):', rem.time);
-    if (newTime && /^\d{2}:\d{2}$/.test(newTime)) {
-      rem.time = newTime;
-      saveReminders();
-      renderList();
-    }
-  }
-
-  function deleteReminder(id) {
-    reminders = reminders.filter(r => r.id !== id);
-    saveReminders();
-    renderList();
-  }
-
-  // Enviar alarmes para o Service Worker
-  function sendAlarmsToSW() {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'UPDATE_ALARMS',
-        alarms: reminders
-      });
-    }
-  }
-
-  document.getElementById('addBtn').addEventListener('click', () => {
-    const name = document.getElementById('medName').value.trim();
-    if (!name) return alert('Digite o nome do remédio');
-    
-    let time;
-    const mode = document.getElementById('modeFixed').classList.contains('active') ? 'fixed' : 'interval';
-    
-    if (mode === 'fixed') {
-      time = document.getElementById('medTime').value;
-      if (!time) return alert('Selecione o horário');
-    } else {
-      const interval = parseInt(document.querySelector('.chip.selected').dataset.h);
-      const d = new Date();
-      d.setMinutes(d.getMinutes() + interval * 60);
-      time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    }
-    
-    reminders.push({
-      id: Date.now().toString(),
-      name,
-      time,
-      created: new Date().toISOString()
-    });
-    
-    saveReminders();
-    renderList();
-    sendAlarmsToSW();
-    document.getElementById('medName').value = '';
-  });
-
-  document.getElementById('testBtn').addEventListener('click', () => {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'TEST_ALARM'
-      });
-      alert('🔊 Alarme de teste enviado! Verifique as notificações.');
-    } else {
-      alert('❌ Service Worker não está pronto. Recarregue a página.');
-    }
-  });
-
-  document.getElementById('stopAlarmBtn').addEventListener('click', () => {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'STOP_ALARM'
-      });
-    }
-    alert('✅ Alarme parado!');
-  });
-
-  // Modo
-  document.getElementById('modeFixed').addEventListener('click', function() {
-    this.classList.add('active');
-    document.getElementById('modeInterval').classList.remove('active');
-    document.getElementById('panelFixed').style.display = 'block';
-    document.getElementById('panelInterval').style.display = 'none';
-  });
-
-  document.getElementById('modeInterval').addEventListener('click', function() {
-    this.classList.add('active');
-    document.getElementById('modeFixed').classList.remove('active');
-    document.getElementById('panelFixed').style.display = 'none';
-    document.getElementById('panelInterval').style.display = 'block';
-  });
-
-  // Chips
-  document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', function() {
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-      this.classList.add('selected');
-    });
-  });
-
-  // Inicializar
-  renderList();
-  document.getElementById('medTime').value = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
+    dispararAlarme();
+  }, 5000);
   
-  // Enviar alarmes para SW a cada 30 segundos
-  setInterval(sendAlarmsToSW, 30000);
-  sendAlarmsToSW();
+  atualizarStatus('🚨 Alarme ativo: ' + nome, 'status-erro');
+}
 
-  // Instalar PWA
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    window.deferredPrompt = e;
-    document.getElementById('installBtn').style.display = 'block';
-  });
+function pararAlarme() {
+  alarmeAtivo = false;
+  
+  if (intervaloAlarme) {
+    clearInterval(intervaloAlarme);
+    intervaloAlarme = null;
+  }
+  
+  document.getElementById('alertaAlarme').style.display = 'none';
+  atualizarStatus('✅ Alarme parado', 'status-ok');
+}
 
-  document.getElementById('installBtn').addEventListener('click', () => {
-    if (window.deferredPrompt) {
-      window.deferredPrompt.prompt();
+// ============ VERIFICAÇÃO DE HORÁRIOS ============
+function verificarAlarmes() {
+  if (alarmeAtivo) return;
+  
+  const agora = new Date();
+  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
+                    String(agora.getMinutes()).padStart(2, '0');
+  
+  lembretes.forEach(lembrete => {
+    if (lembrete.hora === horaAtual) {
+      console.log('🚨 Alarme disparado:', lembrete.nome);
+      iniciarAlarme(lembrete.nome, lembrete.hora);
     }
   });
+}
+
+// ============ GERENCIAR LEMBRETES ============
+function adicionarLembrete() {
+  const nome = document.getElementById('nomeRemedio').value.trim();
+  
+  if (!nome) {
+    alert('⚠️ Digite o nome do remédio!');
+    return;
+  }
+  
+  let hora;
+  
+  if (modoAtual === 'fixo') {
+    hora = document.getElementById('horaFixa').value;
+    if (!hora) {
+      alert('⚠️ Selecione o horário!');
+      return;
+    }
+  } else {
+    // Modo intervalo
+    const agora = new Date();
+    agora.setMinutes(agora.getMinutes() + (intervaloSelecionado * 60));
+    hora = String(agora.getHours()).padStart(2, '0') + ':' + 
+           String(agora.getMinutes()).padStart(2, '0');
+  }
+  
+  // Verificar duplicata
+  const duplicata = lembretes.find(l => l.nome === nome && l.hora === hora);
+  if (duplicata) {
+    alert('⚠️ Este lembrete já existe!');
+    return;
+  }
+  
+  const novoLembrete = {
+    id: Date.now(),
+    nome: nome,
+    hora: hora,
+    intervalo: modoAtual === 'intervalo' ? intervaloSelecionado + 'h' : null,
+    som: somSelecionado
+  };
+  
+  lembretes.push(novoLembrete);
+  salvarDados();
+  atualizarLista();
+  
+  // Limpar campo
+  document.getElementById('nomeRemedio').value = '';
+  
+  atualizarStatus('✅ Lembrete adicionado! Próximo alarme: ' + hora, 'status-ok');
+}
+
+function editarLembrete(id) {
+  const lembrete = lembretes.find(l => l.id === id);
+  if (!lembrete) return;
+  
+  const novaHora = prompt('Editar horário (HH:MM):', lembrete.hora);
+  if (novaHora && /^\d{2}:\d{2}$/.test(novaHora)) {
+    lembrete.hora = novaHora;
+    salvarDados();
+    atualizarLista();
+    atualizarStatus('✅ Horário atualizado: ' + novaHora, 'status-ok');
+  } else if (novaHora) {
+    alert('⚠️ Formato inválido! Use HH:MM (ex: 14:30)');
+  }
+}
+
+function desligarAlarmeIndividual(id) {
+  const lembrete = lembretes.find(l => l.id === id);
+  if (lembrete && alarmeAtivo) {
+    pararAlarme();
+    atualizarStatus('🔕 Alarme de ' + lembrete.nome + ' desligado', 'status-aviso');
+  }
+}
+
+function removerLembrete(id) {
+  if (confirm('Tem certeza que deseja remover este lembrete?')) {
+    lembretes = lembretes.filter(l => l.id !== id);
+    salvarDados();
+    atualizarLista();
+    atualizarStatus('🗑️ Lembrete removido', 'status-aviso');
+  }
+}
+
+function limparTodos() {
+  if (lembretes.length === 0) {
+    alert('Não há lembretes para remover.');
+    return;
+  }
+  
+  if (confirm('Tem certeza que deseja remover TODOS os lembretes?')) {
+    lembretes = [];
+    salvarDados();
+    atualizarLista();
+    pararAlarme();
+    atualizarStatus('🗑️ Todos os lembretes foram removidos', 'status-aviso');
+  }
+}
+
+// ============ INTERFACE ============
+function mudarModo(modo) {
+  modoAtual = modo;
+  
+  document.getElementById('modoFixo').classList.toggle('ativo', modo === 'fixo');
+  document.getElementById('modoIntervalo').classList.toggle('ativo', modo === 'intervalo');
+  document.getElementById('painelFixo').classList.toggle('visivel', modo === 'fixo');
+  document.getElementById('painelIntervalo').classList.toggle('visivel', modo === 'intervalo');
+}
+
+function selecionarIntervalo(horas, botao) {
+  intervaloSelecionado = horas;
+  document.querySelectorAll('.intervalo-btn').forEach(b => b.classList.remove('ativo'));
+  botao.classList.add('ativo');
+}
+
+function selecionarSom(som, botao) {
+  somSelecionado = som;
+  document.querySelectorAll('.som-btn').forEach(b => b.classList.remove('ativo'));
+  botao.classList.add('ativo');
+}
+
+function testarSom() {
+  tocarSom(somSelecionado);
+  atualizarStatus('🔊 Tocando: ' + somSelecionado, 'status-aviso');
+}
+
+function testarAlarmeAgora() {
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        iniciarAlarme('🧪 TESTE', new Date().toLocaleTimeString());
+      } else {
+        alert('⚠️ Ative as notificações primeiro!');
+      }
+    });
+  } else {
+    iniciarAlarme('🧪 TESTE', new Date().toLocaleTimeString());
+  }
+}
+
+function atualizarStatus(mensagem, classe) {
+  const status = document.getElementById('statusSistema');
+  status.textContent = mensagem;
+  status.className = 'status-badge ' + classe;
+}
+
+function atualizarLista() {
+  const div = document.getElementById('listaLembretes');
+  const contador = document.getElementById('contador');
+  
+  contador.textContent = '(' + lembretes.length + ')';
+  
+  if (lembretes.length === 0) {
+    div.innerHTML = '<p style="color:#999; text-align:center;">Nenhum lembrete adicionado</p>';
+    return;
+  }
+  
+  // Ordenar por horário
+  lembretes.sort((a, b) => a.hora.localeCompare(b.hora));
+  
+  div.innerHTML = lembretes.map(l => `
+    <div class="lembrete-card">
+      <div class="lembrete-info">
+        <h4>💊 ${l.nome}</h4>
+        <span class="lembrete-hora">🕒 ${l.hora}</span>
+        ${l.intervalo ? `<span class="lembrete-hora" style="margin-left:5px;">🔁 ${l.intervalo}</span>` : ''}
+        ${l.som ? `<span class="lembrete-hora" style="margin-left:5px;">🔊 ${l.som}</span>` : ''}
+      </div>
+      <div class="lembrete-acoes">
+        <button class="btn-pequeno btn-editar" onclick="editarLembrete(${l.id})">✏️</button>
+        <button class="btn-pequeno btn-desligar" onclick="desligarAlarmeIndividual(${l.id})">🔕</button>
+        <button class="btn-pequeno btn-excluir" onclick="removerLembrete(${l.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ SALVAR/CARREGAR ============
+function salvarDados() {
+  localStorage.setItem('app_remedios_completo', JSON.stringify(lembretes));
+}
+
+// ============ INICIALIZAÇÃO ============
+function iniciar() {
+  // Configurar hora atual
+  const agora = new Date();
+  document.getElementById('horaFixa').value = 
+    String(agora.getHours()).padStart(2, '0') + ':' + 
+    String(agora.getMinutes()).padStart(2, '0');
+  
+  // Solicitar permissão de notificação
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+  
+  // Atualizar lista
+  atualizarLista();
+  
+  // Verificar alarmes a cada 15 segundos
+  setInterval(verificarAlarmes, 15000);
+  
+  // Primeira verificação
+  verificarAlarmes();
+  
+  // Tentar manter tela ativa
+  if ('wakeLock' in navigator) {
+    setInterval(() => {
+      navigator.wakeLock.request('screen').catch(() => {});
+    }, 60000);
+  }
+  
+  atualizarStatus('✅ Sistema funcionando! Verificando a cada 15s', 'status-ok');
+}
+
+// Iniciar o app
+iniciar();
 </script>
+
 </body>
 </html>
