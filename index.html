@@ -230,6 +230,8 @@
       font-size: 14px;
       color: #495057;
       display: inline-block;
+      margin-right: 5px;
+      margin-top: 3px;
     }
     
     .lembrete-acoes {
@@ -257,6 +259,27 @@
     
     .painel.visivel {
       display: block;
+    }
+    
+    .info-box {
+      background: #e7f3ff;
+      border-left: 4px solid #2196F3;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #0d47a1;
+    }
+    
+    .proximo-alarme {
+      background: #f3e5f5;
+      border-left: 4px solid #9c27b0;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #4a148c;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -295,13 +318,16 @@
     
     <!-- Painel Horário Fixo -->
     <div id="painelFixo" class="painel visivel">
-      <label>🕐 Escolha o horário:</label>
+      <label>🕐 Horário do alarme:</label>
       <input type="time" id="horaFixa">
     </div>
     
     <!-- Painel Intervalo -->
     <div id="painelIntervalo" class="painel">
-      <label>⏱️ Tomar a cada:</label>
+      <label>🕐 Horário de início:</label>
+      <input type="time" id="horaInicioIntervalo">
+      
+      <label>⏱️ Repetir a cada:</label>
       <div class="intervalos">
         <button class="intervalo-btn" onclick="selecionarIntervalo(4, this)">4h</button>
         <button class="intervalo-btn" onclick="selecionarIntervalo(6, this)">6h</button>
@@ -309,9 +335,10 @@
         <button class="intervalo-btn" onclick="selecionarIntervalo(12, this)">12h</button>
         <button class="intervalo-btn" onclick="selecionarIntervalo(24, this)">24h</button>
       </div>
-      <p style="font-size:12px; color:#666; margin-top:8px;">
-        ⏱️ Próximo alarme será calculado automaticamente
-      </p>
+      
+      <div id="infoProximoAlarme" class="proximo-alarme" style="display:none;">
+        📅 Próximos alarmes calculados a partir do horário de início
+      </div>
     </div>
     
     <label>🔊 Som do alarme:</label>
@@ -358,8 +385,8 @@
 <script>
 // ============ ESTADO DO APP ============
 let lembretes = [];
-let modoAtual = 'fixo'; // 'fixo' ou 'intervalo'
-let intervaloSelecionado = 8; // horas
+let modoAtual = 'fixo';
+let intervaloSelecionado = 8;
 let somSelecionado = 'beep';
 let alarmeAtivo = false;
 let intervaloAlarme = null;
@@ -367,7 +394,7 @@ let audioContext = null;
 
 // ============ CARREGAR DADOS ============
 try {
-  const dados = localStorage.getItem('app_remedios_completo');
+  const dados = localStorage.getItem('app_remedios_completo_v2');
   if (dados) lembretes = JSON.parse(dados);
 } catch(e) {
   lembretes = [];
@@ -448,7 +475,6 @@ function tocarSom(tipo) {
 // ============ FUNÇÕES DE NOTIFICAÇÃO ============
 function mostrarNotificacao(nome, hora) {
   if ('Notification' in window && Notification.permission === 'granted') {
-    // Notificação principal
     new Notification('💊 HORA DO REMÉDIO!', {
       body: `${nome} - ${hora}\nToque para abrir o app`,
       icon: '💊',
@@ -459,7 +485,6 @@ function mostrarNotificacao(nome, hora) {
       tag: 'alarme-principal'
     });
     
-    // Notificação de reforço após 5 segundos
     setTimeout(() => {
       new Notification('🚨 NÃO ESQUEÇA O REMÉDIO!', {
         body: `${nome} - Tome agora!`,
@@ -477,35 +502,29 @@ function iniciarAlarme(nome, hora) {
   
   alarmeAtivo = true;
   
-  // Mostrar alerta visual
   const alertaDiv = document.getElementById('alertaAlarme');
   alertaDiv.style.display = 'block';
   alertaDiv.textContent = `🚨 ${nome} - ${hora} 🚨`;
   
-  // Função de disparo
   function dispararAlarme() {
     tocarSom(somSelecionado);
     mostrarNotificacao(nome, hora);
     
-    // Vibrar
     if (navigator.vibrate) {
       navigator.vibrate([500, 200, 500, 200, 500]);
     }
     
-    // Manter tela ativa
     if ('wakeLock' in navigator) {
       navigator.wakeLock.request('screen').catch(() => {});
     }
   }
   
-  // Disparar imediatamente
   dispararAlarme();
   
-  // Repetir a cada 5 segundos por 2 minutos
   let contador = 0;
   intervaloAlarme = setInterval(() => {
     contador++;
-    if (contador >= 24) { // 24 * 5 = 120 segundos
+    if (contador >= 24) {
       pararAlarme();
       return;
     }
@@ -536,9 +555,29 @@ function verificarAlarmes() {
                     String(agora.getMinutes()).padStart(2, '0');
   
   lembretes.forEach(lembrete => {
+    // Verificar o horário atual
     if (lembrete.hora === horaAtual) {
       console.log('🚨 Alarme disparado:', lembrete.nome);
       iniciarAlarme(lembrete.nome, lembrete.hora);
+    }
+    
+    // Se for intervalo, calcular próximos horários e verificar
+    if (lembrete.intervalo && lembrete.horaInicio) {
+      const horaInicio = lembrete.horaInicio;
+      const intervalo = lembrete.intervalo;
+      
+      // Calcular se a hora atual corresponde a algum múltiplo do intervalo
+      const [hInicio, mInicio] = horaInicio.split(':').map(Number);
+      const inicioMinutos = hInicio * 60 + mInicio;
+      const atualMinutos = new Date().getHours() * 60 + new Date().getMinutes();
+      
+      let diferenca = atualMinutos - inicioMinutos;
+      if (diferenca < 0) diferenca += 24 * 60; // Ajustar para próximo dia
+      
+      if (diferenca % (intervalo * 60) === 0) {
+        console.log('🚨 Alarme por intervalo:', lembrete.nome);
+        iniciarAlarme(lembrete.nome, horaAtual);
+      }
     }
   });
 }
@@ -552,7 +591,7 @@ function adicionarLembrete() {
     return;
   }
   
-  let hora;
+  let hora, horaInicio = null, intervalo = null;
   
   if (modoAtual === 'fixo') {
     hora = document.getElementById('horaFixa').value;
@@ -561,11 +600,15 @@ function adicionarLembrete() {
       return;
     }
   } else {
-    // Modo intervalo
-    const agora = new Date();
-    agora.setMinutes(agora.getMinutes() + (intervaloSelecionado * 60));
-    hora = String(agora.getHours()).padStart(2, '0') + ':' + 
-           String(agora.getMinutes()).padStart(2, '0');
+    // Modo intervalo - AGORA COM HORA DE INÍCIO
+    horaInicio = document.getElementById('horaInicioIntervalo').value;
+    if (!horaInicio) {
+      alert('⚠️ Selecione o horário de início!');
+      return;
+    }
+    
+    hora = horaInicio; // O primeiro alarme é no horário de início
+    intervalo = intervaloSelecionado;
   }
   
   // Verificar duplicata
@@ -579,7 +622,8 @@ function adicionarLembrete() {
     id: Date.now(),
     nome: nome,
     hora: hora,
-    intervalo: modoAtual === 'intervalo' ? intervaloSelecionado + 'h' : null,
+    horaInicio: horaInicio,
+    intervalo: intervalo,
     som: somSelecionado
   };
   
@@ -587,19 +631,32 @@ function adicionarLembrete() {
   salvarDados();
   atualizarLista();
   
-  // Limpar campo
   document.getElementById('nomeRemedio').value = '';
   
-  atualizarStatus('✅ Lembrete adicionado! Próximo alarme: ' + hora, 'status-ok');
+  if (modoAtual === 'intervalo') {
+    atualizarStatus('✅ Lembrete adicionado! Início: ' + horaInicio + ' a cada ' + intervalo + 'h', 'status-ok');
+  } else {
+    atualizarStatus('✅ Lembrete adicionado! Alarme: ' + hora, 'status-ok');
+  }
 }
 
 function editarLembrete(id) {
   const lembrete = lembretes.find(l => l.id === id);
   if (!lembrete) return;
   
-  const novaHora = prompt('Editar horário (HH:MM):', lembrete.hora);
+  let mensagem = 'Editar horário (HH:MM):';
+  if (lembrete.intervalo) {
+    mensagem = 'Editar horário de início (HH:MM):';
+  }
+  
+  const novaHora = prompt(mensagem, lembrete.horaInicio || lembrete.hora);
   if (novaHora && /^\d{2}:\d{2}$/.test(novaHora)) {
-    lembrete.hora = novaHora;
+    if (lembrete.intervalo) {
+      lembrete.horaInicio = novaHora;
+      lembrete.hora = novaHora; // Atualiza também a hora atual
+    } else {
+      lembrete.hora = novaHora;
+    }
     salvarDados();
     atualizarLista();
     atualizarStatus('✅ Horário atualizado: ' + novaHora, 'status-ok');
@@ -654,6 +711,31 @@ function selecionarIntervalo(horas, botao) {
   intervaloSelecionado = horas;
   document.querySelectorAll('.intervalo-btn').forEach(b => b.classList.remove('ativo'));
   botao.classList.add('ativo');
+  
+  // Mostrar informação do próximo alarme
+  const horaInicio = document.getElementById('horaInicioIntervalo').value;
+  if (horaInicio) {
+    mostrarProximoAlarme(horaInicio, horas);
+  }
+}
+
+function mostrarProximoAlarme(horaInicio, intervalo) {
+  const [h, m] = horaInicio.split(':').map(Number);
+  const inicio = new Date();
+  inicio.setHours(h, m, 0);
+  
+  const proximos = [];
+  for (let i = 0; i < 3; i++) {
+    const proximo = new Date(inicio.getTime() + (i * intervalo * 60 * 60 * 1000));
+    proximos.push(
+      String(proximo.getHours()).padStart(2, '0') + ':' + 
+      String(proximo.getMinutes()).padStart(2, '0')
+    );
+  }
+  
+  const infoDiv = document.getElementById('infoProximoAlarme');
+  infoDiv.style.display = 'block';
+  infoDiv.innerHTML = '📅 Próximos alarmes: <strong>' + proximos.join(' → ') + '</strong>';
 }
 
 function selecionarSom(som, botao) {
@@ -698,16 +780,18 @@ function atualizarLista() {
     return;
   }
   
-  // Ordenar por horário
   lembretes.sort((a, b) => a.hora.localeCompare(b.hora));
   
   div.innerHTML = lembretes.map(l => `
     <div class="lembrete-card">
       <div class="lembrete-info">
         <h4>💊 ${l.nome}</h4>
-        <span class="lembrete-hora">🕒 ${l.hora}</span>
-        ${l.intervalo ? `<span class="lembrete-hora" style="margin-left:5px;">🔁 ${l.intervalo}</span>` : ''}
-        ${l.som ? `<span class="lembrete-hora" style="margin-left:5px;">🔊 ${l.som}</span>` : ''}
+        ${l.intervalo ? 
+          `<span class="lembrete-hora">🕐 Início: ${l.horaInicio}</span>
+           <span class="lembrete-hora">🔁 A cada ${l.intervalo}h</span>` :
+          `<span class="lembrete-hora">🕒 ${l.hora}</span>`
+        }
+        ${l.som ? `<span class="lembrete-hora">🔊 ${l.som}</span>` : ''}
       </div>
       <div class="lembrete-acoes">
         <button class="btn-pequeno btn-editar" onclick="editarLembrete(${l.id})">✏️</button>
@@ -718,34 +802,41 @@ function atualizarLista() {
   `).join('');
 }
 
+// ============ EVENTOS DOS INPUTS ============
+document.addEventListener('DOMContentLoaded', function() {
+  // Atualizar informação de próximo alarme quando mudar hora de início
+  const horaInicioInput = document.getElementById('horaInicioIntervalo');
+  if (horaInicioInput) {
+    horaInicioInput.addEventListener('change', function() {
+      if (this.value && modoAtual === 'intervalo') {
+        mostrarProximoAlarme(this.value, intervaloSelecionado);
+      }
+    });
+  }
+});
+
 // ============ SALVAR/CARREGAR ============
 function salvarDados() {
-  localStorage.setItem('app_remedios_completo', JSON.stringify(lembretes));
+  localStorage.setItem('app_remedios_completo_v2', JSON.stringify(lembretes));
 }
 
 // ============ INICIALIZAÇÃO ============
 function iniciar() {
-  // Configurar hora atual
   const agora = new Date();
-  document.getElementById('horaFixa').value = 
-    String(agora.getHours()).padStart(2, '0') + ':' + 
-    String(agora.getMinutes()).padStart(2, '0');
+  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
+                    String(agora.getMinutes()).padStart(2, '0');
   
-  // Solicitar permissão de notificação
+  document.getElementById('horaFixa').value = horaAtual;
+  document.getElementById('horaInicioIntervalo').value = horaAtual;
+  
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
   
-  // Atualizar lista
   atualizarLista();
-  
-  // Verificar alarmes a cada 15 segundos
   setInterval(verificarAlarmes, 15000);
-  
-  // Primeira verificação
   verificarAlarmes();
   
-  // Tentar manter tela ativa
   if ('wakeLock' in navigator) {
     setInterval(() => {
       navigator.wakeLock.request('screen').catch(() => {});
@@ -755,7 +846,6 @@ function iniciar() {
   atualizarStatus('✅ Sistema funcionando! Verificando a cada 15s', 'status-ok');
 }
 
-// Iniciar o app
 iniciar();
 </script>
 
