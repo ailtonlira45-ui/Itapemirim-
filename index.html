@@ -6,12 +6,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>💊 Remédio 2º Plano | Alarme Garantido</title>
+  <title>💊 Alarme de Remédio | Sons Personalizados</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: linear-gradient(150deg, #eef6ff 0%, #d4e7ff 100%);
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      background: linear-gradient(150deg, #e8f4ff 0%, #d0e3ff 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -20,260 +20,250 @@
       touch-action: manipulation;
     }
     .app-container {
-      max-width: 560px;
+      max-width: 580px;
       width: 100%;
       background: #ffffff;
       border-radius: 42px;
-      box-shadow: 0 30px 55px rgba(0, 40, 70, 0.28);
-      padding: 26px 20px 30px;
-      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 30px 60px rgba(0, 40, 80, 0.25);
+      padding: 24px 20px 30px;
     }
-    h1 { display: flex; align-items: center; gap: 8px; font-size: 2rem; font-weight: 700; color: #083c58; }
-    .subtitle { color: #1f5b83; font-weight: 500; margin-bottom: 18px; padding-left: 12px; border-left: 5px solid #2b8fd9; background: linear-gradient(to right, #e1f0fd, transparent); }
-    .bg-badge {
-      background: #1e7e34; color: white; font-size: 0.7rem; padding: 3px 12px; border-radius: 20px; margin-left: 8px; font-weight: bold;
-    }
-    .card { background: #f6faff; border-radius: 28px; padding: 18px; margin-bottom: 22px; box-shadow: 0 8px 20px rgba(0,120,180,0.08); border: 1px solid #cee5fa; }
-    .input-group { margin-bottom: 14px; }
-    label { font-weight: 700; font-size: 0.85rem; color: #0e4b6e; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-    .row-input { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    input, select { background: white; border: 1.5px solid #c7def7; border-radius: 20px; padding: 12px 14px; font-size: 1rem; outline: none; font-weight: 500; color: #0b2f44; flex: 1 1 130px; }
-    input:focus, select:focus { border-color: #0f7bc2; box-shadow: 0 0 0 4px rgba(15,123,194,0.2); }
-    .mode-selector { display: flex; gap: 12px; margin-bottom: 10px; }
-    .mode-btn { flex: 1; background: #e9f2fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; color: #1d4b6b; cursor: pointer; text-align: center; }
-    .mode-btn.active { background: #0f7bc2; color: white; border-color: #0a5b8c; }
-    .interval-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-    .interval-chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; color: #134b6e; }
-    .interval-chip.selected { background: #1e81c4; color: white; border-color: #0e5b8c; }
-    .btn { background: linear-gradient(135deg, #208ad4, #0d5a92); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 10px 18px rgba(10,70,120,0.3); flex: 1; }
-    .btn-outline { background: white; color: #0f5b8c; border: 1.5px solid #1e81c4; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .list-item { background: white; border-radius: 22px; padding: 14px; margin-bottom: 12px; border: 1px solid #dbecfb; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-    .med-name { font-weight: 800; font-size: 1.1rem; color: #043753; }
-    .med-schedule { background: #e2efff; padding: 4px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
-    .action-btns { display: flex; gap: 6px; }
-    .icon-btn { background: white; border: 1px solid #d2e5fa; font-size: 1.1rem; padding: 8px 12px; border-radius: 30px; cursor: pointer; font-weight: 600; }
-    .delete-btn { color: #b13b3b; }
-    .alarm-off-btn { background: #ffe9e9; border-color: #f5c6c6; color: #b33a3a; }
-    .empty-message { color: #6287a5; padding: 28px; text-align: center; }
-    .footer-note { font-size: 0.7rem; color: #4a6f8c; text-align: center; margin-top: 8px; }
+    h1 { display: flex; align-items: center; gap: 10px; font-size: 1.9rem; font-weight: 800; color: #063251; margin-bottom: 4px; }
+    .badge { background: #0f7bc2; color: white; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
+    .subtitle { color: #1e5a7a; margin-bottom: 20px; padding-left: 14px; border-left: 4px solid #1e81c4; font-weight: 500; }
+    .card { background: #f4f9ff; border-radius: 28px; padding: 18px; margin-bottom: 20px; border: 1px solid #d2e6fa; }
+    label { font-weight: 700; font-size: 0.85rem; color: #0c4260; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+    input, select { width: 100%; background: white; border: 1.5px solid #c5ddf7; border-radius: 18px; padding: 12px 14px; font-size: 1rem; outline: none; margin-bottom: 12px; }
+    .mode-selector { display: flex; gap: 10px; margin-bottom: 14px; }
+    .mode-btn { flex: 1; background: #e3f0fc; border: 2px solid transparent; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer; text-align: center; }
+    .mode-btn.active { background: #0f7bc2; color: white; }
+    .interval-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .chip { background: white; border: 1.5px solid #b9d6f5; border-radius: 24px; padding: 8px 16px; font-weight: 700; cursor: pointer; }
+    .chip.selected { background: #1e81c4; color: white; }
+    .sound-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-bottom: 14px; }
+    .sound-option { background: white; border: 2px solid #d2e6fa; border-radius: 18px; padding: 10px 6px; text-align: center; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
+    .sound-option.selected { border-color: #0f7bc2; background: #e6f4ff; }
+    .btn { background: linear-gradient(135deg, #1e8ad4, #0c558b); border: none; border-radius: 40px; padding: 14px 20px; font-weight: 700; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; width: 100%; margin-top: 8px; }
+    .btn-outline { background: white; color: #0f5b8c; border: 1.5px solid #1e81c4; }
+    .list-item { background: white; border-radius: 20px; padding: 14px; margin-bottom: 10px; border: 1px solid #daeafa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .med-info { font-weight: 700; }
+    .action-row { display: flex; gap: 6px; }
+    .icon-btn { background: #f0f6fe; border: 1px solid #cde2fa; border-radius: 20px; padding: 6px 12px; cursor: pointer; font-weight: 600; }
+    .delete-btn { color: #c44; }
+    .test-btn { background: #fbbf24; color: #000; border: none; }
   </style>
 </head>
 <body>
 <div class="app-container">
-  <h1>💊 Remédio 2º Plano <span class="bg-badge">tela desligada</span></h1>
-  <div class="subtitle">⏱️ Alarme toca mesmo com celular bloqueado</div>
+  <h1>💊 Alarme Remédio <span class="badge">2º plano</span></h1>
+  <div class="subtitle">🔊 Sons diferentes · Funciona com tela apagada</div>
 
   <div class="card">
-    <div class="input-group">
-      <label>📋 Nome do remédio</label>
-      <input type="text" id="medName" placeholder="Ex: Paracetamol" autocomplete="off" maxlength="40">
-    </div>
+    <label>📋 Nome do remédio</label>
+    <input type="text" id="medName" placeholder="Ex: Dipirona" autocomplete="off">
+
     <div class="mode-selector">
       <button id="modeFixed" class="mode-btn active">🕒 Horário fixo</button>
       <button id="modeInterval" class="mode-btn">🔁 Intervalo</button>
     </div>
-    <div id="panelFixedTime">
-      <div class="input-group"><label>⏰ Horário</label><input type="time" id="medTimeFixed"></div>
+
+    <div id="panelFixed">
+      <label>⏰ Horário do alarme</label>
+      <input type="time" id="medTime">
     </div>
     <div id="panelInterval" style="display:none;">
-      <label>⏳ A cada:</label>
+      <label>⏳ Tomar a cada:</label>
       <div class="interval-options">
-        <span class="interval-chip" data-hours="4">4h</span>
-        <span class="interval-chip" data-hours="6">6h</span>
-        <span class="interval-chip selected" data-hours="8">8h</span>
-        <span class="interval-chip" data-hours="12">12h</span>
-        <span class="interval-chip" data-hours="24">24h</span>
+        <span class="chip" data-h="4">4h</span><span class="chip" data-h="6">6h</span>
+        <span class="chip selected" data-h="8">8h</span><span class="chip" data-h="12">12h</span><span class="chip" data-h="24">24h</span>
       </div>
     </div>
-    <button class="btn" id="addReminderBtn" style="margin-top:14px;">➕ Adicionar</button>
+
+    <label>🔊 Som do alarme</label>
+    <div class="sound-grid" id="soundGrid">
+      <div class="sound-option selected" data-sound="beep">🔔 Beep</div>
+      <div class="sound-option" data-sound="melody">🎵 Melodia</div>
+      <div class="sound-option" data-sound="siren">🚨 Sirene</div>
+      <div class="sound-option" data-sound="bell">🛎️ Sino</div>
+      <div class="sound-option" data-sound="buzz">📳 Vibração</div>
+    </div>
+    <button class="btn" id="addBtn">➕ Adicionar lembrete</button>
+    <button class="btn test-btn" id="testSoundBtn" style="margin-top:6px;">🔊 Testar som selecionado</button>
   </div>
 
   <div>
-    <div style="display:flex; justify-content:space-between;"><h3>📌 Lembretes</h3><span id="activeCount">0</span></div>
-    <div id="remindersList"><div class="empty-message">Nenhum lembrete.</div></div>
-    <div style="display:flex; gap:10px; margin-top:12px;">
-      <button class="btn btn-outline" id="clearAllBtn">🗑️ Limpar</button>
-      <button class="btn btn-outline" id="stopAllAlarmsBtn">🔕 Silenciar</button>
+    <h3>📌 Seus lembretes <span id="countBadge">0</span></h3>
+    <div id="listContainer"><div style="color:#7b98b3; padding:20px;">Nenhum.</div></div>
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button class="btn btn-outline" id="clearBtn">🗑️ Limpar</button>
+      <button class="btn btn-outline" id="silenceBtn">🔕 Parar alarme</button>
     </div>
   </div>
-  <div class="footer-note">🔒 Com a tela apagada, o som e a notificação aparecerão.</div>
 </div>
 
 <script>
   (function() {
-    const STORAGE_KEY = 'bg_medicine_reminders';
+    const STORE = 'med_alarms_v2';
     let reminders = [];
-    let currentMode = 'fixed';
-    let selectedIntervalHours = 8;
-    let wakeLock = null;
-    let intervalCheckerId = null;
+    let mode = 'fixed';
+    let intervalHours = 8;
+    let selectedSound = 'beep';
+    let alarmOscillators = [];
+    let alarmInterval = null;
+    let currentAlarmId = null;
 
     // Elementos
-    const medNameInput = document.getElementById('medName');
-    const medTimeFixed = document.getElementById('medTimeFixed');
-    const modeFixedBtn = document.getElementById('modeFixed');
-    const modeIntervalBtn = document.getElementById('modeInterval');
-    const panelFixed = document.getElementById('panelFixedTime');
+    const nameInp = document.getElementById('medName');
+    const timeInp = document.getElementById('medTime');
+    const fixedBtn = document.getElementById('modeFixed');
+    const intervalBtn = document.getElementById('modeInterval');
+    const panelFixed = document.getElementById('panelFixed');
     const panelInterval = document.getElementById('panelInterval');
-    const addBtn = document.getElementById('addReminderBtn');
-    const remindersListDiv = document.getElementById('remindersList');
-    const clearAllBtn = document.getElementById('clearAllBtn');
-    const stopAllAlarmsBtn = document.getElementById('stopAllAlarmsBtn');
-    const activeCountSpan = document.getElementById('activeCount');
-    const intervalChips = document.querySelectorAll('.interval-chip');
-
-    // Service Worker
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('data:application/javascript,' + encodeURIComponent(
-          `self.addEventListener('install', e => self.skipWaiting());
-           self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-           self.addEventListener('message', e => {
-             if (e.data && e.data.action === 'triggerAlarm') {
-               const { name, time } = e.data;
-               self.registration.showNotification('💊 Hora do remédio: ' + name, {
-                 body: 'Tomar agora • ' + time,
-                 icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="45" fill="%231e81c4"/%3E%3Ctext x="50" y="70" font-size="60" text-anchor="middle" fill="white"%3E💊%3C/text%3E%3C/svg%3E',
-                 vibrate: [200, 100, 200, 100, 200],
-                 tag: 'med-reminder',
-                 requireInteraction: true
-               });
-             }
-           });`
-        )).then(reg => console.log('SW registrado')).catch(() => {});
-      }
-    }
-
-    function requestWakeLock() {
-      if ('wakeLock' in navigator) {
-        navigator.wakeLock.request('screen').then(lock => {
-          wakeLock = lock;
-          wakeLock.addEventListener('release', () => {});
-        }).catch(() => {});
-      }
-    }
+    const addBtn = document.getElementById('addBtn');
+    const listContainer = document.getElementById('listContainer');
+    const countBadge = document.getElementById('countBadge');
+    const clearBtn = document.getElementById('clearBtn');
+    const silenceBtn = document.getElementById('silenceBtn');
+    const testBtn = document.getElementById('testSoundBtn');
+    const soundGrid = document.getElementById('soundGrid');
 
     // Modo
-    function setMode(mode) {
-      currentMode = mode;
-      modeFixedBtn.classList.toggle('active', mode==='fixed');
-      modeIntervalBtn.classList.toggle('active', mode==='interval');
-      panelFixed.style.display = mode==='fixed' ? 'block' : 'none';
-      panelInterval.style.display = mode==='interval' ? 'block' : 'none';
-    }
-    modeFixedBtn.onclick = ()=> setMode('fixed');
-    modeIntervalBtn.onclick = ()=> setMode('interval');
-    intervalChips.forEach(c => c.onclick = function(){
-      intervalChips.forEach(c=>c.classList.remove('selected'));
+    fixedBtn.onclick = ()=> { mode='fixed'; fixedBtn.classList.add('active'); intervalBtn.classList.remove('active'); panelFixed.style.display='block'; panelInterval.style.display='none'; };
+    intervalBtn.onclick = ()=> { mode='interval'; intervalBtn.classList.add('active'); fixedBtn.classList.remove('active'); panelFixed.style.display='none'; panelInterval.style.display='block'; };
+
+    // Interval chips
+    document.querySelectorAll('.chip').forEach(c => c.onclick = function(){
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
       this.classList.add('selected');
-      selectedIntervalHours = parseInt(this.dataset.hours);
+      intervalHours = parseInt(this.dataset.h);
     });
 
-    function load() {
-      try { reminders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { reminders = []; }
-    }
-    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders)); }
+    // Som
+    soundGrid.querySelectorAll('.sound-option').forEach(opt => opt.onclick = function(){
+      soundGrid.querySelectorAll('.sound-option').forEach(o=>o.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedSound = this.dataset.sound;
+    });
 
-    function playSound() {
-      try {
-        const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    // Áudio
+    function stopAlarm() {
+      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+      alarmOscillators.forEach(o => { try { o.stop(); } catch(e){} });
+      alarmOscillators = [];
+      currentAlarmId = null;
+    }
+
+    function playSoundPattern(soundType) {
+      stopAlarm();
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const now = ctx.currentTime;
+
+      function tone(freq, start, duration, type='square', vol=0.25) {
         const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = type; o.frequency.value = freq;
+        g.gain.setValueAtTime(vol, start);
+        g.gain.exponentialRampToValueAtTime(0.001, start+duration);
         o.connect(g); g.connect(ctx.destination);
-        o.type='square'; o.frequency.value=800; g.gain.value=0.4;
-        o.start(); o.stop(ctx.currentTime+0.5);
-      } catch(e){}
-    }
-
-    function triggerViaServiceWorker(reminder) {
-      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-          action: 'triggerAlarm',
-          name: reminder.name,
-          time: reminder.time
-        });
+        o.start(start); o.stop(start+duration);
+        alarmOscillators.push(o);
       }
-      playSound();
+
+      if (soundType === 'beep') {
+        for(let i=0;i<3;i++) tone(880, now+i*0.25, 0.2);
+      } else if (soundType === 'melody') {
+        tone(523, now, 0.2); tone(659, now+0.2, 0.2); tone(784, now+0.4, 0.3);
+      } else if (soundType === 'siren') {
+        for(let i=0;i<4;i++){ tone(600+i*100, now+i*0.2, 0.2,'sawtooth',0.2); }
+      } else if (soundType === 'bell') {
+        tone(1200, now, 0.15); tone(1000, now+0.15, 0.2);
+      } else if (soundType === 'buzz') {
+        tone(120, now, 0.5,'square',0.4);
+      }
     }
 
-    function checkReminders() {
+    function triggerAlarm(reminder) {
+      stopAlarm();
+      currentAlarmId = reminder.id;
+      playSoundPattern(selectedSound);
+      alarmInterval = setInterval(() => playSoundPattern(selectedSound), 3000);
+      if (Notification.permission === 'granted') {
+        new Notification(`💊 ${reminder.name}`, { body: `Hora de tomar! ${reminder.time}`, vibrate: [200,100,200], tag:'med' });
+      }
+      alert(`⏰ ALARME: ${reminder.name} • ${reminder.time}`);
+    }
+
+    testBtn.onclick = ()=> { playSoundPattern(selectedSound); alert('Som de teste tocando.'); };
+    silenceBtn.onclick = ()=>{ stopAlarm(); alert('Alarme silenciado.'); };
+
+    // Dados
+    function load() { try { reminders = JSON.parse(localStorage.getItem(STORE)) || []; } catch { reminders = []; } }
+    function save() { localStorage.setItem(STORE, JSON.stringify(reminders)); }
+
+    function check() {
       const now = new Date();
       const cur = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
       reminders.forEach(r => {
-        if (r.time === cur && r._lastTriggered !== cur) {
-          triggerViaServiceWorker(r);
-          r._lastTriggered = cur;
-        } else if (r._lastTriggered && r._lastTriggered !== cur) delete r._lastTriggered;
+        if (r.time === cur && r._last !== cur) {
+          triggerAlarm(r);
+          r._last = cur;
+        } else if (r._last && r._last !== cur) delete r._last;
       });
     }
 
-    function startChecker() {
-      if (intervalCheckerId) clearInterval(intervalCheckerId);
-      checkReminders();
-      intervalCheckerId = setInterval(checkReminders, 10000);
-    }
+    setInterval(check, 8000);
 
     function render() {
       if (!reminders.length) {
-        remindersListDiv.innerHTML = '<div class="empty-message">✨ Nenhum.</div>';
-        activeCountSpan.textContent = '0';
+        listContainer.innerHTML = '<div style="color:#7b98b3;">Nenhum lembrete.</div>';
+        countBadge.textContent = '0';
         return;
       }
-      const sorted = [...reminders].sort((a,b)=>a.time.localeCompare(b.time));
-      remindersListDiv.innerHTML = sorted.map(r=>`
+      countBadge.textContent = reminders.length;
+      listContainer.innerHTML = reminders.sort((a,b)=>a.time.localeCompare(b.time)).map(r=>`
         <div class="list-item">
-          <div><div class="med-name">💊 ${escapeHtml(r.name)}</div><div class="med-schedule">🕒 ${r.time} ${r.intervalInfo||''}</div></div>
-          <div class="action-btns">
+          <div><strong>💊 ${r.name}</strong> · 🕒 ${r.time} ${r.int||''}</div>
+          <div class="action-row">
             <button class="icon-btn" onclick="window.app.edit('${r.id}')">✏️</button>
-            <button class="icon-btn alarm-off-btn" onclick="window.app.silence('${r.id}')">🔕</button>
             <button class="icon-btn delete-btn" onclick="window.app.del('${r.id}')">🗑️</button>
           </div>
         </div>`).join('');
-      activeCountSpan.textContent = reminders.length;
-    }
-
-    function escapeHtml(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-
-    function add() {
-      const name = medNameInput.value.trim();
-      if (!name) return alert('Nome obrigatório');
-      let time;
-      let intervalInfo = null;
-      if (currentMode === 'fixed') {
-        time = medTimeFixed.value;
-        if (!time) return alert('Horário obrigatório');
-      } else {
-        const n = new Date();
-        n.setMinutes(n.getMinutes()+selectedIntervalHours*60);
-        time = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
-        intervalInfo = `${selectedIntervalHours}h`;
-      }
-      reminders.push({ id: Date.now().toString(36)+Math.random().toString(36).substr(2,5), name, time, intervalInfo });
-      save(); render(); medNameInput.value=''; if(currentMode==='fixed') medTimeFixed.value='';
     }
 
     window.app = {
       edit: (id)=>{
         const r = reminders.find(r=>r.id===id); if(!r) return;
-        const nt = prompt('Novo horário (HH:MM):', r.time);
-        if(nt && /^([01]\d|2[0-3]):[0-5]\d$/.test(nt)){ r.time=nt; delete r._lastTriggered; save(); render(); }
+        const t = prompt('Novo horário HH:MM', r.time);
+        if(t && /^\d{2}:\d{2}$/.test(t)) { r.time=t; delete r._last; save(); render(); }
       },
-      del: (id)=>{ reminders=reminders.filter(r=>r.id!==id); save(); render(); },
-      silence: ()=>{ alert('Alarme silenciado.'); }
+      del: (id)=>{
+        if(currentAlarmId===id) stopAlarm();
+        reminders=reminders.filter(r=>r.id!==id); save(); render();
+      }
     };
 
-    addBtn.onclick = add;
-    clearAllBtn.onclick = ()=>{ if(confirm('Limpar todos?')){ reminders=[]; save(); render(); } };
-    stopAllAlarmsBtn.onclick = ()=>{ alert('Alarmes interrompidos.'); };
+    addBtn.onclick = ()=>{
+      const name = nameInp.value.trim();
+      if(!name) return alert('Nome obrigatório');
+      let time, intInfo=null;
+      if(mode==='fixed'){
+        time = timeInp.value;
+        if(!time) return alert('Horário obrigatório');
+      } else {
+        const d = new Date(); d.setMinutes(d.getMinutes()+intervalHours*60);
+        time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        intInfo = `${intervalHours}h`;
+      }
+      reminders.push({ id: Date.now().toString(36), name, time, int: intInfo });
+      save(); render(); nameInp.value=''; if(mode==='fixed') timeInp.value='';
+    };
 
-    function init() {
-      registerServiceWorker();
-      requestWakeLock();
-      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') requestWakeLock(); });
+    clearBtn.onclick = ()=>{ if(confirm('Limpar todos?')){ reminders=[]; save(); render(); stopAlarm(); } };
+
+    function init(){
       load(); render();
-      setMode('fixed');
-      if(medTimeFixed) medTimeFixed.value = `${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-      startChecker();
+      if(timeInp) timeInp.value = `${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
       Notification.requestPermission();
+      if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
+      check();
     }
     window.addEventListener('DOMContentLoaded', init);
   })();
