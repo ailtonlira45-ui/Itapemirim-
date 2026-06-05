@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>💊 Alarme Remédio - Completo</title>
+  <title>💊 Alarme Remédio - Corrigido</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -25,19 +25,8 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
     
-    h1 {
-      text-align: center;
-      color: #333;
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-    
-    .subtitulo {
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
+    h1 { text-align: center; color: #333; font-size: 28px; margin-bottom: 5px; }
+    .subtitulo { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
     
     .alerta-alarme {
       background: #ff0000;
@@ -79,11 +68,7 @@
       border: 1px solid #dee2e6;
     }
     
-    .secao h3 {
-      color: #495057;
-      margin-bottom: 12px;
-      font-size: 16px;
-    }
+    .secao h3 { color: #495057; margin-bottom: 12px; font-size: 16px; }
     
     label {
       display: block;
@@ -104,15 +89,9 @@
       transition: border 0.3s;
     }
     
-    input:focus {
-      border-color: #667eea;
-    }
+    input:focus { border-color: #667eea; }
     
-    .modo-botoes {
-      display: flex;
-      gap: 8px;
-      margin: 10px 0;
-    }
+    .modo-botoes { display: flex; gap: 8px; margin: 10px 0; }
     
     .modo-btn {
       flex: 1;
@@ -127,17 +106,9 @@
       font-size: 14px;
     }
     
-    .modo-btn.ativo {
-      background: #667eea;
-      color: white;
-    }
+    .modo-btn.ativo { background: #667eea; color: white; }
     
-    .intervalos {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
-      margin: 10px 0;
-    }
+    .intervalos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 10px 0; }
     
     .intervalo-btn {
       padding: 10px 5px;
@@ -150,18 +121,9 @@
       font-size: 12px;
     }
     
-    .intervalo-btn.ativo {
-      background: #28a745;
-      color: white;
-      border-color: #28a745;
-    }
+    .intervalo-btn.ativo { background: #28a745; color: white; border-color: #28a745; }
     
-    .sons-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0;
-    }
+    .sons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
     
     .som-btn {
       padding: 12px 8px;
@@ -174,11 +136,7 @@
       font-size: 14px;
     }
     
-    .som-btn.ativo {
-      background: #ffc107;
-      border-color: #ff9800;
-      color: #333;
-    }
+    .som-btn.ativo { background: #ffc107; border-color: #ff9800; color: #333; }
     
     .btn {
       width: 100%;
@@ -192,10 +150,7 @@
       transition: transform 0.2s;
     }
     
-    .btn:active {
-      transform: scale(0.98);
-    }
-    
+    .btn:active { transform: scale(0.98); }
     .btn-primario { background: #667eea; color: white; }
     .btn-sucesso { background: #28a745; color: white; }
     .btn-perigo { background: #dc3545; color: white; }
@@ -211,6 +166,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
       transition: all 0.3s;
     }
     
@@ -219,10 +175,7 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
-    .lembrete-info h4 {
-      color: #333;
-      margin-bottom: 5px;
-    }
+    .lembrete-info h4 { color: #333; margin-bottom: 5px; }
     
     .lembrete-hora {
       background: #e9ecef;
@@ -235,10 +188,7 @@
       margin-top: 3px;
     }
     
-    .lembrete-acoes {
-      display: flex;
-      gap: 5px;
-    }
+    .lembrete-acoes { display: flex; gap: 5px; }
     
     .btn-pequeno {
       padding: 8px 12px;
@@ -247,30 +197,14 @@
       font-weight: bold;
       cursor: pointer;
       font-size: 14px;
-      transition: all 0.2s;
     }
     
     .btn-editar { background: #ffc107; color: #333; }
     .btn-desligar { background: #fd7e14; color: white; }
     .btn-excluir { background: #dc3545; color: white; }
     
-    .painel {
-      display: none;
-    }
-    
-    .painel.visivel {
-      display: block;
-    }
-    
-    .info-box {
-      background: #e7f3ff;
-      border-left: 4px solid #2196F3;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      font-size: 13px;
-      color: #0d47a1;
-    }
+    .painel { display: none; }
+    .painel.visivel { display: block; }
     
     .proximo-alarme {
       background: #f3e5f5;
@@ -283,7 +217,7 @@
       font-weight: bold;
     }
 
-    /* MODAL DE RESUMO DO ALARME */
+    /* MODAL */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -297,9 +231,7 @@
       align-items: center;
     }
 
-    .modal-overlay.visivel {
-      display: flex;
-    }
+    .modal-overlay.visivel { display: flex; }
 
     .modal-resumo {
       background: white;
@@ -307,6 +239,8 @@
       padding: 25px;
       max-width: 400px;
       width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       animation: slideUp 0.3s ease;
     }
@@ -333,16 +267,8 @@
       align-items: center;
     }
 
-    .resumo-label {
-      font-weight: bold;
-      color: #495057;
-    }
-
-    .resumo-valor {
-      color: #667eea;
-      font-weight: bold;
-      font-size: 16px;
-    }
+    .resumo-label { font-weight: bold; color: #495057; }
+    .resumo-valor { color: #667eea; font-weight: bold; font-size: 16px; }
 
     .resumo-destaque {
       background: #ffe6e6;
@@ -390,35 +316,27 @@
 
 <div class="container">
   <h1>💊 Alarme Remédio</h1>
-  <p class="subtitulo">⏰ Clique no alarme para ver o resumo</p>
+  <p class="subtitulo">⏰ Clique no lembrete para ver histórico</p>
   
-  <!-- Alerta visual do alarme (agora clicável) -->
-  <div id="alertaAlarme" class="alerta-alarme" onclick="mostrarResumoAlarme()">
+  <div id="alertaAlarme" class="alerta-alarme" onclick="mostrarResumoAlarmeAtivo()">
     🚨 HORA DO REMÉDIO! 🚨
     <br><small style="font-size:14px;">👆 Clique para ver o resumo</small>
   </div>
   
-  <!-- Status do sistema -->
   <div id="statusSistema" class="status-badge status-aviso">
     ⏳ Inicializando sistema...
   </div>
 
-  <!-- Modal de Resumo do Alarme -->
+  <!-- Modal de Resumo -->
   <div id="modalResumo" class="modal-overlay">
     <div class="modal-resumo">
-      <h2>📋 Resumo do Alarme</h2>
-      
-      <div id="conteudoResumo">
-        <!-- Preenchido dinamicamente -->
-      </div>
-      
-      <button class="btn-fechar-modal" onclick="fecharResumo()">
-        ✅ Entendi - Fechar
-      </button>
+      <h2 id="modalTitulo">📋 Resumo</h2>
+      <div id="conteudoResumo"></div>
+      <button class="btn-fechar-modal" onclick="fecharResumo()">✅ Fechar</button>
     </div>
   </div>
 
-  <!-- Seção: Adicionar Remédio -->
+  <!-- Adicionar Remédio -->
   <div class="secao">
     <h3>📋 Adicionar Remédio</h3>
     
@@ -427,24 +345,18 @@
     
     <label>⏰ Modo do alarme:</label>
     <div class="modo-botoes">
-      <button id="modoFixo" class="modo-btn ativo" onclick="mudarModo('fixo')">
-        🕒 Horário Fixo
-      </button>
-      <button id="modoIntervalo" class="modo-btn" onclick="mudarModo('intervalo')">
-        🔁 Intervalo
-      </button>
+      <button id="modoFixo" class="modo-btn ativo" onclick="mudarModo('fixo')">🕒 Horário Fixo</button>
+      <button id="modoIntervalo" class="modo-btn" onclick="mudarModo('intervalo')">🔁 Intervalo</button>
     </div>
     
-    <!-- Painel Horário Fixo -->
     <div id="painelFixo" class="painel visivel">
       <label>🕐 Horário do alarme:</label>
       <input type="time" id="horaFixa">
     </div>
     
-    <!-- Painel Intervalo -->
     <div id="painelIntervalo" class="painel">
       <label>🕐 Horário de início:</label>
-      <input type="time" id="horaInicioIntervalo">
+      <input type="time" id="horaInicioIntervalo" onchange="atualizarPreviewIntervalo()">
       
       <label>⏱️ Repetir a cada:</label>
       <div class="intervalos">
@@ -455,9 +367,7 @@
         <button class="intervalo-btn" onclick="selecionarIntervalo(24, this)">24h</button>
       </div>
       
-      <div id="infoProximoAlarme" class="proximo-alarme" style="display:none;">
-        📅 Próximos alarmes calculados a partir do horário de início
-      </div>
+      <div id="infoProximoAlarme" class="proximo-alarme" style="display:none;"></div>
     </div>
     
     <label>🔊 Som do alarme:</label>
@@ -470,39 +380,25 @@
       <button class="som-btn" onclick="selecionarSom('eletronico', this)">🎹 Eletrônico</button>
     </div>
     
-    <button class="btn btn-primario" onclick="testarSom()">
-      🔊 Testar Som Selecionado
-    </button>
-    
-    <button class="btn btn-sucesso" onclick="adicionarLembrete()">
-      ➕ Adicionar Lembrete
-    </button>
+    <button class="btn btn-primario" onclick="testarSom()">🔊 Testar Som</button>
+    <button class="btn btn-sucesso" onclick="adicionarLembrete()">➕ Adicionar Lembrete</button>
   </div>
 
-  <!-- Seção: Lembretes Ativos -->
+  <!-- Lembretes -->
   <div class="secao">
-    <h3>📌 Seus Lembretes <span id="contador" style="color:#667eea;">(0)</span></h3>
+    <h3>📌 Seus Lembretes <span id="contador">(0)</span></h3>
     <div id="listaLembretes">
-      <p style="color:#999; text-align:center;">Nenhum lembrete adicionado</p>
+      <p style="color:#999; text-align:center;">Nenhum lembrete</p>
     </div>
   </div>
 
-  <!-- Botões de Controle -->
-  <button class="btn btn-perigo" onclick="pararAlarme()">
-    🔕 Parar Alarme Atual
-  </button>
-  
-  <button class="btn btn-info" onclick="testarAlarmeAgora()">
-    🧪 Testar Alarme Agora
-  </button>
-  
-  <button class="btn btn-alerta" onclick="limparTodos()">
-    🗑️ Limpar Todos os Lembretes
-  </button>
+  <button class="btn btn-perigo" onclick="pararAlarme()">🔕 Parar Alarme</button>
+  <button class="btn btn-info" onclick="testarAlarmeAgora()">🧪 Testar Alarme</button>
+  <button class="btn btn-alerta" onclick="limparTodos()">🗑️ Limpar Todos</button>
 </div>
 
 <script>
-// ============ ESTADO DO APP ============
+// ============ ESTADO ============
 let lembretes = [];
 let modoAtual = 'fixo';
 let intervaloSelecionado = 8;
@@ -511,32 +407,24 @@ let alarmeAtivo = false;
 let intervaloAlarme = null;
 let audioContext = null;
 let ultimosAlarmesDisparados = {};
-let alarmeAtual = null; // NOVO: Guarda info do alarme atual
-let historicoAlarmes = []; // NOVO: Histórico de alarmes
+let alarmeAtual = null;
+let historicoAlarmes = [];
 
 // ============ CARREGAR DADOS ============
 try {
-  const dados = localStorage.getItem('app_remedios_completo_v4');
-  if (dados) lembretes = JSON.parse(dados);
-} catch(e) {
-  lembretes = [];
-}
+  lembretes = JSON.parse(localStorage.getItem('app_remedios_v5')) || [];
+} catch(e) { lembretes = []; }
 
 try {
-  const hist = localStorage.getItem('historico_alarmes');
-  if (hist) historicoAlarmes = JSON.parse(hist);
-} catch(e) {
-  historicoAlarmes = [];
-}
+  historicoAlarmes = JSON.parse(localStorage.getItem('historico_v5')) || [];
+} catch(e) { historicoAlarmes = []; }
 
-// ============ FUNÇÕES DE SOM ============
+// ============ SOM ============
 function getAudioContext() {
   if (!audioContext || audioContext.state === 'closed') {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-  if (audioContext.state === 'suspended') {
-    audioContext.resume();
-  }
+  if (audioContext.state === 'suspended') audioContext.resume();
   return audioContext;
 }
 
@@ -560,109 +448,199 @@ function tocarSom(tipo) {
     
     switch(tipo) {
       case 'beep':
-        beep(880, now, 0.3);
-        beep(880, now + 0.4, 0.3);
-        beep(880, now + 0.8, 0.3);
+        beep(880, now, 0.3); beep(880, now+0.4, 0.3); beep(880, now+0.8, 0.3);
         break;
-        
       case 'melodia':
-        beep(523, now, 0.2, 'sine', 0.4);
-        beep(659, now + 0.2, 0.2, 'sine', 0.4);
-        beep(784, now + 0.4, 0.3, 'sine', 0.4);
-        beep(1047, now + 0.6, 0.2, 'sine', 0.4);
+        beep(523, now, 0.2, 'sine', 0.4); beep(659, now+0.2, 0.2, 'sine', 0.4);
+        beep(784, now+0.4, 0.3, 'sine', 0.4); beep(1047, now+0.6, 0.2, 'sine', 0.4);
         break;
-        
       case 'sirene':
-        for(let i = 0; i < 8; i++) {
-          beep(400 + (i * 100), now + (i * 0.15), 0.15, 'sawtooth', 0.3);
-        }
+        for(let i=0; i<8; i++) beep(400+(i*100), now+(i*0.15), 0.15, 'sawtooth', 0.3);
         break;
-        
       case 'sino':
-        beep(1200, now, 0.15, 'triangle', 0.5);
-        beep(1000, now + 0.15, 0.2, 'triangle', 0.4);
-        beep(800, now + 0.3, 0.25, 'triangle', 0.3);
+        beep(1200, now, 0.15, 'triangle', 0.5); beep(1000, now+0.15, 0.2, 'triangle', 0.4);
+        beep(800, now+0.3, 0.25, 'triangle', 0.3);
         break;
-        
       case 'vibracao':
         beep(100, now, 0.5, 'square', 0.8);
         if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
         break;
-        
       case 'eletronico':
-        beep(440, now, 0.1, 'square', 0.3);
-        beep(660, now + 0.1, 0.1, 'square', 0.3);
-        beep(880, now + 0.2, 0.2, 'square', 0.3);
-        beep(1100, now + 0.3, 0.1, 'square', 0.3);
+        beep(440, now, 0.1); beep(660, now+0.1, 0.1);
+        beep(880, now+0.2, 0.2); beep(1100, now+0.3, 0.1);
         break;
     }
-  } catch(e) {
-    console.log('Erro no som:', e);
-  }
+  } catch(e) {}
 }
 
-// ============ FUNÇÕES DE NOTIFICAÇÃO ============
+// ============ NOTIFICAÇÃO ============
 function mostrarNotificacao(nome, hora) {
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification('💊 HORA DO REMÉDIO!', {
-      body: `${nome} - ${hora}\n👆 Toque para ver o resumo completo!`,
+      body: `${nome} - ${hora}`,
       icon: '💊',
-      badge: '💊',
       vibrate: [500, 200, 500, 200, 500],
       requireInteraction: true,
-      silent: false,
-      tag: 'alarme-principal',
-      data: { nome, hora }
+      tag: 'alarme-principal'
     });
-    
-    setTimeout(() => {
-      new Notification('🚨 NÃO ESQUEÇA O REMÉDIO!', {
-        body: `${nome} - Tome agora! 👆 Veja o resumo`,
-        vibrate: [300, 100, 300, 100, 300],
-        requireInteraction: true,
-        tag: 'alarme-reforco',
-        data: { nome, hora }
-      });
-    }, 5000);
   }
 }
 
-// ============ NOVA FUNÇÃO: MOSTRAR RESUMO DO ALARME ============
-function mostrarResumoAlarme() {
-  if (!alarmeAtual) return;
+// ============ ALARME ============
+function iniciarAlarme(lembrete) {
+  if (alarmeAtivo) return;
   
-  const modal = document.getElementById('modalResumo');
-  const conteudo = document.getElementById('conteudoResumo');
+  alarmeAtivo = true;
+  alarmeAtual = lembrete;
   
-  const agora = new Date();
-  const dataAtual = agora.toLocaleDateString('pt-BR');
-  const horaAtual = agora.toLocaleTimeString('pt-BR');
+  document.getElementById('alertaAlarme').style.display = 'block';
+  document.getElementById('alertaAlarme').innerHTML = `🚨 ${lembrete.nome} - ${lembrete.hora || ''} 🚨<br><small>👆 Clique para detalhes</small>`;
   
-  // Buscar informações completas do lembrete
-  const lembrete = lembretes.find(l => l.id === alarmeAtual.id) || alarmeAtual;
-  
-  // Calcular próximo alarme se for intervalo
-  let proximoAlarme = 'N/A';
-  if (lembrete.intervalo) {
-    const [h, m] = lembrete.horaInicio.split(':').map(Number);
-    const inicio = new Date();
-    inicio.setHours(h, m, 0);
-    
-    // Encontrar o próximo horário após agora
-    let proximo = new Date(inicio);
-    while (proximo <= agora) {
-      proximo = new Date(proximo.getTime() + (lembrete.intervalo * 60 * 60 * 1000));
-    }
-    proximoAlarme = proximo.toLocaleTimeString('pt-BR');
+  function disparar() {
+    tocarSom(lembrete.som || somSelecionado);
+    mostrarNotificacao(lembrete.nome, lembrete.hora);
+    if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
   }
   
-  // Buscar histórico deste remédio
-  const historicoRemedio = historicoAlarmes.filter(h => h.nome === lembrete.nome);
+  disparar();
+  
+  let contador = 0;
+  intervaloAlarme = setInterval(() => {
+    contador++;
+    if (contador >= 24) { pararAlarme(); return; }
+    disparar();
+  }, 5000);
+  
+  // Registrar no histórico
+  const agora = new Date();
+  historicoAlarmes.push({
+    nome: lembrete.nome,
+    data: agora.toLocaleDateString('pt-BR'),
+    hora: agora.toLocaleTimeString('pt-BR'),
+    timestamp: Date.now()
+  });
+  if (historicoAlarmes.length > 100) historicoAlarmes = historicoAlarmes.slice(-100);
+  localStorage.setItem('historico_v5', JSON.stringify(historicoAlarmes));
+  
+  atualizarStatus('🚨 Alarme: ' + lembrete.nome, 'status-erro');
+}
+
+function pararAlarme() {
+  alarmeAtivo = false;
+  alarmeAtual = null;
+  if (intervaloAlarme) { clearInterval(intervaloAlarme); intervaloAlarme = null; }
+  document.getElementById('alertaAlarme').style.display = 'none';
+  atualizarStatus('✅ Alarme parado', 'status-ok');
+}
+
+// ============ VERIFICAÇÃO (CORRIGIDA) ============
+function verificarAlarmes() {
+  const agora = new Date();
+  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
+                    String(agora.getMinutes()).padStart(2, '0');
+  const dataHoje = agora.toDateString();
+  
+  console.log('🔍 Verificando:', horaAtual, '| Lembretes:', lembretes.length);
+  
+  lembretes.forEach(lembrete => {
+    // Modo FIXO
+    if (!lembrete.intervalo) {
+      if (lembrete.hora === horaAtual) {
+        const chave = 'fixo-' + lembrete.id + '-' + dataHoje + '-' + horaAtual;
+        if (!ultimosAlarmesDisparados[chave]) {
+          console.log('🚨 DISPARANDO FIXO:', lembrete.nome, lembrete.hora);
+          ultimosAlarmesDisparados[chave] = true;
+          iniciarAlarme(lembrete);
+        }
+      }
+    }
+    // Modo INTERVALO (CORRIGIDO)
+    else {
+      const horaInicio = lembrete.horaInicio;
+      const intervaloH = lembrete.intervalo;
+      
+      if (!horaInicio || !intervaloH) return;
+      
+      // Converter para minutos
+      const [hIni, mIni] = horaInicio.split(':').map(Number);
+      const [hAtu, mAtu] = horaAtual.split(':').map(Number);
+      
+      const minutosInicio = hIni * 60 + mIni;
+      const minutosAtual = hAtu * 60 + mAtu;
+      
+      // Calcular diferença considerando virada de dia
+      let diff = minutosAtual - minutosInicio;
+      if (diff < 0) diff += 24 * 60; // Adiciona 24h se passou da meia-noite
+      
+      const intervaloMin = intervaloH * 60;
+      
+      // Verificar se é múltiplo exato do intervalo
+      if (diff % intervaloMin === 0) {
+        const chave = 'int-' + lembrete.id + '-' + dataHoje + '-' + horaAtual;
+        if (!ultimosAlarmesDisparados[chave]) {
+          console.log('🚨 DISPARANDO INTERVALO:', lembrete.nome, 'Início:', horaInicio, 'Intervalo:', intervaloH+'h', 'Diff:', diff+'min');
+          ultimosAlarmesDisparados[chave] = true;
+          
+          // Criar cópia com hora atual para exibição
+          const lembreteAtual = {...lembrete, hora: horaAtual};
+          iniciarAlarme(lembreteAtual);
+        }
+      }
+    }
+  });
+  
+  // Limpar chaves de dias anteriores
+  Object.keys(ultimosAlarmesDisparados).forEach(chave => {
+    const partes = chave.split('-');
+    const dataChave = partes[2] + '-' + partes[3] + '-' + partes[4];
+    if (dataChave !== dataHoje) delete ultimosAlarmesDisparados[chave];
+  });
+}
+
+// ============ MOSTRAR RESUMO (CORRIGIDO) ============
+function mostrarResumoAlarmeAtivo() {
+  if (!alarmeAtual) return;
+  mostrarResumo(alarmeAtual);
+}
+
+function mostrarResumoLembrete(id) {
+  const lembrete = lembretes.find(l => l.id === id);
+  if (!lembrete) return;
+  mostrarResumo(lembrete);
+}
+
+function mostrarResumo(lembrete) {
+  const modal = document.getElementById('modalResumo');
+  const conteudo = document.getElementById('conteudoResumo');
+  const titulo = document.getElementById('modalTitulo');
+  
+  const historicoRemedio = historicoAlarmes
+    .filter(h => h.nome === lembrete.nome)
+    .slice(-10)
+    .reverse();
+  
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const tomadosHoje = historicoAlarmes.filter(h => h.nome === lembrete.nome && h.data === hoje).length;
+  
+  // Calcular próximos horários para intervalo
+  let proximosHorarios = [];
+  if (lembrete.intervalo && lembrete.horaInicio) {
+    const [h, m] = lembrete.horaInicio.split(':').map(Number);
+    const inicio = new Date();
+    inicio.setHours(h, m, 0, 0);
+    for (let i = 0; i < 5; i++) {
+      const prox = new Date(inicio.getTime() + i * lembrete.intervalo * 3600000);
+      proximosHorarios.push(
+        String(prox.getHours()).padStart(2, '0') + ':' + 
+        String(prox.getMinutes()).padStart(2, '0')
+      );
+    }
+  }
+  
+  titulo.textContent = alarmeAtivo ? '🚨 ALARME ATIVO!' : '📋 Detalhes do Lembrete';
   
   conteudo.innerHTML = `
-    <div class="resumo-destaque">
-      🚨 ALARME ATIVO! 🚨
-    </div>
+    ${alarmeAtivo ? '<div class="resumo-destaque">🚨 TOME AGORA! 🚨</div>' : ''}
     
     <div class="resumo-item">
       <span class="resumo-label">💊 Remédio:</span>
@@ -670,437 +648,119 @@ function mostrarResumoAlarme() {
     </div>
     
     <div class="resumo-item">
-      <span class="resumo-label">🕐 Hora do alarme:</span>
-      <span class="resumo-valor">${lembrete.hora || horaAtual}</span>
-    </div>
-    
-    <div class="resumo-item">
-      <span class="resumo-label">📅 Data:</span>
-      <span class="resumo-valor">${dataAtual}</span>
+      <span class="resumo-label">🕐 Horário:</span>
+      <span class="resumo-valor">${lembrete.hora || 'N/A'}</span>
     </div>
     
     <div class="resumo-item">
       <span class="resumo-label">🔊 Som:</span>
-      <span class="resumo-valor">${lembrete.som || somSelecionado}</span>
+      <span class="resumo-valor">${lembrete.som || 'beep'}</span>
     </div>
     
     ${lembrete.intervalo ? `
       <div class="resumo-item">
-        <span class="resumo-label">⏱️ Intervalo:</span>
-        <span class="resumo-valor">A cada ${lembrete.intervalo}h</span>
-      </div>
-      <div class="resumo-item">
-        <span class="resumo-label">🕐 Horário início:</span>
+        <span class="resumo-label">🕐 Início:</span>
         <span class="resumo-valor">${lembrete.horaInicio}</span>
       </div>
       <div class="resumo-item">
-        <span class="resumo-label">⏭️ Próximo alarme:</span>
-        <span class="resumo-valor">${proximoAlarme}</span>
+        <span class="resumo-label">⏱️ Intervalo:</span>
+        <span class="resumo-valor">A cada ${lembrete.intervalo}h</span>
+      </div>
+      <div style="margin-top:10px; background:#f3e5f5; padding:10px; border-radius:10px;">
+        <strong>📅 Próximos horários:</strong><br>
+        ${proximosHorarios.map(h => `<span style="background:#9c27b0; color:white; padding:3px 8px; border-radius:10px; margin:2px; display:inline-block; font-size:12px;">${h}</span>`).join(' ')}
       </div>
     ` : ''}
     
+    <div class="resumo-item" style="margin-top:10px;">
+      <span class="resumo-label">📊 Tomados hoje:</span>
+      <span class="resumo-valor">${tomadosHoje}x</span>
+    </div>
+    
     <div class="resumo-item">
-      <span class="resumo-label">📊 Total de tomados hoje:</span>
-      <span class="resumo-valor">${historicoRemedio.filter(h => h.data === dataAtual).length}x</span>
+      <span class="resumo-label">📅 Criado em:</span>
+      <span class="resumo-valor">${new Date(lembrete.id).toLocaleDateString('pt-BR')}</span>
     </div>
     
     ${historicoRemedio.length > 0 ? `
       <div style="margin-top:15px;">
-        <strong>📜 Histórico recente:</strong>
+        <strong>📜 Últimos registros:</strong>
         <div class="historico-container">
-          ${historicoRemedio.slice(-5).reverse().map(h => `
+          ${historicoRemedio.map(h => `
             <div class="historico-item">
-              <span>${h.data} - ${h.hora}</span>
-              <span>✅ Tomado</span>
+              <span>📅 ${h.data}</span>
+              <span>🕐 ${h.hora}</span>
+              <span>✅</span>
             </div>
           `).join('')}
         </div>
       </div>
-    ` : '<p style="text-align:center; color:#999; margin-top:10px;">Nenhum histórico ainda</p>'}
-    
-    <div style="text-align:center; margin-top:15px; font-size:12px; color:#666;">
-      ⏰ Alarme criado em: ${new Date(lembrete.id).toLocaleString('pt-BR')}
-    </div>
+    ` : '<p style="text-align:center; color:#999; margin-top:10px;">Nenhum registro ainda</p>'}
   `;
   
   modal.classList.add('visivel');
-  
-  // Salvar no histórico
-  salvarHistorico(lembrete.nome, dataAtual, horaAtual);
 }
 
 function fecharResumo() {
   document.getElementById('modalResumo').classList.remove('visivel');
 }
 
-function salvarHistorico(nome, data, hora) {
-  historicoAlarmes.push({
-    nome,
-    data,
-    hora,
-    timestamp: Date.now()
-  });
-  
-  // Manter apenas últimos 50 registros
-  if (historicoAlarmes.length > 50) {
-    historicoAlarmes = historicoAlarmes.slice(-50);
-  }
-  
-  localStorage.setItem('historico_alarmes', JSON.stringify(historicoAlarmes));
-}
-
-// ============ SISTEMA DE ALARME ============
-function iniciarAlarme(nome, hora, id) {
-  if (alarmeAtivo) {
-    console.log('Já tem alarme tocando');
-    return;
-  }
-  
-  alarmeAtivo = true;
-  
-  // NOVO: Guardar informação do alarme atual
-  alarmeAtual = {
-    id,
-    nome,
-    hora,
-    som: somSelecionado
-  };
-  
-  const alertaDiv = document.getElementById('alertaAlarme');
-  alertaDiv.style.display = 'block';
-  alertaDiv.innerHTML = `🚨 ${nome} - ${hora} 🚨<br><small style="font-size:14px;">👆 Clique para ver o resumo completo</small>`;
-  
-  function dispararAlarme() {
-    tocarSom(somSelecionado);
-    mostrarNotificacao(nome, hora);
-    
-    if (navigator.vibrate) {
-      navigator.vibrate([500, 200, 500, 200, 500]);
-    }
-    
-    if ('wakeLock' in navigator) {
-      navigator.wakeLock.request('screen').catch(() => {});
-    }
-  }
-  
-  dispararAlarme();
-  
-  let contador = 0;
-  intervaloAlarme = setInterval(() => {
-    contador++;
-    if (contador >= 24) {
-      pararAlarme();
-      return;
-    }
-    dispararAlarme();
-  }, 5000);
-  
-  atualizarStatus('🚨 Alarme ativo: ' + nome + ' - Clique no alerta vermelho', 'status-erro');
-}
-
-function pararAlarme() {
-  alarmeAtivo = false;
-  alarmeAtual = null;
-  
-  if (intervaloAlarme) {
-    clearInterval(intervaloAlarme);
-    intervaloAlarme = null;
-  }
-  
-  document.getElementById('alertaAlarme').style.display = 'none';
-  atualizarStatus('✅ Alarme parado', 'status-ok');
-}
-
-// ============ VERIFICAÇÃO DE HORÁRIOS ============
-function verificarAlarmes() {
-  const agora = new Date();
-  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
-                    String(agora.getMinutes()).padStart(2, '0');
-  const dataAtual = agora.toDateString();
-  
-  console.log('🔍 Verificando alarmes para:', horaAtual);
-  
-  lembretes.forEach(lembrete => {
-    if (!lembrete.intervalo) {
-      if (lembrete.hora === horaAtual) {
-        const chave = lembrete.id + '-' + dataAtual + '-' + horaAtual;
-        if (!ultimosAlarmesDisparados[chave]) {
-          console.log('🚨 Disparando alarme fixo:', lembrete.nome);
-          ultimosAlarmesDisparados[chave] = true;
-          iniciarAlarme(lembrete.nome, lembrete.hora, lembrete.id);
-        }
-      }
-    } else {
-      const horaInicio = lembrete.horaInicio;
-      const intervaloHoras = lembrete.intervalo;
-      
-      if (horaInicio && intervaloHoras) {
-        const [hInicio, mInicio] = horaInicio.split(':').map(Number);
-        const [hAtual, mAtual] = horaAtual.split(':').map(Number);
-        
-        const minutosInicio = hInicio * 60 + mInicio;
-        const minutosAtual = hAtual * 60 + mAtual;
-        
-        let diferencaMinutos = minutosAtual - minutosInicio;
-        if (diferencaMinutos < 0) {
-          diferencaMinutos += 24 * 60;
-        }
-        
-        const intervaloMinutos = intervaloHoras * 60;
-        
-        if (diferencaMinutos % intervaloMinutos === 0) {
-          const chave = lembrete.id + '-' + dataAtual + '-' + horaAtual;
-          if (!ultimosAlarmesDisparados[chave]) {
-            console.log('🚨 Disparando alarme intervalo:', lembrete.nome);
-            ultimosAlarmesDisparados[chave] = true;
-            iniciarAlarme(lembrete.nome, horaAtual, lembrete.id);
-          }
-        }
-      }
-    }
-  });
-  
-  // Limpar chaves antigas
-  const chavesParaRemover = [];
-  for (let chave in ultimosAlarmesDisparados) {
-    const partes = chave.split('-');
-    const dataChave = partes[1] + '-' + partes[2] + '-' + partes[3];
-    if (dataChave !== dataAtual) {
-      chavesParaRemover.push(chave);
-    }
-  }
-  chavesParaRemover.forEach(chave => delete ultimosAlarmesDisparados[chave]);
-}
-
-// ============ EVENTO DE NOTIFICAÇÃO (CLIQUE) ============
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('message', function(event) {
-    if (event.data && event.data.action === 'showResume') {
-      mostrarResumoAlarme();
-    }
-  });
-}
-
-// Também mostrar resumo quando a notificação é clicada
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible' && alarmeAtivo) {
-    // Quando o usuário volta para o app durante um alarme
-    console.log('Usuário voltou ao app durante alarme');
-  }
-});
-
-// ============ GERENCIAR LEMBRETES ============
+// ============ ADICIONAR LEMBRETE ============
 function adicionarLembrete() {
   const nome = document.getElementById('nomeRemedio').value.trim();
-  
-  if (!nome) {
-    alert('⚠️ Digite o nome do remédio!');
-    return;
-  }
+  if (!nome) return alert('⚠️ Digite o nome!');
   
   let hora, horaInicio = null, intervalo = null;
   
   if (modoAtual === 'fixo') {
     hora = document.getElementById('horaFixa').value;
-    if (!hora) {
-      alert('⚠️ Selecione o horário!');
-      return;
-    }
+    if (!hora) return alert('⚠️ Selecione o horário!');
   } else {
     horaInicio = document.getElementById('horaInicioIntervalo').value;
-    if (!horaInicio) {
-      alert('⚠️ Selecione o horário de início!');
-      return;
-    }
-    
+    if (!horaInicio) return alert('⚠️ Selecione o horário de início!');
     hora = horaInicio;
     intervalo = intervaloSelecionado;
   }
   
-  const duplicata = lembretes.find(l => l.nome === nome && l.hora === hora && l.intervalo === intervalo);
-  if (duplicata) {
-    alert('⚠️ Este lembrete já existe!');
-    return;
-  }
-  
-  const novoLembrete = {
+  lembretes.push({
     id: Date.now(),
-    nome: nome,
-    hora: hora,
-    horaInicio: horaInicio,
-    intervalo: intervalo,
-    som: somSelecionado,
-    criadoEm: new Date().toISOString()
-  };
+    nome,
+    hora,
+    horaInicio,
+    intervalo,
+    som: somSelecionado
+  });
   
-  lembretes.push(novoLembrete);
-  salvarDados();
+  localStorage.setItem('app_remedios_v5', JSON.stringify(lembretes));
   atualizarLista();
-  
   document.getElementById('nomeRemedio').value = '';
-  
-  if (modoAtual === 'intervalo') {
-    atualizarStatus('✅ Lembrete adicionado! Início: ' + horaInicio + ' a cada ' + intervalo + 'h', 'status-ok');
-  } else {
-    atualizarStatus('✅ Lembrete adicionado! Alarme: ' + hora, 'status-ok');
-  }
+  atualizarStatus('✅ Lembrete adicionado!', 'status-ok');
 }
 
-function editarLembrete(id) {
-  const lembrete = lembretes.find(l => l.id === id);
-  if (!lembrete) return;
-  
-  let mensagem = 'Editar horário (HH:MM):';
-  if (lembrete.intervalo) {
-    mensagem = 'Editar horário de início (HH:MM):';
-  }
-  
-  const novaHora = prompt(mensagem, lembrete.horaInicio || lembrete.hora);
-  if (novaHora && /^\d{2}:\d{2}$/.test(novaHora)) {
-    if (lembrete.intervalo) {
-      lembrete.horaInicio = novaHora;
-      lembrete.hora = novaHora;
-    } else {
-      lembrete.hora = novaHora;
-    }
-    salvarDados();
-    atualizarLista();
-    atualizarStatus('✅ Horário atualizado: ' + novaHora, 'status-ok');
-  } else if (novaHora) {
-    alert('⚠️ Formato inválido! Use HH:MM (ex: 14:30)');
-  }
-}
-
-function desligarAlarmeIndividual(id) {
-  if (alarmeAtivo) {
-    pararAlarme();
-    const lembrete = lembretes.find(l => l.id === id);
-    if (lembrete) {
-      atualizarStatus('🔕 Alarme de ' + lembrete.nome + ' desligado', 'status-aviso');
-    }
-  }
-}
-
-function removerLembrete(id) {
-  if (confirm('Tem certeza que deseja remover este lembrete?')) {
-    lembretes = lembretes.filter(l => l.id !== id);
-    salvarDados();
-    atualizarLista();
-    atualizarStatus('🗑️ Lembrete removido', 'status-aviso');
-  }
-}
-
-function limparTodos() {
-  if (lembretes.length === 0) {
-    alert('Não há lembretes para remover.');
-    return;
-  }
-  
-  if (confirm('Tem certeza que deseja remover TODOS os lembretes?')) {
-    lembretes = [];
-    salvarDados();
-    atualizarLista();
-    pararAlarme();
-    atualizarStatus('🗑️ Todos os lembretes foram removidos', 'status-aviso');
-  }
-}
-
-// ============ INTERFACE ============
-function mudarModo(modo) {
-  modoAtual = modo;
-  
-  document.getElementById('modoFixo').classList.toggle('ativo', modo === 'fixo');
-  document.getElementById('modoIntervalo').classList.toggle('ativo', modo === 'intervalo');
-  document.getElementById('painelFixo').classList.toggle('visivel', modo === 'fixo');
-  document.getElementById('painelIntervalo').classList.toggle('visivel', modo === 'intervalo');
-}
-
-function selecionarIntervalo(horas, botao) {
-  intervaloSelecionado = horas;
-  document.querySelectorAll('.intervalo-btn').forEach(b => b.classList.remove('ativo'));
-  botao.classList.add('ativo');
-  
-  const horaInicio = document.getElementById('horaInicioIntervalo').value;
-  if (horaInicio) {
-    mostrarProximoAlarme(horaInicio, horas);
-  }
-}
-
-function mostrarProximoAlarme(horaInicio, intervalo) {
-  const [h, m] = horaInicio.split(':').map(Number);
-  const inicio = new Date();
-  inicio.setHours(h, m, 0);
-  
-  const proximos = [];
-  for (let i = 0; i < 4; i++) {
-    const proximo = new Date(inicio.getTime() + (i * intervalo * 60 * 60 * 1000));
-    proximos.push(
-      String(proximo.getHours()).padStart(2, '0') + ':' + 
-      String(proximo.getMinutes()).padStart(2, '0')
-    );
-  }
-  
-  const infoDiv = document.getElementById('infoProximoAlarme');
-  infoDiv.style.display = 'block';
-  infoDiv.innerHTML = '📅 Próximos alarmes: <strong>' + proximos.join(' → ') + ' → ...</strong>';
-}
-
-function selecionarSom(som, botao) {
-  somSelecionado = som;
-  document.querySelectorAll('.som-btn').forEach(b => b.classList.remove('ativo'));
-  botao.classList.add('ativo');
-}
-
-function testarSom() {
-  tocarSom(somSelecionado);
-  atualizarStatus('🔊 Tocando: ' + somSelecionado, 'status-aviso');
-}
-
-function testarAlarmeAgora() {
-  if (Notification.permission !== 'granted') {
-    Notification.requestPermission().then(perm => {
-      if (perm === 'granted') {
-        iniciarAlarme('🧪 TESTE', new Date().toLocaleTimeString(), 'teste');
-      } else {
-        alert('⚠️ Ative as notificações primeiro!');
-      }
-    });
-  } else {
-    iniciarAlarme('🧪 TESTE', new Date().toLocaleTimeString(), 'teste');
-  }
-}
-
-function atualizarStatus(mensagem, classe) {
-  const status = document.getElementById('statusSistema');
-  status.textContent = mensagem;
-  status.className = 'status-badge ' + classe;
-}
-
+// ============ LISTA ============
 function atualizarLista() {
   const div = document.getElementById('listaLembretes');
-  const contador = document.getElementById('contador');
+  document.getElementById('contador').textContent = '(' + lembretes.length + ')';
   
-  contador.textContent = '(' + lembretes.length + ')';
-  
-  if (lembretes.length === 0) {
-    div.innerHTML = '<p style="color:#999; text-align:center;">Nenhum lembrete adicionado</p>';
+  if (!lembretes.length) {
+    div.innerHTML = '<p style="color:#999; text-align:center;">Nenhum lembrete</p>';
     return;
   }
   
   lembretes.sort((a, b) => a.hora.localeCompare(b.hora));
   
   div.innerHTML = lembretes.map(l => `
-    <div class="lembrete-card">
+    <div class="lembrete-card" onclick="mostrarResumoLembrete(${l.id})" style="cursor:pointer;">
       <div class="lembrete-info">
-        <h4>💊 ${l.nome}</h4>
+        <h4>💊 ${l.nome} ${l.intervalo ? '<small style="color:#28a745;">(Intervalo)</small>' : ''}</h4>
         ${l.intervalo ? 
           `<span class="lembrete-hora">🕐 Início: ${l.horaInicio}</span>
-           <span class="lembrete-hora">🔁 A cada ${l.intervalo}h</span>` :
+           <span class="lembrete-hora">🔁 ${l.intervalo}h</span>` :
           `<span class="lembrete-hora">🕒 ${l.hora}</span>`
         }
-        ${l.som ? `<span class="lembrete-hora">🔊 ${l.som}</span>` : ''}
+        <span class="lembrete-hora">🔊 ${l.som}</span>
       </div>
-      <div class="lembrete-acoes">
+      <div class="lembrete-acoes" onclick="event.stopPropagation();">
         <button class="btn-pequeno btn-editar" onclick="editarLembrete(${l.id})">✏️</button>
         <button class="btn-pequeno btn-desligar" onclick="desligarAlarmeIndividual(${l.id})">🔕</button>
         <button class="btn-pequeno btn-excluir" onclick="removerLembrete(${l.id})">🗑️</button>
@@ -1109,59 +769,113 @@ function atualizarLista() {
   `).join('');
 }
 
-// ============ EVENTOS DOS INPUTS ============
-document.addEventListener('DOMContentLoaded', function() {
-  const horaInicioInput = document.getElementById('horaInicioIntervalo');
-  if (horaInicioInput) {
-    horaInicioInput.addEventListener('change', function() {
-      if (this.value && modoAtual === 'intervalo') {
-        mostrarProximoAlarme(this.value, intervaloSelecionado);
-      }
-    });
+function editarLembrete(id) {
+  const l = lembretes.find(x => x.id === id);
+  if (!l) return;
+  const novaHora = prompt('Novo horário (HH:MM):', l.horaInicio || l.hora);
+  if (novaHora && /^\d{2}:\d{2}$/.test(novaHora)) {
+    if (l.intervalo) { l.horaInicio = novaHora; l.hora = novaHora; }
+    else l.hora = novaHora;
+    localStorage.setItem('app_remedios_v5', JSON.stringify(lembretes));
+    atualizarLista();
   }
-  
-  // Fechar modal clicando fora
-  document.getElementById('modalResumo').addEventListener('click', function(e) {
-    if (e.target === this) {
-      fecharResumo();
-    }
-  });
-});
-
-// ============ SALVAR/CARREGAR ============
-function salvarDados() {
-  localStorage.setItem('app_remedios_completo_v4', JSON.stringify(lembretes));
 }
 
-// ============ INICIALIZAÇÃO ============
+function desligarAlarmeIndividual(id) {
+  if (alarmeAtivo) pararAlarme();
+}
+
+function removerLembrete(id) {
+  if (confirm('Remover este lembrete?')) {
+    lembretes = lembretes.filter(l => l.id !== id);
+    localStorage.setItem('app_remedios_v5', JSON.stringify(lembretes));
+    atualizarLista();
+  }
+}
+
+function limparTodos() {
+  if (confirm('Remover TODOS?')) {
+    lembretes = [];
+    localStorage.setItem('app_remedios_v5', JSON.stringify(lembretes));
+    atualizarLista();
+    pararAlarme();
+  }
+}
+
+// ============ INTERFACE ============
+function mudarModo(m) {
+  modoAtual = m;
+  document.getElementById('modoFixo').classList.toggle('ativo', m==='fixo');
+  document.getElementById('modoIntervalo').classList.toggle('ativo', m==='intervalo');
+  document.getElementById('painelFixo').classList.toggle('visivel', m==='fixo');
+  document.getElementById('painelIntervalo').classList.toggle('visivel', m==='intervalo');
+}
+
+function selecionarIntervalo(h, btn) {
+  intervaloSelecionado = h;
+  document.querySelectorAll('.intervalo-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  atualizarPreviewIntervalo();
+}
+
+function atualizarPreviewIntervalo() {
+  const horaInicio = document.getElementById('horaInicioIntervalo').value;
+  if (horaInicio) {
+    const [h, m] = horaInicio.split(':').map(Number);
+    const inicio = new Date();
+    inicio.setHours(h, m, 0);
+    const proximos = [];
+    for (let i = 0; i < 4; i++) {
+      const p = new Date(inicio.getTime() + i * intervaloSelecionado * 3600000);
+      proximos.push(String(p.getHours()).padStart(2,'0')+':'+String(p.getMinutes()).padStart(2,'0'));
+    }
+    document.getElementById('infoProximoAlarme').style.display = 'block';
+    document.getElementById('infoProximoAlarme').innerHTML = '📅 Próximos: <strong>' + proximos.join(' → ') + ' → ...</strong>';
+  }
+}
+
+function selecionarSom(s, btn) {
+  somSelecionado = s;
+  document.querySelectorAll('.som-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+}
+
+function testarSom() { tocarSom(somSelecionado); }
+function testarAlarmeAgora() {
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission();
+    return;
+  }
+  iniciarAlarme({id:'teste', nome:'🧪 TESTE', hora:new Date().toLocaleTimeString(), som:somSelecionado});
+}
+
+function atualizarStatus(msg, cls) {
+  const s = document.getElementById('statusSistema');
+  s.textContent = msg;
+  s.className = 'status-badge ' + cls;
+}
+
+// ============ INICIAR ============
 function iniciar() {
   const agora = new Date();
-  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
-                    String(agora.getMinutes()).padStart(2, '0');
-  
+  const horaAtual = String(agora.getHours()).padStart(2,'0')+':'+String(agora.getMinutes()).padStart(2,'0');
   document.getElementById('horaFixa').value = horaAtual;
   document.getElementById('horaInicioIntervalo').value = horaAtual;
   
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
-  
+  Notification.requestPermission();
   atualizarLista();
   
   setInterval(verificarAlarmes, 10000);
   verificarAlarmes();
   
-  if ('wakeLock' in navigator) {
-    setInterval(() => {
-      navigator.wakeLock.request('screen').catch(() => {});
-    }, 60000);
-  }
+  document.getElementById('modalResumo').addEventListener('click', function(e) {
+    if (e.target === this) fecharResumo();
+  });
   
-  atualizarStatus('✅ Sistema funcionando! Clique no alarme para ver resumo', 'status-ok');
+  atualizarStatus('✅ Funcionando! Clique nos lembretes para ver histórico', 'status-ok');
 }
 
 iniciar();
 </script>
-
 </body>
 </html>
