@@ -9,7 +9,7 @@
     
     body {
       font-family: Arial, sans-serif;
-      background: #f0f4ff;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       padding: 15px;
     }
@@ -23,7 +23,51 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     
-    h1 { text-align: center; color: #333; font-size: 24px; margin-bottom: 5px; }
+    /* RELÓGIO DIGITAL */
+    .relogio-container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .relogio-data {
+      color: #8888ff;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+    }
+    
+    .relogio-hora {
+      color: #00ff88;
+      font-size: 60px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+      letter-spacing: 3px;
+      margin: 10px 0;
+    }
+    
+    .relogio-segundos {
+      color: #ff6b6b;
+      font-size: 18px;
+      font-weight: bold;
+      animation: piscarSegundos 1s infinite;
+    }
+    
+    @keyframes piscarSegundos {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .relogio-info {
+      color: #aaaacc;
+      font-size: 12px;
+      margin-top: 5px;
+    }
     
     .alarme-ativo {
       background: #ff0000;
@@ -272,12 +316,33 @@
       font-weight: bold;
       animation: piscar 2s infinite;
     }
+
+    .proximo-alarme-info {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #2e7d32;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>💊 Alarme Remédio</h1>
+  <h1 style="text-align:center; color:#333; font-size:24px;">💊 Alarme Remédio</h1>
+  
+  <!-- RELÓGIO DIGITAL -->
+  <div class="relogio-container">
+    <div class="relogio-data" id="relogioData">Carregando...</div>
+    <div class="relogio-hora" id="relogioHora">00:00</div>
+    <div class="relogio-segundos" id="relogioSegundos">00</div>
+    <div class="relogio-info">⏰ Horário de Brasília</div>
+  </div>
+  
+  <!-- Próximo alarme -->
+  <div id="proximoAlarmeInfo" class="proximo-alarme-info" style="display:none;"></div>
   
   <div id="avisoNotificacao" class="aviso-notificacao" onclick="ativarNotificacoes()">
     🔔 TOQUE AQUI PARA ATIVAR NOTIFICAÇÕES
@@ -363,11 +428,109 @@
 </div>
 
 <script>
+// ============ RELÓGIO DIGITAL ============
+function atualizarRelogio() {
+  const agora = new Date();
+  
+  // Data formatada
+  const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  
+  const diaSemana = diasSemana[agora.getDay()];
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const mes = meses[agora.getMonth()];
+  const ano = agora.getFullYear();
+  
+  document.getElementById('relogioData').textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+  
+  // Hora formatada
+  const horas = String(agora.getHours()).padStart(2, '0');
+  const minutos = String(agora.getMinutes()).padStart(2, '0');
+  const segundos = String(agora.getSeconds()).padStart(2, '0');
+  
+  document.getElementById('relogioHora').textContent = `${horas}:${minutos}`;
+  document.getElementById('relogioSegundos').textContent = segundos;
+  
+  // Atualizar informação do próximo alarme
+  atualizarProximoAlarme();
+}
+
+// Atualizar relógio a cada segundo
+setInterval(atualizarRelogio, 1000);
+atualizarRelogio();
+
+// ============ MOSTRAR PRÓXIMO ALARME ============
+function atualizarProximoAlarme() {
+  if (lembretes.length === 0) {
+    document.getElementById('proximoAlarmeInfo').style.display = 'none';
+    return;
+  }
+  
+  const agora = new Date();
+  const horaAtual = String(agora.getHours()).padStart(2, '0') + ':' + 
+                    String(agora.getMinutes()).padStart(2, '0');
+  
+  // Encontrar o próximo alarme
+  let proximo = null;
+  let menorDiferenca = Infinity;
+  
+  lembretes.forEach(l => {
+    let horaAlarme = l.hora;
+    
+    // Se for intervalo, calcular próximo horário
+    if (l.intervalo && l.horaInicio) {
+      const [hIni, mIni] = l.horaInicio.split(':').map(Number);
+      const inicioMinutos = hIni * 60 + mIni;
+      const atualMinutos = new Date().getHours() * 60 + new Date().getMinutes();
+      
+      let diff = atualMinutos - inicioMinutos;
+      if (diff < 0) diff += 24 * 60;
+      
+      const intervaloMinutos = l.intervalo * 60;
+      const proximoMinutos = inicioMinutos + (Math.floor(diff / intervaloMinutos) + 1) * intervaloMinutos;
+      
+      const h = Math.floor((proximoMinutos % (24 * 60)) / 60);
+      const m = proximoMinutos % 60;
+      horaAlarme = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+    }
+    
+    // Calcular diferença
+    const [hAlarme, mAlarme] = horaAlarme.split(':').map(Number);
+    let diferencaMinutos = (hAlarme * 60 + mAlarme) - (new Date().getHours() * 60 + new Date().getMinutes());
+    if (diferencaMinutos < 0) diferencaMinutos += 24 * 60;
+    
+    if (diferencaMinutos < menorDiferenca) {
+      menorDiferenca = diferencaMinutos;
+      proximo = { ...l, horaProxima: horaAlarme, diferenca: diferencaMinutos };
+    }
+  });
+  
+  if (proximo) {
+    const div = document.getElementById('proximoAlarmeInfo');
+    div.style.display = 'block';
+    
+    if (proximo.diferenca === 0) {
+      div.innerHTML = `🔔 <strong>AGORA!</strong> - ${proximo.nome}`;
+      div.style.background = '#ffebee';
+      div.style.borderLeftColor = '#f44336';
+    } else if (proximo.diferenca < 60) {
+      div.innerHTML = `⏰ Próximo: <strong>${proximo.nome}</strong> em ${proximo.diferenca} minutos (${proximo.horaProxima})`;
+      div.style.background = '#fff3e0';
+      div.style.borderLeftColor = '#ff9800';
+    } else {
+      const horas = Math.floor(proximo.diferenca / 60);
+      const mins = proximo.diferenca % 60;
+      div.innerHTML = `📅 Próximo: <strong>${proximo.nome}</strong> às ${proximo.horaProxima} (${horas}h${mins}min)`;
+      div.style.background = '#e8f5e9';
+      div.style.borderLeftColor = '#4caf50';
+    }
+  }
+}
+
 // ============ BANCO DE DADOS LOCAL ============
 const DB_NAME = 'AlarmeRemedioDB';
 let db = null;
 
-// Abrir banco de dados IndexedDB
 function abrirBanco() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
@@ -387,13 +550,10 @@ function abrirBanco() {
       resolve(db);
     };
     
-    request.onerror = (event) => {
-      reject(event.target.error);
-    };
+    request.onerror = (event) => reject(event.target.error);
   });
 }
 
-// Salvar lembrete
 function salvarLembrete(lembrete) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['lembretes'], 'readwrite');
@@ -404,7 +564,6 @@ function salvarLembrete(lembrete) {
   });
 }
 
-// Buscar todos os lembretes
 function buscarLembretes() {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['lembretes'], 'readonly');
@@ -415,7 +574,6 @@ function buscarLembretes() {
   });
 }
 
-// Deletar lembrete
 function deletarLembrete(id) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['lembretes'], 'readwrite');
@@ -426,7 +584,6 @@ function deletarLembrete(id) {
   });
 }
 
-// Salvar histórico
 function salvarHistorico(registro) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['historico'], 'readwrite');
@@ -437,7 +594,6 @@ function salvarHistorico(registro) {
   });
 }
 
-// Buscar histórico
 function buscarHistorico() {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['historico'], 'readonly');
@@ -466,6 +622,7 @@ async function inicializarBanco() {
     historico = await buscarHistorico();
     console.log('✅ Banco carregado:', lembretes.length, 'lembretes');
     atualizarLista();
+    atualizarProximoAlarme();
   } catch(e) {
     console.error('Erro no banco:', e);
   }
@@ -554,7 +711,6 @@ async function iniciarAlarme(lembrete) {
   disparar();
   intervaloAlarme = setInterval(disparar, 5000);
   
-  // Salvar no histórico
   const agora = new Date();
   await salvarHistorico({
     nome: lembrete.nome,
@@ -590,12 +746,10 @@ function verificarAlarmes() {
   lembretes.forEach(lembrete => {
     let deveAlarmar = false;
     
-    // Modo fixo
     if (!lembrete.intervalo && lembrete.hora === horaAtual) {
       deveAlarmar = true;
     }
     
-    // Modo intervalo
     if (lembrete.intervalo && lembrete.horaInicio) {
       const [hIni, mIni] = lembrete.horaInicio.split(':').map(Number);
       const [hAtu, mAtu] = horaAtual.split(':').map(Number);
@@ -759,6 +913,7 @@ async function adicionarLembrete() {
   await salvarLembrete(lembrete);
   lembretes = await buscarLembretes();
   atualizarLista();
+  atualizarProximoAlarme();
   document.getElementById('nomeRemedio').value = '';
   document.getElementById('statusSistema').textContent = '✅ Lembrete salvo!';
   document.getElementById('statusSistema').className = 'status status-ok';
@@ -774,6 +929,7 @@ async function editarLembrete(id) {
     await salvarLembrete(l);
     lembretes = await buscarLembretes();
     atualizarLista();
+    atualizarProximoAlarme();
   }
 }
 
@@ -782,6 +938,7 @@ async function removerLembrete(id) {
     await deletarLembrete(id);
     lembretes = await buscarLembretes();
     atualizarLista();
+    atualizarProximoAlarme();
   }
 }
 
@@ -792,6 +949,7 @@ async function limparTudo() {
     }
     lembretes = [];
     atualizarLista();
+    atualizarProximoAlarme();
   }
 }
 
@@ -879,7 +1037,6 @@ async function iniciar() {
   document.getElementById('horaFixa').value = h;
   document.getElementById('horaInicioIntervalo').value = h;
   
-  // Verificar alarmes a cada 15 segundos
   setInterval(verificarAlarmes, 15000);
   verificarAlarmes();
   
@@ -887,14 +1044,13 @@ async function iniciar() {
     if (e.target === this) fecharModal();
   });
   
-  // Tentar manter tela ativa
   if ('wakeLock' in navigator) {
     setInterval(() => {
       navigator.wakeLock.request('screen').catch(() => {});
     }, 60000);
   }
   
-  document.getElementById('statusSistema').textContent = '✅ Sistema pronto! Verificando alarmes...';
+  document.getElementById('statusSistema').textContent = '✅ Sistema pronto!';
   document.getElementById('statusSistema').className = 'status status-ok';
 }
 
