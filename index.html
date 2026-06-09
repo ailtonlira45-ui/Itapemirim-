@@ -5,768 +5,795 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>💊 Alarme Remédio</title>
+  <title>💊 MedAlarm - Alarme de Remédios</title>
   <style>
+    :root {
+      --primary: #2563eb;
+      --success: #059669;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
       min-height: 100vh;
-      padding: 15px;
+      padding: 16px;
+      color: var(--text);
     }
     
-    .container {
-      max-width: 550px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 25px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
+    .app-container { max-width: 520px; margin: 0 auto; }
     
-    h1 { text-align: center; color: #333; font-size: 28px; margin-bottom: 5px; }
-    .subtitulo { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+    .header { text-align: center; margin-bottom: 20px; }
+    .logo { font-size: 36px; }
+    .app-title { font-size: 26px; font-weight: 800; color: var(--text); }
+    .app-subtitle { font-size: 13px; color: var(--text-light); font-weight: 500; }
     
-    .relogio-container {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    .clock-card {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
       border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 15px;
+      padding: 24px;
+      margin-bottom: 16px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: 1px solid #334155;
     }
     
-    .relogio-data { color: #8888ff; font-size: 16px; font-weight: bold; margin-bottom: 5px; }
-    .relogio-hora { color: #00ff88; font-size: 60px; font-weight: bold; font-family: 'Courier New', monospace; text-shadow: 0 0 20px rgba(0, 255, 136, 0.5); letter-spacing: 3px; margin: 10px 0; }
-    .relogio-segundos { color: #ff6b6b; font-size: 18px; font-weight: bold; }
+    .clock-date { color: #94a3b8; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .clock-time { color: #34d399; font-size: 60px; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px; }
+    .clock-seconds { color: #f87171; font-size: 16px; font-weight: 600; }
     
-    .alarme-tela-cheia {
+    .alarm-overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(255, 0, 0, 0.9);
+      inset: 0;
+      background: rgba(220, 38, 38, 0.95);
       z-index: 9999;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
-      animation: piscarFundo 0.5s infinite;
+      align-items: center;
+      justify-content: center;
+      animation: alarmPulse 0.5s infinite;
       cursor: pointer;
     }
     
-    .alarme-tela-cheia.ativo { display: flex; }
+    .alarm-overlay.active { display: flex; }
     
-    @keyframes piscarFundo {
-      0%, 100% { background: rgba(255, 0, 0, 0.9); }
-      50% { background: rgba(255, 255, 0, 0.9); }
+    @keyframes alarmPulse {
+      0%, 100% { background: rgba(220, 38, 38, 0.95); }
+      50% { background: rgba(234, 179, 8, 0.95); }
     }
     
-    .alarme-tela-cheia h2 { color: white; font-size: 40px; text-align: center; margin-bottom: 20px; }
-    .alarme-tela-cheia p { color: white; font-size: 24px; margin-bottom: 30px; }
-    .alarme-tela-cheia button { background: white; color: #ff0000; border: none; padding: 20px 40px; border-radius: 50px; font-size: 24px; font-weight: bold; cursor: pointer; }
+    .alarm-icon { font-size: 80px; margin-bottom: 16px; }
+    .alarm-title { color: white; font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+    .alarm-medicine { color: white; font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 24px; }
+    .alarm-time-badge { background: white; color: #dc2626; padding: 12px 32px; border-radius: 50px; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+    .alarm-dismiss { background: white; color: #dc2626; border: none; padding: 16px 48px; border-radius: 50px; font-size: 20px; font-weight: 700; cursor: pointer; }
     
-    .alerta-alarme {
-      background: #ff0000; color: white; padding: 20px; border-radius: 15px;
-      text-align: center; margin: 15px 0; font-size: 22px; font-weight: bold;
-      display: none; animation: piscar 0.5s infinite; cursor: pointer;
-    }
-    
-    @keyframes piscar {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    
-    .status-badge { padding: 10px; border-radius: 10px; text-align: center; margin: 10px 0; font-weight: bold; font-size: 14px; }
-    .status-ok { background: #d4edda; color: #155724; }
-    .status-erro { background: #f8d7da; color: #721c24; }
-    .status-aviso { background: #fff3cd; color: #856404; }
-    
-    .secao { background: #f8f9fa; border-radius: 15px; padding: 15px; margin: 15px 0; border: 1px solid #dee2e6; }
-    .secao h3 { color: #495057; margin-bottom: 12px; font-size: 16px; }
-    
-    label { display: block; color: #495057; font-weight: bold; margin: 8px 0 4px; font-size: 14px; }
-    
-    input { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 10px; font-size: 16px; margin-bottom: 10px; outline: none; }
-    input:focus { border-color: #667eea; }
-    
-    .modo-botoes { display: flex; gap: 8px; margin: 10px 0; }
-    
-    .modo-btn { flex: 1; padding: 10px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 14px; }
-    .modo-btn.ativo { background: #667eea; color: white; }
-    
-    .intervalos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 10px 0; }
-    
-    .intervalo-btn { padding: 10px 5px; border: 2px solid #dee2e6; background: white; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
-    .intervalo-btn.ativo { background: #28a745; color: white; border-color: #28a745; }
-    
-    .sons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
-    
-    .som-btn { padding: 12px 8px; border: 2px solid #dee2e6; background: white; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 14px; }
-    .som-btn.ativo { background: #ffc107; border-color: #ff9800; color: #333; }
-    
-    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin: 6px 0; }
-    .btn:active { transform: scale(0.98); }
-    .btn-primario { background: #667eea; color: white; }
-    .btn-sucesso { background: #28a745; color: white; }
-    .btn-perigo { background: #dc3545; color: white; }
-    .btn-alerta { background: #ffc107; color: #333; }
-    .btn-info { background: #17a2b8; color: white; }
-    
-    .lembrete-card { background: white; border: 2px solid #dee2e6; border-radius: 15px; padding: 15px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .lembrete-card:hover { border-color: #667eea; }
-    .lembrete-info h4 { color: #333; margin-bottom: 5px; }
-    
-    .lembrete-hora { background: #e9ecef; padding: 4px 12px; border-radius: 15px; font-size: 14px; color: #495057; display: inline-block; margin-right: 5px; margin-top: 3px; }
-    .lembrete-acoes { display: flex; gap: 5px; }
-    
-    .btn-pequeno { padding: 8px 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
-    .btn-editar { background: #ffc107; color: #333; }
-    .btn-excluir { background: #dc3545; color: white; }
-    
-    .painel { display: none; }
-    .painel.visivel { display: block; }
-    
-    .proximo-alarme {
-      background: #f3e5f5;
-      border-left: 4px solid #9c27b0;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
+    .status-bar {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-weight: 600;
       font-size: 13px;
-      color: #4a148c;
-      font-weight: bold;
-    }
-
-    .aviso-intervalo {
-      background: #e3f2fd;
-      border-left: 4px solid #2196F3;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      font-size: 13px;
-      color: #0d47a1;
-    }
-    
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; justify-content: center; align-items: center; }
-    .modal-overlay.visivel { display: flex; }
-    
-    .modal-resumo { background: white; border-radius: 20px; padding: 25px; max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; }
-    .modal-resumo h2 { color: #dc3545; text-align: center; margin-bottom: 20px; }
-    
-    .resumo-item { background: #f8f9fa; padding: 12px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; }
-    .resumo-label { font-weight: bold; color: #495057; }
-    .resumo-valor { color: #667eea; font-weight: bold; }
-    
-    .destaque { background: #ffe6e6; border: 2px solid #dc3545; padding: 15px; border-radius: 10px; text-align: center; margin: 15px 0; font-weight: bold; color: #dc3545; }
-    
-    .btn-fechar-modal { background: #667eea; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
-    .historico-container { max-height: 200px; overflow-y: auto; margin: 10px 0; }
-    .historico-item { background: #f0f0f0; padding: 8px; border-radius: 8px; margin: 5px 0; font-size: 12px; display: flex; justify-content: space-between; }
-    
-    .horarios-intervalo {
       display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin: 10px 0;
+      align-items: center;
+      gap: 8px;
     }
     
-    .horario-chip {
-      background: #9c27b0;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: bold;
+    .status-ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .status-warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+    .status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
     }
+    
+    .card-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .form-group { margin-bottom: 14px; }
+    
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+    
+    .form-input:focus { border-color: var(--primary); background: white; }
+    
+    .mode-selector { display: flex; gap: 8px; margin-bottom: 14px; }
+    
+    .mode-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    
+    .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    .interval-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    
+    .interval-chip {
+      padding: 10px 8px;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    
+    .interval-chip.active { background: var(--success); color: white; border-color: var(--success); }
+    
+    .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+    
+    .sound-chip {
+      padding: 12px 8px;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    
+    .sound-chip.active { background: var(--warning); border-color: #f59e0b; color: #1e293b; }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+    
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-warning { background: var(--warning); color: #1e293b; }
+    .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+    
+    .reminder-item {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .reminder-item:active { background: #f1f5f9; }
+    .reminder-info h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-top: 2px;
+    }
+    
+    .badge-time { background: #dbeafe; color: #1e40af; }
+    .badge-interval { background: #d1fae5; color: #065f46; }
+    .badge-sound { background: #fef3c7; color: #92400e; }
+    
+    .reminder-actions { display: flex; gap: 4px; }
+    
+    .btn-icon {
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .btn-icon-edit { background: #fef3c7; color: #92400e; }
+    .btn-icon-delete { background: #fee2e2; color: #991b1b; }
+    
+    .panel { display: none; }
+    .panel.visible { display: block; }
+    
+    .preview-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 13px;
+    }
+    
+    .time-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .time-chip { background: var(--primary); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 600; }
+    
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-backdrop.visible { display: flex; }
+    
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 16px; text-align: center; }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+    
+    .detail-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
+    .detail-value { font-weight: 700; color: var(--text); font-size: 14px; }
+    
+    .history-list { max-height: 150px; overflow-y: auto; }
+    
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background: #f8fafc;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    
+    .empty-state { text-align: center; color: var(--text-light); padding: 20px; font-size: 14px; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>💊 Alarme Remédio</h1>
-  <p class="subtitulo">⏰ Intervalo funcionando corretamente!</p>
-  
-  <div class="relogio-container">
-    <div class="relogio-data" id="relogioData"></div>
-    <div class="relogio-hora" id="relogioHora"></div>
-    <div class="relogio-segundos" id="relogioSegundos"></div>
+<div class="app-container">
+  <div class="header">
+    <div class="logo">💊</div>
+    <div class="app-title">MedAlarm</div>
+    <div class="app-subtitle">Alarme Inteligente de Remédios</div>
   </div>
   
-  <div id="alarmeTelaCheia" class="alarme-tela-cheia" onclick="pararAlarme()">
-    <h2>🚨 HORA DO REMÉDIO! 🚨</h2>
-    <p id="alarmeTelaCheiaNome"></p>
-    <button onclick="event.stopPropagation(); pararAlarme();">🔕 DESLIGAR</button>
+  <div class="clock-card">
+    <div class="clock-date" id="clockDate"></div>
+    <div class="clock-time" id="clockTime"></div>
+    <div class="clock-seconds" id="clockSeconds"></div>
   </div>
   
-  <div id="alertaAlarme" class="alerta-alarme" onclick="mostrarResumoAlarmeAtivo()">
-    🚨 HORA DO REMÉDIO! 🚨
+  <div class="alarm-overlay" id="alarmOverlay" onclick="stopAlarm()">
+    <div class="alarm-icon">🚨</div>
+    <div class="alarm-title">HORA DO REMÉDIO!</div>
+    <div class="alarm-medicine" id="alarmMedName"></div>
+    <div class="alarm-time-badge" id="alarmMedTime"></div>
+    <button class="alarm-dismiss" onclick="event.stopPropagation(); stopAlarm();">🔕 DESLIGAR</button>
   </div>
   
-  <div id="statusSistema" class="status-badge status-aviso">⏳ Carregando...</div>
-
-  <div id="modalResumo" class="modal-overlay">
-    <div class="modal-resumo">
-      <h2 id="modalTitulo">📋 Detalhes</h2>
-      <div id="conteudoResumo"></div>
-      <button class="btn-fechar-modal" onclick="fecharResumo()">✅ Fechar</button>
-    </div>
-  </div>
-
-  <div class="secao">
-    <h3>📋 Adicionar Remédio</h3>
-    <label>💊 Nome:</label>
-    <input type="text" id="nomeRemedio" placeholder="Ex: Dipirona 500mg" autocomplete="off">
+  <div class="status-bar status-warn" id="statusBar">⏳ Inicializando...</div>
+  
+  <!-- ADICIONAR REMÉDIO -->
+  <div class="card">
+    <div class="card-header">📋 Novo Lembrete</div>
     
-    <div class="modo-botoes">
-      <button id="modoFixo" class="modo-btn ativo" onclick="mudarModo('fixo')">🕒 Horário Fixo</button>
-      <button id="modoIntervalo" class="modo-btn" onclick="mudarModo('intervalo')">🔁 Intervalo</button>
+    <div class="form-group">
+      <label class="form-label">Nome do Remédio</label>
+      <input type="text" class="form-input" id="medName" placeholder="Ex: Dipirona 500mg" autocomplete="off">
     </div>
     
-    <div id="painelFixo" class="painel visivel">
-      <label>🕐 Horário:</label>
-      <input type="time" id="horaFixa">
+    <label class="form-label">Modo do Alarme</label>
+    <div class="mode-selector">
+      <button class="mode-btn active" id="modeFixedBtn" onclick="setMode('fixed')">🕒 Horário Fixo</button>
+      <button class="mode-btn" id="modeIntervalBtn" onclick="setMode('interval')">🔁 Por Intervalo</button>
     </div>
     
-    <div id="painelIntervalo" class="painel">
-      <label>🕐 Horário de início:</label>
-      <input type="time" id="horaInicioIntervalo" onchange="atualizarPreviewIntervalo()">
-      <label>⏱️ Repetir a cada:</label>
-      <div class="intervalos">
-        <button class="intervalo-btn" onclick="selecionarIntervalo(1, this)">1h</button>
-        <button class="intervalo-btn" onclick="selecionarIntervalo(4, this)">4h</button>
-        <button class="intervalo-btn" onclick="selecionarIntervalo(6, this)">6h</button>
-        <button class="intervalo-btn ativo" onclick="selecionarIntervalo(8, this)">8h</button>
-        <button class="intervalo-btn" onclick="selecionarIntervalo(12, this)">12h</button>
+    <div class="panel visible" id="panelFixed">
+      <div class="form-group">
+        <label class="form-label">Horário do Alarme</label>
+        <input type="time" class="form-input" id="timeFixed">
+      </div>
+    </div>
+    
+    <div class="panel" id="panelInterval">
+      <div class="form-group">
+        <label class="form-label">Horário de Início</label>
+        <input type="time" class="form-input" id="timeStart" onchange="updatePreview()">
       </div>
       
-      <div id="infoProximoAlarme" class="aviso-intervalo" style="display:none;"></div>
-      <div id="todosHorarios" class="horarios-intervalo" style="display:none;"></div>
+      <label class="form-label">Repetir a Cada</label>
+      <div class="interval-grid">
+        <button class="interval-chip" onclick="setIntervalVal(4, this)">4 horas</button>
+        <button class="interval-chip" onclick="setIntervalVal(6, this)">6 horas</button>
+        <button class="interval-chip" onclick="setIntervalVal(7, this)">7 horas</button>
+        <button class="interval-chip active" onclick="setIntervalVal(8, this)">8 horas</button>
+        <button class="interval-chip" onclick="setIntervalVal(12, this)">12 horas</button>
+        <button class="interval-chip" onclick="setIntervalVal(24, this)">24 horas</button>
+      </div>
+      
+      <div class="preview-box" id="previewBox" style="display:none;">
+        <strong>📅 Horários do dia:</strong>
+        <div class="time-chips" id="previewChips"></div>
+      </div>
     </div>
     
-    <label>🔊 Som:</label>
-    <div class="sons-grid">
-      <button class="som-btn ativo" onclick="selecionarSom('beep', this)">🔔 Beep</button>
-      <button class="som-btn" onclick="selecionarSom('melodia', this)">🎵 Melodia</button>
-      <button class="som-btn" onclick="selecionarSom('sirene', this)">🚨 Sirene</button>
-      <button class="som-btn" onclick="selecionarSom('sino', this)">🛎️ Sino</button>
-      <button class="som-btn" onclick="selecionarSom('vibracao', this)">📳 Vibração</button>
-      <button class="som-btn" onclick="selecionarSom('eletronico', this)">🎹 Eletrônico</button>
+    <label class="form-label">Som do Alarme</label>
+    <div class="sound-grid">
+      <button class="sound-chip active" onclick="setSound('beep', this)">🔔 Beep</button>
+      <button class="sound-chip" onclick="setSound('melody', this)">🎵 Melodia</button>
+      <button class="sound-chip" onclick="setSound('siren', this)">🚨 Sirene</button>
+      <button class="sound-chip" onclick="setSound('bell', this)">🛎️ Sino</button>
+      <button class="sound-chip" onclick="setSound('vibrate', this)">📳 Vibração</button>
+      <button class="sound-chip" onclick="setSound('electronic', this)">🎹 Eletrônico</button>
     </div>
     
-    <button class="btn btn-primario" onclick="testarSom()">🔊 Testar Som</button>
-    <button class="btn btn-sucesso" onclick="adicionarLembrete()">➕ Adicionar Lembrete</button>
+    <button class="btn btn-outline" onclick="testSound()">🔊 Testar Som</button>
+    <button class="btn btn-success" onclick="addReminder()">➕ Salvar Lembrete</button>
   </div>
-
-  <div class="secao">
-    <h3>📌 Seus Lembretes <span id="contador">(0)</span></h3>
-    <div id="listaLembretes"><p style="color:#999;">Nenhum lembrete</p></div>
+  
+  <!-- LISTA DE LEMBRETES -->
+  <div class="card">
+    <div class="card-header">📌 Seus Lembretes <span id="countBadge" style="color:var(--primary);">(0)</span></div>
+    <div id="remindersList"><div class="empty-state">Nenhum lembrete salvo</div></div>
   </div>
+  
+  <button class="btn btn-danger" onclick="stopAlarm()">🔕 Parar Alarme</button>
+  <button class="btn btn-outline" onclick="testAlarm()">🧪 Testar Alarme</button>
+  <button class="btn btn-warning" onclick="clearAll()">🗑️ Remover Todos</button>
+</div>
 
-  <button class="btn btn-perigo" onclick="pararAlarme()">🔕 Parar Alarme</button>
-  <button class="btn btn-info" onclick="testarAlarmeAgora()">🧪 Testar Alarme</button>
-  <button class="btn btn-alerta" onclick="limparTodos()">🗑️ Limpar Todos</button>
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle">📋 Detalhes</h3>
+    <div id="modalContent"></div>
+    <button class="btn btn-primary" onclick="closeModal()" style="margin-top:16px;">✅ Fechar</button>
+  </div>
 </div>
 
 <script>
 // ============ RELÓGIO ============
-function atualizarRelogio() {
-  const agora = new Date();
-  const dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+function updateClock() {
+  const now = new Date();
+  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   
-  document.getElementById('relogioData').textContent = `${dias[agora.getDay()]}, ${String(agora.getDate()).padStart(2,'0')} de ${meses[agora.getMonth()]} de ${agora.getFullYear()}`;
-  document.getElementById('relogioHora').textContent = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
-  document.getElementById('relogioSegundos').textContent = String(agora.getSeconds()).padStart(2,'0');
+  document.getElementById('clockDate').textContent = 
+    `${days[now.getDay()]}, ${now.getDate().toString().padStart(2,'0')} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+  document.getElementById('clockTime').textContent = 
+    `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  document.getElementById('clockSeconds').textContent = now.getSeconds().toString().padStart(2,'0');
+  
+  if (now.getSeconds() === 0) checkAlarms();
 }
-setInterval(atualizarRelogio, 1000);
-atualizarRelogio();
+setInterval(updateClock, 1000);
+updateClock();
 
 // ============ DADOS ============
-const CHAVE_LEMBRETES = 'alarme_remedios_final';
-const CHAVE_HISTORICO = 'alarme_historico_final';
+let reminders = [];
+let history = [];
+let currentMode = 'fixed';
+let currentInterval = 8;
+let currentSound = 'beep';
+let alarmActive = false;
+let alarmTimer = null;
+let audioCtx = null;
+let currentAlarm = null;
+let firedAlarms = {};
 
-let lembretes = [];
-let historicoAlarmes = [];
-let modoAtual = 'fixo';
-let intervaloSelecionado = 8;
-let somSelecionado = 'beep';
-let alarmeAtivo = false;
-let intervaloAlarme = null;
-let audioContext = null;
-let ultimosAlarmesDisparados = {};
-let alarmeAtual = null;
-
-function salvarTudo() {
-  try {
-    localStorage.setItem(CHAVE_LEMBRETES, JSON.stringify(lembretes));
-    localStorage.setItem(CHAVE_HISTORICO, JSON.stringify(historicoAlarmes));
-    console.log('💾 Salvo! Lembretes:', lembretes.length);
-  } catch(e) {
-    console.error('❌ Erro ao salvar:', e);
-  }
+// CARREGAR DADOS SALVOS
+try {
+  reminders = JSON.parse(localStorage.getItem('medalarm_reminders') || '[]');
+  history = JSON.parse(localStorage.getItem('medalarm_history') || '[]');
+} catch(e) {
+  reminders = [];
+  history = [];
 }
 
-function carregarTudo() {
-  try {
-    const l = localStorage.getItem(CHAVE_LEMBRETES);
-    const h = localStorage.getItem(CHAVE_HISTORICO);
-    lembretes = l ? JSON.parse(l) : [];
-    historicoAlarmes = h ? JSON.parse(h) : [];
-    console.log('📂 Carregado! Lembretes:', lembretes.length);
-  } catch(e) {
-    lembretes = [];
-    historicoAlarmes = [];
-  }
+function saveData() {
+  localStorage.setItem('medalarm_reminders', JSON.stringify(reminders));
+  localStorage.setItem('medalarm_history', JSON.stringify(history));
 }
 
 // ============ SOM ============
-function tocarSom(tipo) {
+function getAudioCtx() {
+  if (!audioCtx || audioCtx.state === 'closed') audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playSound(type) {
   try {
-    if (!audioContext || audioContext.state === 'closed') {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioContext.state === 'suspended') audioContext.resume();
-    
-    const ctx = audioContext;
-    const now = ctx.currentTime;
-    
-    function beep(freq, inicio, dur, onda='square', vol=0.4) {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime;
+    const beep = (f, s, d, w='square', v=0.35) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
       o.connect(g); g.connect(ctx.destination);
-      o.type = onda; o.frequency.value = freq;
-      g.gain.setValueAtTime(vol, inicio);
-      g.gain.exponentialRampToValueAtTime(0.001, inicio+dur);
-      o.start(inicio); o.stop(inicio+dur);
-    }
+      o.type = w; o.frequency.value = f;
+      g.gain.setValueAtTime(v, s); g.gain.exponentialRampToValueAtTime(0.001, s+d);
+      o.start(s); o.stop(s+d);
+    };
     
-    if (tipo === 'beep') {
-      for(let i=0; i<5; i++) beep(880, now+i*0.3, 0.25);
-    } else if (tipo === 'melodia') {
-      beep(523, now, 0.2, 'sine'); beep(659, now+0.2, 0.2, 'sine');
-      beep(784, now+0.4, 0.3, 'sine');
-    } else if (tipo === 'sirene') {
-      for(let i=0; i<10; i++) beep(400+i*80, now+i*0.1, 0.15, 'sawtooth', 0.4);
-    } else if (tipo === 'sino') {
-      beep(1200, now, 0.15, 'triangle', 0.6);
-      beep(1000, now+0.15, 0.2, 'triangle', 0.5);
-    } else if (tipo === 'vibracao') {
-      beep(150, now, 0.8, 'square', 0.9);
-      if (navigator.vibrate) navigator.vibrate([300,100,300]);
-    } else if (tipo === 'eletronico') {
-      beep(440, now, 0.1); beep(660, now+0.1, 0.1); beep(880, now+0.2, 0.2);
-    }
+    if (type === 'beep') { for(let i=0;i<5;i++) beep(880, t+i*0.3, 0.25); }
+    else if (type === 'melody') { beep(523,t,0.2,'sine',0.4); beep(659,t+0.2,0.2,'sine',0.4); beep(784,t+0.4,0.3,'sine',0.4); }
+    else if (type === 'siren') { for(let i=0;i<10;i++) beep(400+i*80, t+i*0.1, 0.15, 'sawtooth',0.4); }
+    else if (type === 'bell') { beep(1200,t,0.15,'triangle',0.6); beep(1000,t+0.15,0.2,'triangle',0.5); }
+    else if (type === 'vibrate') { beep(150,t,0.8,'square',0.9); if(navigator.vibrate) navigator.vibrate([300,100,300]); }
+    else if (type === 'electronic') { beep(440,t,0.1); beep(660,t+0.1,0.1); beep(880,t+0.2,0.2); }
   } catch(e) {}
 }
 
-// ============ NOTIFICAÇÃO ============
-function mostrarNotificacao(nome, hora) {
+// ============ ALARME ============
+function triggerAlarm(name, time) {
+  if (alarmActive) return;
+  alarmActive = true;
+  currentAlarm = { name, time };
+  
+  document.getElementById('alarmOverlay').classList.add('active');
+  document.getElementById('alarmMedName').textContent = `💊 ${name}`;
+  document.getElementById('alarmMedTime').textContent = `⏰ ${time}`;
+  
+  function ring() { playSound(currentSound); }
+  ring();
+  alarmTimer = setInterval(ring, 3000);
+  
+  if (navigator.vibrate) navigator.vibrate([500,200,500,200,500]);
+  
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification('💊 HORA DO REMÉDIO!', {
-      body: `${nome} - ${hora}`,
+      body: `${name} - ${time}`,
       icon: '💊',
-      vibrate: [500,200,500,200,500],
+      vibrate: [500,200,500],
       requireInteraction: true,
-      tag: 'alarme-' + Date.now()
+      tag: 'medalarm'
     });
   }
-}
-
-// ============ ALARME ============
-function iniciarAlarme(nome, hora, id) {
-  if (alarmeAtivo) return;
   
-  alarmeAtivo = true;
-  alarmeAtual = { id, nome, hora };
+  if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
   
-  // Tela cheia
-  document.getElementById('alarmeTelaCheia').classList.add('ativo');
-  document.getElementById('alarmeTelaCheiaNome').textContent = `💊 ${nome} - ${hora}`;
-  
-  // Alerta
-  document.getElementById('alertaAlarme').style.display = 'block';
-  document.getElementById('alertaAlarme').innerHTML = `🚨 ${nome} - ${hora} 🚨`;
-  
-  // Som
-  function tocar() { tocarSom(somSelecionado); }
-  tocar();
-  intervaloAlarme = setInterval(tocar, 2000);
-  
-  // Notificação
-  mostrarNotificacao(nome, hora);
-  
-  // Vibração
-  if (navigator.vibrate) {
-    navigator.vibrate([500,200,500,200,500]);
-  }
-  
-  // Wake Lock
-  if ('wakeLock' in navigator) {
-    navigator.wakeLock.request('screen').catch(() => {});
-  }
-  
-  // Histórico
-  const agora = new Date();
-  historicoAlarmes.push({
-    nome, 
-    data: agora.toLocaleDateString('pt-BR'),
-    hora: agora.toLocaleTimeString('pt-BR'),
+  const now = new Date();
+  history.push({
+    name,
+    date: now.toLocaleDateString('pt-BR'),
+    time: now.toLocaleTimeString('pt-BR'),
     timestamp: Date.now()
   });
-  if (historicoAlarmes.length > 100) historicoAlarmes = historicoAlarmes.slice(-100);
-  salvarTudo();
+  if (history.length > 200) history = history.slice(-200);
+  saveData();
   
-  atualizarStatus('🚨 ALARME: ' + nome + ' às ' + hora, 'status-erro');
+  setStatus(`🚨 Alarme: ${name}`, 'error');
+  
+  setTimeout(() => { if (alarmActive) stopAlarm(); }, 120000);
 }
 
-function pararAlarme() {
-  alarmeAtivo = false;
-  alarmeAtual = null;
-  
-  if (intervaloAlarme) { clearInterval(intervaloAlarme); intervaloAlarme = null; }
+function stopAlarm() {
+  alarmActive = false;
+  currentAlarm = null;
+  if (alarmTimer) { clearInterval(alarmTimer); alarmTimer = null; }
   if (navigator.vibrate) navigator.vibrate(0);
-  
-  document.getElementById('alarmeTelaCheia').classList.remove('ativo');
-  document.getElementById('alertaAlarme').style.display = 'none';
-  
-  atualizarStatus('✅ Alarme parado', 'status-ok');
+  document.getElementById('alarmOverlay').classList.remove('active');
+  setStatus('✅ Pronto', 'ok');
 }
 
-// ============ VERIFICAÇÃO (CORRIGIDA PARA INTERVALO) ============
-function verificarAlarmes() {
-  if (alarmeAtivo) return;
+// ============ VERIFICAR ALARMES ============
+function checkAlarms() {
+  if (alarmActive) return;
   
-  const agora = new Date();
-  const horaAtual = String(agora.getHours()).padStart(2,'0')+':'+String(agora.getMinutes()).padStart(2,'0');
-  const minutosAtual = agora.getHours() * 60 + agora.getMinutes();
-  const dataAtual = agora.toDateString();
+  const now = new Date();
+  const currentTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  const today = now.toDateString();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
   
-  console.log('🔍 Verificando:', horaAtual);
-  
-  lembretes.forEach(lembrete => {
-    let deveAlarmar = false;
-    let horaAlarme = '';
+  for (const rem of reminders) {
+    let shouldFire = false;
+    let fireTime = '';
     
-    // MODO FIXO
-    if (!lembrete.intervalo && lembrete.hora === horaAtual) {
-      deveAlarmar = true;
-      horaAlarme = lembrete.hora;
-    }
-    
-    // MODO INTERVALO (CORRIGIDO)
-    if (lembrete.intervalo && lembrete.horaInicio) {
-      const [hIni, mIni] = lembrete.horaInicio.split(':').map(Number);
-      const minutosInicio = hIni * 60 + mIni;
-      const intervaloMinutos = lembrete.intervalo * 60;
-      
-      // Calcular diferença desde o início
-      let diferenca = minutosAtual - minutosInicio;
-      
-      // Se for negativo, significa que o horário de início é depois do horário atual
-      // ou que passou da meia-noite
-      if (diferenca < 0) {
-        diferenca += 24 * 60; // Adiciona 24 horas em minutos
-      }
-      
-      // Verificar se a diferença é múltiplo exato do intervalo
-      if (diferenca >= 0 && diferenca % intervaloMinutos === 0) {
-        deveAlarmar = true;
-        horaAlarme = horaAtual;
-        console.log('✅ Intervalo encontrado!', lembrete.nome, 'Diferença:', diferenca, 'min');
-      }
+    if (!rem.interval) {
+      if (rem.time === currentTime) { shouldFire = true; fireTime = rem.time; }
+    } else {
+      const [h, m] = rem.startTime.split(':').map(Number);
+      const startMin = h * 60 + m;
+      let diff = currentMinutes - startMin;
+      if (diff < 0) diff += 1440;
+      if (diff % (rem.interval * 60) === 0) { shouldFire = true; fireTime = currentTime; }
     }
     
-    if (deveAlarmar) {
-      const chave = lembrete.id + '-' + dataAtual + '-' + horaAlarme;
-      if (!ultimosAlarmesDisparados[chave]) {
-        console.log('🚨 DISPARANDO:', lembrete.nome, horaAlarme);
-        ultimosAlarmesDisparados[chave] = true;
-        iniciarAlarme(lembrete.nome, horaAlarme, lembrete.id);
+    if (shouldFire) {
+      const key = `${rem.id}-${today}-${fireTime}`;
+      if (!firedAlarms[key]) {
+        firedAlarms[key] = true;
+        triggerAlarm(rem.name, fireTime);
+        break;
       }
-    }
-  });
-  
-  // Limpar chaves de dias anteriores
-  for (let chave in ultimosAlarmesDisparados) {
-    if (!chave.includes(dataAtual)) {
-      delete ultimosAlarmesDisparados[chave];
-    }
-  }
-}
-
-// ============ RESUMO (MOSTRA TODOS OS HORÁRIOS) ============
-function mostrarResumoAlarmeAtivo() { 
-  if (alarmeAtual) mostrarResumo(alarmeAtual); 
-}
-
-function mostrarResumoLembrete(id) {
-  const l = lembretes.find(x => x.id === id);
-  if (l) mostrarResumo(l);
-}
-
-function mostrarResumo(dados) {
-  const modal = document.getElementById('modalResumo');
-  const conteudo = document.getElementById('conteudoResumo');
-  const hoje = new Date().toLocaleDateString('pt-BR');
-  const hist = historicoAlarmes.filter(h => h.nome === dados.nome).slice(-10).reverse();
-  const tomadosHoje = historicoAlarmes.filter(h => h.nome === dados.nome && h.data === hoje).length;
-  
-  // Calcular todos os horários para intervalo
-  let todosHorarios = [];
-  if (dados.intervalo && dados.horaInicio) {
-    const [h, m] = dados.horaInicio.split(':').map(Number);
-    for (let i = 0; i < 24 / dados.intervalo; i++) {
-      const totalMinutos = (h * 60 + m + i * dados.intervalo * 60) % (24 * 60);
-      const hh = Math.floor(totalMinutos / 60);
-      const mm = totalMinutos % 60;
-      todosHorarios.push(String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0'));
     }
   }
   
-  conteudo.innerHTML = `
-    <div class="destaque">
-      ${alarmeAtivo ? '🚨 ALARME ATIVO! 🚨' : '📋 Detalhes do Lembrete'}
-    </div>
-    
-    <div class="resumo-item">
-      <span class="resumo-label">💊 Remédio:</span>
-      <span class="resumo-valor">${dados.nome}</span>
-    </div>
-    
-    <div class="resumo-item">
-      <span class="resumo-label">🕐 Horário:</span>
-      <span class="resumo-valor">${dados.intervalo ? dados.horaInicio + ' (início)' : dados.hora}</span>
-    </div>
-    
-    ${dados.intervalo ? `
-      <div class="resumo-item">
-        <span class="resumo-label">⏱️ Intervalo:</span>
-        <span class="resumo-valor">A cada ${dados.intervalo}h</span>
-      </div>
-      
-      <div style="background:#f3e5f5; padding:15px; border-radius:10px; margin:10px 0;">
-        <strong>📅 TODOS os horários do dia:</strong>
-        <div class="horarios-intervalo" style="margin-top:8px;">
-          ${todosHorarios.map(h => `
-            <span class="horario-chip">${h}</span>
-          `).join(' ')}
-        </div>
-      </div>
-    ` : ''}
-    
-    <div class="resumo-item">
-      <span class="resumo-label">🔊 Som:</span>
-      <span class="resumo-valor">${dados.som || 'beep'}</span>
-    </div>
-    
-    <div class="resumo-item">
-      <span class="resumo-label">📊 Tomados hoje:</span>
-      <span class="resumo-valor">${tomadosHoje}x</span>
-    </div>
-    
-    ${hist.length > 0 ? `
-      <div style="margin-top:10px;">
-        <strong>📜 Últimos registros:</strong>
-        <div class="historico-container">
-          ${hist.map(h => `
-            <div class="historico-item">
-              <span>${h.data}</span>
-              <span>${h.hora}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    ` : ''}
-  `;
-  
-  document.getElementById('modalTitulo').textContent = alarmeAtivo ? '🚨 Alarme Ativo!' : '📋 ' + dados.nome;
-  modal.classList.add('visivel');
+  for (const key in firedAlarms) {
+    if (!key.includes(today)) delete firedAlarms[key];
+  }
 }
 
-function fecharResumo() { 
-  document.getElementById('modalResumo').classList.remove('visivel'); 
-}
-
-// ============ CRUD ============
-function adicionarLembrete() {
-  const nome = document.getElementById('nomeRemedio').value.trim();
-  if (!nome) return alert('⚠️ Digite o nome!');
+// ============ ADICIONAR ============
+function addReminder() {
+  const name = document.getElementById('medName').value.trim();
+  if (!name) return alert('Digite o nome do remédio!');
   
-  let hora, horaInicio = null, intervalo = null;
+  let time, startTime = null, interval = null;
   
-  if (modoAtual === 'fixo') {
-    hora = document.getElementById('horaFixa').value;
-    if (!hora) return alert('⚠️ Selecione o horário!');
+  if (currentMode === 'fixed') {
+    time = document.getElementById('timeFixed').value;
+    if (!time) return alert('Selecione o horário!');
   } else {
-    horaInicio = document.getElementById('horaInicioIntervalo').value;
-    if (!horaInicio) return alert('⚠️ Selecione o horário de início!');
-    hora = horaInicio;
-    intervalo = intervaloSelecionado;
+    startTime = document.getElementById('timeStart').value;
+    if (!startTime) return alert('Selecione o horário de início!');
+    time = startTime;
+    interval = currentInterval;
   }
   
-  lembretes.push({ 
-    id: Date.now(), 
-    nome, 
-    hora, 
-    horaInicio, 
-    intervalo, 
-    som: somSelecionado 
+  reminders.push({
+    id: Date.now(),
+    name,
+    time,
+    startTime,
+    interval,
+    sound: currentSound,
+    created: new Date().toISOString()
   });
   
-  salvarTudo();
-  atualizarLista();
-  document.getElementById('nomeRemedio').value = '';
-  atualizarStatus('✅ Lembrete salvo!', 'status-ok');
+  saveData();
+  renderList();
+  document.getElementById('medName').value = '';
+  setStatus('✅ Lembrete salvo!', 'ok');
 }
 
-function editarLembrete(id) {
-  const l = lembretes.find(x => x.id === id);
-  if (!l) return;
-  const nh = prompt('Novo horário (HH:MM):', l.horaInicio || l.hora);
-  if (nh && /^\d{2}:\d{2}$/.test(nh)) {
-    if (l.intervalo) { l.horaInicio = nh; l.hora = nh; }
-    else l.hora = nh;
-    salvarTudo();
-    atualizarLista();
-  }
-}
-
-function removerLembrete(id) {
-  if (confirm('Remover?')) {
-    lembretes = lembretes.filter(l => l.id !== id);
-    salvarTudo();
-    atualizarLista();
-  }
-}
-
-function limparTodos() {
-  if (confirm('Remover TODOS?')) {
-    lembretes = [];
-    salvarTudo();
-    atualizarLista();
-    pararAlarme();
-  }
-}
-
-// ============ INTERFACE ============
-function atualizarLista() {
-  const div = document.getElementById('listaLembretes');
-  document.getElementById('contador').textContent = '(' + lembretes.length + ')';
+// ============ LISTA ============
+function renderList() {
+  const div = document.getElementById('remindersList');
+  document.getElementById('countBadge').textContent = `(${reminders.length})`;
   
-  if (!lembretes.length) {
-    div.innerHTML = '<p style="color:#999;">Nenhum lembrete</p>';
+  if (!reminders.length) {
+    div.innerHTML = '<div class="empty-state">Nenhum lembrete salvo</div>';
     return;
   }
   
-  lembretes.sort((a, b) => a.hora.localeCompare(b.hora));
+  reminders.sort((a,b) => a.time.localeCompare(b.time));
   
-  div.innerHTML = lembretes.map(l => `
-    <div class="lembrete-card" onclick="mostrarResumoLembrete(${l.id})">
-      <div class="lembrete-info">
-        <h4>💊 ${l.nome} ${l.intervalo ? '🔁' : ''}</h4>
-        ${l.intervalo ? 
-          `<span class="lembrete-hora">🕐 Início: ${l.horaInicio}</span><span class="lembrete-hora">⏱️ A cada ${l.intervalo}h</span>` :
-          `<span class="lembrete-hora">🕒 ${l.hora}</span>`
+  div.innerHTML = reminders.map(r => `
+    <div class="reminder-item" onclick="showDetails(${r.id})">
+      <div class="reminder-info">
+        <h4>💊 ${r.name} ${r.interval ? '🔁' : ''}</h4>
+        ${r.interval ? 
+          `<span class="badge badge-time">🕐 ${r.startTime}</span><span class="badge badge-interval">⏱️ ${r.interval}h</span>` :
+          `<span class="badge badge-time">🕒 ${r.time}</span>`
         }
-        <span class="lembrete-hora">🔊 ${l.som}</span>
+        <span class="badge badge-sound">🔊 ${r.sound}</span>
       </div>
-      <div class="lembrete-acoes">
-        <button class="btn-pequeno btn-editar" onclick="event.stopPropagation(); editarLembrete(${l.id})">✏️</button>
-        <button class="btn-pequeno btn-excluir" onclick="event.stopPropagation(); removerLembrete(${l.id})">🗑️</button>
+      <div class="reminder-actions">
+        <button class="btn-icon btn-icon-edit" onclick="event.stopPropagation(); editReminder(${r.id})">✏️</button>
+        <button class="btn-icon btn-icon-delete" onclick="event.stopPropagation(); deleteReminder(${r.id})">🗑️</button>
       </div>
     </div>
   `).join('');
 }
 
-function mudarModo(m) {
-  modoAtual = m;
-  document.getElementById('modoFixo').classList.toggle('ativo', m==='fixo');
-  document.getElementById('modoIntervalo').classList.toggle('ativo', m==='intervalo');
-  document.getElementById('painelFixo').classList.toggle('visivel', m==='fixo');
-  document.getElementById('painelIntervalo').classList.toggle('visivel', m==='intervalo');
-}
-
-function selecionarIntervalo(h, btn) {
-  intervaloSelecionado = h;
-  document.querySelectorAll('.intervalo-btn').forEach(b => b.classList.remove('ativo'));
-  btn.classList.add('ativo');
-  atualizarPreviewIntervalo();
-}
-
-function atualizarPreviewIntervalo() {
-  const hi = document.getElementById('horaInicioIntervalo').value;
-  if (hi && intervaloSelecionado) {
-    const [h, m] = hi.split(':').map(Number);
-    const totalHorarios = Math.floor(24 / intervaloSelecionado);
-    const horarios = [];
-    
-    for (let i = 0; i < totalHorarios; i++) {
-      const totalMinutos = (h * 60 + m + i * intervaloSelecionado * 60) % (24 * 60);
-      const hh = Math.floor(totalMinutos / 60);
-      const mm = totalMinutos % 60;
-      horarios.push(String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0'));
+// ============ DETALHES ============
+function showDetails(id) {
+  const r = reminders.find(x => x.id === id);
+  if (!r) return;
+  
+  const today = new Date().toLocaleDateString('pt-BR');
+  const medHistory = history.filter(h => h.name === r.name).slice(-10).reverse();
+  const todayCount = history.filter(h => h.name === r.name && h.date === today).length;
+  
+  let scheduleHtml = '';
+  if (r.interval && r.startTime) {
+    const [h, m] = r.startTime.split(':').map(Number);
+    const times = [];
+    const total = Math.floor(1440 / (r.interval * 60));
+    for (let i = 0; i < total; i++) {
+      const mins = (h*60+m + i*r.interval*60) % 1440;
+      times.push(`${Math.floor(mins/60).toString().padStart(2,'0')}:${(mins%60).toString().padStart(2,'0')}`);
     }
-    
-    document.getElementById('infoProximoAlarme').style.display = 'block';
-    document.getElementById('infoProximoAlarme').innerHTML = 
-      `📅 ${totalHorarios} alarmes por dia: <strong>${horarios.join(' → ')}</strong>`;
-    
-    // Mostrar chips com todos os horários
-    const chipsDiv = document.getElementById('todosHorarios');
-    chipsDiv.style.display = 'flex';
-    chipsDiv.innerHTML = horarios.map(h => 
-      `<span class="horario-chip">${h}</span>`
-    ).join('');
+    scheduleHtml = `
+      <div class="detail-row"><span class="detail-label">⏱️ Intervalo</span><span class="detail-value">A cada ${r.interval}h</span></div>
+      <div style="background:#eff6ff; padding:12px; border-radius:8px; margin-bottom:8px;">
+        <strong style="font-size:13px;">📅 ${total} alarmes/dia:</strong>
+        <div class="time-chips" style="margin-top:6px;">${times.map(t => `<span class="time-chip">${t}</span>`).join('')}</div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('modalTitle').textContent = '📋 ' + r.name;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="detail-row"><span class="detail-label">💊 Remédio</span><span class="detail-value">${r.name}</span></div>
+    <div class="detail-row"><span class="detail-label">🕐 Horário</span><span class="detail-value">${r.interval ? r.startTime + ' (início)' : r.time}</span></div>
+    ${scheduleHtml}
+    <div class="detail-row"><span class="detail-label">🔊 Som</span><span class="detail-value">${r.sound}</span></div>
+    <div class="detail-row"><span class="detail-label">📊 Hoje</span><span class="detail-value">${todayCount}x</span></div>
+    ${medHistory.length ? `
+      <div style="margin-top:12px;"><strong style="font-size:13px;">📜 Histórico</strong>
+        <div class="history-list">${medHistory.map(h => `<div class="history-item"><span>${h.date}</span><span>${h.time}</span></div>`).join('')}</div>
+      </div>
+    ` : ''}
+  `;
+  document.getElementById('modalBackdrop').classList.add('visible');
+}
+
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('visible'); }
+
+// ============ EDITAR / REMOVER ============
+function editReminder(id) {
+  const r = reminders.find(x => x.id === id);
+  if (!r) return;
+  const val = prompt('Novo horário (HH:MM):', r.startTime || r.time);
+  if (val && /^\d{2}:\d{2}$/.test(val)) {
+    if (r.interval) { r.startTime = val; r.time = val; }
+    else r.time = val;
+    saveData();
+    renderList();
+    setStatus('✅ Atualizado!', 'ok');
   }
 }
 
-function selecionarSom(s, btn) {
-  somSelecionado = s;
-  document.querySelectorAll('.som-btn').forEach(b => b.classList.remove('ativo'));
-  btn.classList.add('ativo');
+function deleteReminder(id) {
+  if (confirm('Remover este lembrete?')) {
+    reminders = reminders.filter(r => r.id !== id);
+    saveData();
+    renderList();
+    setStatus('🗑️ Removido', 'warn');
+  }
 }
 
-function testarSom() { tocarSom(somSelecionado); }
+function clearAll() {
+  if (reminders.length && confirm('Remover TODOS os lembretes?')) {
+    reminders = [];
+    saveData();
+    renderList();
+    stopAlarm();
+    setStatus('🗑️ Todos removidos', 'warn');
+  }
+}
 
-function testarAlarmeAgora() {
+// ============ INTERFACE ============
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('modeFixedBtn').classList.toggle('active', m==='fixed');
+  document.getElementById('modeIntervalBtn').classList.toggle('active', m==='interval');
+  document.getElementById('panelFixed').classList.toggle('visible', m==='fixed');
+  document.getElementById('panelInterval').classList.toggle('visible', m==='interval');
+}
+
+function setIntervalVal(h, btn) {
+  currentInterval = h;
+  document.querySelectorAll('.interval-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updatePreview();
+}
+
+function setSound(s, btn) {
+  currentSound = s;
+  document.querySelectorAll('.sound-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function updatePreview() {
+  const start = document.getElementById('timeStart').value;
+  if (start && currentInterval) {
+    const [h, m] = start.split(':').map(Number);
+    const total = Math.floor(1440 / (currentInterval * 60));
+    const times = [];
+    for (let i = 0; i < total; i++) {
+      const mins = (h*60+m + i*currentInterval*60) % 1440;
+      times.push(`${Math.floor(mins/60).toString().padStart(2,'0')}:${(mins%60).toString().padStart(2,'0')}`);
+    }
+    document.getElementById('previewBox').style.display = 'block';
+    document.getElementById('previewChips').innerHTML = times.map(t => `<span class="time-chip">${t}</span>`).join('');
+  }
+}
+
+function testSound() { playSound(currentSound); }
+
+function testAlarm() {
   if (Notification.permission !== 'granted') Notification.requestPermission();
-  iniciarAlarme('🧪 TESTE', new Date().toLocaleTimeString(), 'teste');
+  triggerAlarm('🧪 Teste', new Date().toLocaleTimeString('pt-BR'));
 }
 
-function atualizarStatus(msg, cls) {
-  document.getElementById('statusSistema').textContent = msg;
-  document.getElementById('statusSistema').className = 'status-badge ' + cls;
+function setStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.className = 'status-bar status-' + type;
 }
 
 // ============ INICIAR ============
-function iniciar() {
-  carregarTudo();
-  
-  const agora = new Date();
-  const h = String(agora.getHours()).padStart(2,'0')+':'+String(agora.getMinutes()).padStart(2,'0');
-  document.getElementById('horaFixa').value = h;
-  document.getElementById('horaInicioIntervalo').value = h;
+function init() {
+  const now = new Date();
+  const currentTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  document.getElementById('timeFixed').value = currentTime;
+  document.getElementById('timeStart').value = currentTime;
   
   Notification.requestPermission();
-  atualizarLista();
+  renderList();
   
-  // Verificar a cada 30 segundos
-  setInterval(verificarAlarmes, 30000);
-  verificarAlarmes();
-  
-  document.getElementById('modalResumo').addEventListener('click', function(e) {
-    if (e.target === this) fecharResumo();
+  document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
   });
   
   if ('wakeLock' in navigator) {
-    setInterval(() => { navigator.wakeLock.request('screen').catch(() => {}); }, 60000);
+    setInterval(() => { navigator.wakeLock.request('screen').catch(()=>{}); }, 60000);
   }
   
-  atualizarStatus('✅ ' + lembretes.length + ' lembrete(s) carregado(s)!', 'status-ok');
+  setStatus(`✅ ${reminders.length} lembrete(s) carregado(s)`, 'ok');
 }
 
-iniciar();
+init();
 </script>
 </body>
 </html>
