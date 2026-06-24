@@ -1,799 +1,1479 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>💊 MedAlarm - Alarme de Remédios</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --success: #059669;
-      --danger: #dc2626;
-      --warning: #f59e0b;
-      --bg: #f1f5f9;
-      --card: #ffffff;
-      --text: #1e293b;
-      --text-light: #64748b;
-      --border: #e2e8f0;
-    }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      min-height: 100vh;
-      padding: 16px;
-      color: var(--text);
-    }
-    
-    .app-container { max-width: 520px; margin: 0 auto; }
-    
-    .header { text-align: center; margin-bottom: 20px; }
-    .logo { font-size: 36px; }
-    .app-title { font-size: 26px; font-weight: 800; color: var(--text); }
-    .app-subtitle { font-size: 13px; color: var(--text-light); font-weight: 500; }
-    
-    .clock-card {
-      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 16px;
-      text-align: center;
-      border: 1px solid #334155;
-    }
-    
-    .clock-date { color: #94a3b8; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-    .clock-time { color: #34d399; font-size: 60px; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px; }
-    .clock-seconds { color: #f87171; font-size: 16px; font-weight: 600; }
-    
-    .alarm-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(220, 38, 38, 0.95);
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: alarmPulse 0.5s infinite;
-      cursor: pointer;
-    }
-    
-    .alarm-overlay.active { display: flex; }
-    
-    @keyframes alarmPulse {
-      0%, 100% { background: rgba(220, 38, 38, 0.95); }
-      50% { background: rgba(234, 179, 8, 0.95); }
-    }
-    
-    .alarm-icon { font-size: 80px; margin-bottom: 16px; }
-    .alarm-title { color: white; font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 8px; }
-    .alarm-medicine { color: white; font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 24px; }
-    .alarm-time-badge { background: white; color: #dc2626; padding: 12px 32px; border-radius: 50px; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
-    .alarm-dismiss { background: white; color: #dc2626; border: none; padding: 16px 48px; border-radius: 50px; font-size: 20px; font-weight: 700; cursor: pointer; }
-    
-    .status-bar {
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      font-weight: 600;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .status-ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-    .status-warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-    .status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-    
-    .card {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border: 1px solid var(--border);
-    }
-    
-    .card-header {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .form-group { margin-bottom: 14px; }
-    
-    .form-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    
-    .form-input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 500;
-      outline: none;
-      transition: all 0.2s;
-      background: #f8fafc;
-    }
-    
-    .form-input:focus { border-color: var(--primary); background: white; }
-    
-    .mode-selector { display: flex; gap: 8px; margin-bottom: 14px; }
-    
-    .mode-btn {
-      flex: 1;
-      padding: 10px;
-      border: 2px solid var(--border);
-      background: #f8fafc;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    
-    .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-    
-    .interval-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-    
-    .interval-chip {
-      padding: 10px 8px;
-      border: 2px solid var(--border);
-      background: #f8fafc;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    
-    .interval-chip.active { background: var(--success); color: white; border-color: var(--success); }
-    
-    .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
-    
-    .sound-chip {
-      padding: 12px 8px;
-      border: 2px solid var(--border);
-      background: #f8fafc;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    
-    .sound-chip.active { background: var(--warning); border-color: #f59e0b; color: #1e293b; }
-    
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 8px;
-    }
-    
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-warning { background: var(--warning); color: #1e293b; }
-    .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
-    
-    .reminder-item {
-      background: #f8fafc;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .reminder-item:active { background: #f1f5f9; }
-    .reminder-info h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-    
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-right: 4px;
-      margin-top: 2px;
-    }
-    
-    .badge-time { background: #dbeafe; color: #1e40af; }
-    .badge-interval { background: #d1fae5; color: #065f46; }
-    .badge-sound { background: #fef3c7; color: #92400e; }
-    
-    .reminder-actions { display: flex; gap: 4px; }
-    
-    .btn-icon {
-      padding: 8px 10px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    
-    .btn-icon-edit { background: #fef3c7; color: #92400e; }
-    .btn-icon-delete { background: #fee2e2; color: #991b1b; }
-    
-    .panel { display: none; }
-    .panel.visible { display: block; }
-    
-    .preview-box {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 14px;
-      font-size: 13px;
-    }
-    
-    .time-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-    .time-chip { background: var(--primary); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: 600; }
-    
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal-backdrop.visible { display: flex; }
-    
-    .modal {
-      background: white;
-      border-radius: 20px;
-      padding: 24px;
-      width: 90%;
-      max-width: 400px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    
-    .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 16px; text-align: center; }
-    
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      background: #f8fafc;
-      border-radius: 8px;
-      margin-bottom: 6px;
-    }
-    
-    .detail-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
-    .detail-value { font-weight: 700; color: var(--text); font-size: 14px; }
-    
-    .history-list { max-height: 150px; overflow-y: auto; }
-    
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px;
-      background: #f8fafc;
-      border-radius: 6px;
-      margin-bottom: 4px;
-      font-size: 12px;
-    }
-    
-    .empty-state { text-align: center; color: var(--text-light); padding: 20px; font-size: 14px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinVoice - Gestão Financeira Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .db-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .db-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .db-status-dot.error {
+            background: var(--warning);
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+        }
+
+        .balance-section {
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border-radius: var(--radius-lg);
+            margin-bottom: 36px;
+            border: 1px solid var(--gray-100);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray-400);
+            margin-bottom: 12px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .balance-amount.positive { color: var(--success); }
+        .balance-amount.negative { color: var(--danger); }
+        .balance-amount.zero { color: var(--gray-800); }
+
+        .balance-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .balance-trend.positive { background: var(--success-light); color: var(--success); }
+        .balance-trend.negative { background: var(--danger-light); color: var(--danger); }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .month-nav {
+            background: var(--gray-100);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+            color: var(--gray-600);
+        }
+
+        .month-nav:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .month-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+            min-width: 160px;
+            text-align: center;
+        }
+
+        .quick-months {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .month-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--gray-600);
+            white-space: nowrap;
+        }
+
+        .month-chip:hover { border-color: var(--primary); color: var(--primary); background: #f5f3ff; }
+        .month-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .monthly-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--gray-100);
+            transition: all 0.2s;
+        }
+
+        .summary-card:hover { background: white; box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+
+        .summary-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+
+        .summary-value { font-size: 20px; font-weight: 700; color: var(--gray-800); }
+        .summary-value.income { color: var(--success); }
+        .summary-value.expense { color: var(--danger); }
+
+        .voice-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .mic-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .mic-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-200);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .mic-button {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .mic-button:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4); background: var(--primary-dark); }
+        .mic-button:active:not(:disabled) { transform: scale(0.95); }
+        .mic-button:disabled { background: var(--gray-300); cursor: not-allowed; box-shadow: none; }
+        .mic-button.recording { background: var(--danger); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3); }
+        .mic-button.recording + .mic-ring { animation: ringPulse 2s ease-out infinite; border-color: var(--danger); }
+
+        @keyframes ringPulse {
+            0% { width: 100px; height: 100px; opacity: 1; border-width: 2px; }
+            100% { width: 160px; height: 160px; opacity: 0; border-width: 1px; }
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--gray-50);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-300); }
+        .status-dot.active { background: var(--success); animation: blink 1s ease-in-out infinite; }
+        .status-dot.error { background: var(--danger); }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .transcript-display {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 1rem;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #166534;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 24px;
+            border: 1px solid #ddd6fe;
+        }
+
+        .tips-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list { display: grid; gap: 10px; }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--gray-700);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius);
+            transition: background 0.2s;
+        }
+
+        .tip-item:hover { background: rgba(255, 255, 255, 0.9); }
+        .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+        .input-group { display: flex; gap: 10px; margin-top: 24px; }
+        .input-wrapper { flex: 1; position: relative; }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 18px;
+        }
+
+        .manual-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            background: var(--gray-50);
+        }
+
+        .manual-input:focus { outline: none; border-color: var(--primary-light); background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .manual-input::placeholder { color: var(--gray-400); }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-danger { background: var(--danger); color: white; font-size: 13px; padding: 10px 16px; }
+        .btn-danger:hover { background: #dc2626; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .transactions-title { font-size: 18px; font-weight: 600; color: var(--gray-800); }
+
+        .transactions-count {
+            font-size: 13px;
+            color: var(--gray-400);
+            font-weight: 500;
+            background: var(--gray-50);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .transaction-list {
+            display: grid;
+            gap: 8px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .transaction-list::-webkit-scrollbar { width: 6px; }
+        .transaction-list::-webkit-scrollbar-track { background: var(--gray-100); border-radius: 3px; }
+        .transaction-list::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+        .transaction-list::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+        .transaction-item {
+            display: grid;
+            grid-template-columns: 40px 1fr auto auto;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .transaction-item:hover { background: white; border-color: var(--gray-200); box-shadow: var(--shadow-sm); }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .transaction-icon.expense { background: var(--danger-light); }
+        .transaction-icon.income { background: var(--success-light); }
+
+        .transaction-content { min-width: 0; }
+
+        .transaction-description {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .transaction-meta { display: flex; gap: 8px; font-size: 12px; color: #6b7280; flex-wrap: wrap; }
+
+        .transaction-category {
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #ede9fe;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .transaction-amount { font-weight: 700; font-size: 15px; white-space: nowrap; }
+        .transaction-amount.expense { color: #ef4444; }
+        .transaction-amount.income { color: #10b981; }
+
+        .transaction-actions { display: flex; gap: 4px; }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 0.375rem;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: #9ca3af;
+        }
+
+        .action-btn:hover { background: #f3f4f6; color: #374151; }
+        .action-btn.edit:hover { background: #fef3c7; color: #f59e0b; }
+        .action-btn.delete:hover { background: #fee2e2; color: #ef4444; }
+
+        .empty-state { text-align: center; padding: 40px; color: #9ca3af; }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+        .warning-banner {
+            background: var(--warning-light);
+            border: 1px solid #fbbf24;
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .warning-icon { font-size: 20px; flex-shrink: 0; }
+        .warning-content { font-size: 13px; color: #92400e; line-height: 1.6; }
+        .warning-title { font-weight: 600; margin-bottom: 4px; }
+        .warning-steps { margin-top: 8px; padding-left: 20px; }
+        .warning-steps li { margin-bottom: 4px; }
+
+        .data-management {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .data-info { font-size: 12px; color: var(--gray-400); margin-top: 16px; text-align: center; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 1rem;
+            font-size: 14px;
+            z-index: 1000;
+            animation: toastIn 0.3s ease-out;
+        }
+
+        .toast.success { background: #10b981; }
+        .toast.error { background: #ef4444; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 6px; }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus { outline: none; border-color: #818cf8; }
+        .form-select { background: white; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-actions .btn { flex: 1; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 12px; }
+            .card { padding: 24px 20px; }
+            .balance-amount { font-size: 40px; }
+            .mic-button { width: 80px; height: 80px; font-size: 28px; }
+            .input-group { flex-direction: column; }
+            .transaction-item { grid-template-columns: 40px 1fr auto; gap: 8px; }
+            .transaction-actions { grid-column: 3; grid-row: 1; }
+            .data-management { flex-direction: column; }
+            .monthly-summary { gap: 8px; }
+            .summary-value { font-size: 16px; }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">💎</div>
+                <h1 class="logo-text">FinVoice</h1>
+            </div>
+            <p class="header-subtitle">Sua voz, suas finanças, seu controle</p>
+            <div class="db-status" id="dbStatus">
+                <span class="db-status-dot" id="dbStatusDot"></span>
+                <span id="dbStatusText">Conectando ao banco de dados...</span>
+            </div>
+        </header>
 
-<div class="app-container">
-  <div class="header">
-    <div class="logo">💊</div>
-    <div class="app-title">MedAlarm</div>
-    <div class="app-subtitle">Alarme Inteligente de Remédios</div>
-  </div>
-  
-  <div class="clock-card">
-    <div class="clock-date" id="clockDate"></div>
-    <div class="clock-time" id="clockTime"></div>
-    <div class="clock-seconds" id="clockSeconds"></div>
-  </div>
-  
-  <div class="alarm-overlay" id="alarmOverlay" onclick="stopAlarm()">
-    <div class="alarm-icon">🚨</div>
-    <div class="alarm-title">HORA DO REMÉDIO!</div>
-    <div class="alarm-medicine" id="alarmMedName"></div>
-    <div class="alarm-time-badge" id="alarmMedTime"></div>
-    <button class="alarm-dismiss" onclick="event.stopPropagation(); stopAlarm();">🔕 DESLIGAR</button>
-  </div>
-  
-  <div class="status-bar status-warn" id="statusBar">⏳ Inicializando...</div>
-  
-  <!-- ADICIONAR REMÉDIO -->
-  <div class="card">
-    <div class="card-header">📋 Novo Lembrete</div>
-    
-    <div class="form-group">
-      <label class="form-label">Nome do Remédio</label>
-      <input type="text" class="form-input" id="medName" placeholder="Ex: Dipirona 500mg" autocomplete="off">
+        <main>
+            <div class="card">
+                <div class="balance-section">
+                    <div class="balance-label" id="balanceLabel">Saldo Total</div>
+                    <div class="balance-amount zero" id="balance">R$ 0,00</div>
+                    <div class="balance-trend" id="balanceTrend" style="display: none;"></div>
+                </div>
+
+                <div class="month-selector">
+                    <button class="month-nav" id="prevMonth" title="Mês anterior">◀</button>
+                    <span class="month-display" id="monthDisplay">Carregando...</span>
+                    <button class="month-nav" id="nextMonth" title="Próximo mês">▶</button>
+                </div>
+
+                <div class="quick-months" id="quickMonths"></div>
+
+                <div class="monthly-summary">
+                    <div class="summary-card">
+                        <div class="summary-label">Entradas</div>
+                        <div class="summary-value income" id="monthIncome">R$ 0,00</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Saídas</div>
+                        <div class="summary-value expense" id="monthExpense">R$ 0,00</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Saldo</div>
+                        <div class="summary-value" id="monthBalance">R$ 0,00</div>
+                    </div>
+                </div>
+
+                <div class="voice-section">
+                    <div class="mic-wrapper">
+                        <button class="mic-button" id="micButton" aria-label="Gravar áudio" title="Clique para falar" disabled>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </button>
+                        <div class="mic-ring"></div>
+                    </div>
+                    <div class="status-badge" id="statusBadge">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">Aguardando inicialização...</span>
+                    </div>
+                    <div class="transcript-display" id="transcriptDisplay" style="display:none;">
+                        🎙️ <span id="transcriptText"></span>
+                    </div>
+                </div>
+
+                <div id="permissionWarning" class="warning-banner" style="display: none;">
+                    <span class="warning-icon">⚠️</span>
+                    <div class="warning-content">
+                        <div class="warning-title">Microfone não autorizado</div>
+                        <p>Para usar o reconhecimento de voz:</p>
+                        <ol class="warning-steps">
+                            <li>Clique no ícone de cadeado 🔒 na barra de endereço</li>
+                            <li>Ative a permissão do microfone</li>
+                            <li>Recarregue a página</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <div class="tips-title">💡 Exemplos do que você pode falar ou digitar:</div>
+                    <div class="tips-list">
+                        <div class="tip-item"><span class="tip-icon">🗣️</span><span><strong>Gastei 50 reais em combustível</strong></span></div>
+                        <div class="tip-item"><span class="tip-icon">💰</span><span><strong>Recebi 2000 de salário</strong></span></div>
+                        <div class="tip-item"><span class="tip-icon">📝</span><span><strong>50 combustível</strong> (formato simples)</span></div>
+                        <div class="tip-item"><span class="tip-icon">📱</span><span><strong>Comprei celular por 1200</strong></span></div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <span class="input-icon">✏️</span>
+                        <input type="text" class="manual-input" id="manualInput" 
+                               placeholder='Digite ou fale qualquer coisa como: 50 reais combustível...'
+                               aria-label="Digitar transação manualmente">
+                    </div>
+                    <button class="btn btn-primary" id="addButton">Adicionar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="transactions-header">
+                    <h2 class="transactions-title">Transações</h2>
+                    <span class="transactions-count" id="transactionCount">0 registros</span>
+                </div>
+                <div class="transaction-list" id="transactionsList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <div class="empty-text">Nenhuma transação registrada</div>
+                    </div>
+                </div>
+
+                <div class="data-management">
+                    <button class="btn btn-danger" id="exportData" style="flex: 1;">📥 Exportar Dados</button>
+                    <button class="btn btn-primary" id="importData" style="flex: 1; background: var(--gray-600);">📤 Importar Dados</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+                <div class="data-info">Banco de dados: IndexedDB | Seus dados ficam salvos localmente</div>
+            </div>
+        </main>
     </div>
-    
-    <label class="form-label">Modo do Alarme</label>
-    <div class="mode-selector">
-      <button class="mode-btn active" id="modeFixedBtn" onclick="setMode('fixed')">🕒 Horário Fixo</button>
-      <button class="mode-btn" id="modeIntervalBtn" onclick="setMode('interval')">🔁 Por Intervalo</button>
+
+    <div class="modal-overlay" id="editModal" style="display:none">
+        <div class="modal">
+            <h3 class="modal-title">✏️ Editar Transação</h3>
+            <div class="form-group">
+                <label class="form-label">Descrição</label>
+                <input type="text" class="form-input" id="editDescription" placeholder="Ex: Combustível">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Valor (R$)</label>
+                <input type="number" class="form-input" id="editAmount" step="0.01" min="0" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tipo</label>
+                <select class="form-select" id="editType">
+                    <option value="expense">Saída (Gasto)</option>
+                    <option value="income">Entrada (Recebimento)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Categoria</label>
+                <select class="form-select" id="editCategory">
+                    <option value="Alimentação">Alimentação</option>
+                    <option value="Transporte">Transporte</option>
+                    <option value="Moradia">Moradia</option>
+                    <option value="Lazer">Lazer</option>
+                    <option value="Saúde">Saúde</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Renda">Renda</option>
+                    <option value="Compras">Compras</option>
+                    <option value="Serviços">Serviços</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Data e Hora</label>
+                <input type="datetime-local" class="form-input" id="editDate">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" id="cancelEdit" style="background:#6b7280;color:white">Cancelar</button>
+                <button class="btn btn-success" id="saveEdit">Salvar</button>
+            </div>
+        </div>
     </div>
-    
-    <div class="panel visible" id="panelFixed">
-      <div class="form-group">
-        <label class="form-label">Horário do Alarme</label>
-        <input type="time" class="form-input" id="timeFixed">
-      </div>
-    </div>
-    
-    <div class="panel" id="panelInterval">
-      <div class="form-group">
-        <label class="form-label">Horário de Início</label>
-        <input type="time" class="form-input" id="timeStart" onchange="updatePreview()">
-      </div>
-      
-      <label class="form-label">Repetir a Cada</label>
-      <div class="interval-grid">
-        <button class="interval-chip" onclick="setIntervalVal(4, this)">4 horas</button>
-        <button class="interval-chip" onclick="setIntervalVal(6, this)">6 horas</button>
-        <button class="interval-chip" onclick="setIntervalVal(7, this)">7 horas</button>
-        <button class="interval-chip active" onclick="setIntervalVal(8, this)">8 horas</button>
-        <button class="interval-chip" onclick="setIntervalVal(12, this)">12 horas</button>
-        <button class="interval-chip" onclick="setIntervalVal(24, this)">24 horas</button>
-      </div>
-      
-      <div class="preview-box" id="previewBox" style="display:none;">
-        <strong>📅 Horários do dia:</strong>
-        <div class="time-chips" id="previewChips"></div>
-      </div>
-    </div>
-    
-    <label class="form-label">Som do Alarme</label>
-    <div class="sound-grid">
-      <button class="sound-chip active" onclick="setSound('beep', this)">🔔 Beep</button>
-      <button class="sound-chip" onclick="setSound('melody', this)">🎵 Melodia</button>
-      <button class="sound-chip" onclick="setSound('siren', this)">🚨 Sirene</button>
-      <button class="sound-chip" onclick="setSound('bell', this)">🛎️ Sino</button>
-      <button class="sound-chip" onclick="setSound('vibrate', this)">📳 Vibração</button>
-      <button class="sound-chip" onclick="setSound('electronic', this)">🎹 Eletrônico</button>
-    </div>
-    
-    <button class="btn btn-outline" onclick="testSound()">🔊 Testar Som</button>
-    <button class="btn btn-success" onclick="addReminder()">➕ Salvar Lembrete</button>
-  </div>
-  
-  <!-- LISTA DE LEMBRETES -->
-  <div class="card">
-    <div class="card-header">📌 Seus Lembretes <span id="countBadge" style="color:var(--primary);">(0)</span></div>
-    <div id="remindersList"><div class="empty-state">Nenhum lembrete salvo</div></div>
-  </div>
-  
-  <button class="btn btn-danger" onclick="stopAlarm()">🔕 Parar Alarme</button>
-  <button class="btn btn-outline" onclick="testAlarm()">🧪 Testar Alarme</button>
-  <button class="btn btn-warning" onclick="clearAll()">🗑️ Remover Todos</button>
-</div>
 
-<!-- MODAL -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <h3 id="modalTitle">📋 Detalhes</h3>
-    <div id="modalContent"></div>
-    <button class="btn btn-primary" onclick="closeModal()" style="margin-top:16px;">✅ Fechar</button>
-  </div>
-</div>
+    <script>
+        // ==================== BANCO DE DADOS ====================
+        class DatabaseManager {
+            constructor() {
+                this.dbName = 'FinVoiceDB';
+                this.dbVersion = 1;
+                this.db = null;
+                this.storeName = 'transactions';
+            }
 
-<script>
-// ============ RELÓGIO ============
-function updateClock() {
-  const now = new Date();
-  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  
-  document.getElementById('clockDate').textContent = 
-    `${days[now.getDay()]}, ${now.getDate().toString().padStart(2,'0')} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
-  document.getElementById('clockTime').textContent = 
-    `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  document.getElementById('clockSeconds').textContent = now.getSeconds().toString().padStart(2,'0');
-  
-  if (now.getSeconds() === 0) checkAlarms();
-}
-setInterval(updateClock, 1000);
-updateClock();
+            async init() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.dbVersion);
+                    request.onerror = (e) => reject(e.target.error);
+                    request.onsuccess = (e) => {
+                        this.db = e.target.result;
+                        console.log('✅ DB conectado');
+                        resolve();
+                    };
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(this.storeName)) {
+                            const store = db.createObjectStore(this.storeName, { keyPath: 'id', autoIncrement: true });
+                            store.createIndex('type', 'type');
+                            store.createIndex('date', 'date');
+                            console.log('📦 DB criado');
+                        }
+                    };
+                });
+            }
 
-// ============ DADOS ============
-let reminders = [];
-let history = [];
-let currentMode = 'fixed';
-let currentInterval = 8;
-let currentSound = 'beep';
-let alarmActive = false;
-let alarmTimer = null;
-let audioCtx = null;
-let currentAlarm = null;
-let firedAlarms = {};
+            async add(data) {
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction(this.storeName, 'readwrite');
+                    const store = tx.objectStore(this.storeName);
+                    const req = store.add(data);
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            }
 
-// CARREGAR DADOS SALVOS
-try {
-  reminders = JSON.parse(localStorage.getItem('medalarm_reminders') || '[]');
-  history = JSON.parse(localStorage.getItem('medalarm_history') || '[]');
-} catch(e) {
-  reminders = [];
-  history = [];
-}
+            async update(id, data) {
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction(this.storeName, 'readwrite');
+                    const store = tx.objectStore(this.storeName);
+                    const req = store.put({ ...data, id });
+                    req.onsuccess = () => resolve();
+                    req.onerror = () => reject(req.error);
+                });
+            }
 
-function saveData() {
-  localStorage.setItem('medalarm_reminders', JSON.stringify(reminders));
-  localStorage.setItem('medalarm_history', JSON.stringify(history));
-}
+            async getAll() {
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction(this.storeName, 'readonly');
+                    const store = tx.objectStore(this.storeName);
+                    const index = store.index('date');
+                    const req = index.openCursor(null, 'prev');
+                    const results = [];
+                    req.onsuccess = (e) => {
+                        const cursor = e.target.result;
+                        if (cursor) {
+                            results.push(cursor.value);
+                            cursor.continue();
+                        } else {
+                            resolve(results);
+                        }
+                    };
+                    req.onerror = () => reject(req.error);
+                });
+            }
 
-// ============ SOM ============
-function getAudioCtx() {
-  if (!audioCtx || audioCtx.state === 'closed') audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-
-function playSound(type) {
-  try {
-    const ctx = getAudioCtx();
-    const t = ctx.currentTime;
-    const beep = (f, s, d, w='square', v=0.35) => {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = w; o.frequency.value = f;
-      g.gain.setValueAtTime(v, s); g.gain.exponentialRampToValueAtTime(0.001, s+d);
-      o.start(s); o.stop(s+d);
-    };
-    
-    if (type === 'beep') { for(let i=0;i<5;i++) beep(880, t+i*0.3, 0.25); }
-    else if (type === 'melody') { beep(523,t,0.2,'sine',0.4); beep(659,t+0.2,0.2,'sine',0.4); beep(784,t+0.4,0.3,'sine',0.4); }
-    else if (type === 'siren') { for(let i=0;i<10;i++) beep(400+i*80, t+i*0.1, 0.15, 'sawtooth',0.4); }
-    else if (type === 'bell') { beep(1200,t,0.15,'triangle',0.6); beep(1000,t+0.15,0.2,'triangle',0.5); }
-    else if (type === 'vibrate') { beep(150,t,0.8,'square',0.9); if(navigator.vibrate) navigator.vibrate([300,100,300]); }
-    else if (type === 'electronic') { beep(440,t,0.1); beep(660,t+0.1,0.1); beep(880,t+0.2,0.2); }
-  } catch(e) {}
-}
-
-// ============ ALARME ============
-function triggerAlarm(name, time) {
-  if (alarmActive) return;
-  alarmActive = true;
-  currentAlarm = { name, time };
-  
-  document.getElementById('alarmOverlay').classList.add('active');
-  document.getElementById('alarmMedName').textContent = `💊 ${name}`;
-  document.getElementById('alarmMedTime').textContent = `⏰ ${time}`;
-  
-  function ring() { playSound(currentSound); }
-  ring();
-  alarmTimer = setInterval(ring, 3000);
-  
-  if (navigator.vibrate) navigator.vibrate([500,200,500,200,500]);
-  
-  if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification('💊 HORA DO REMÉDIO!', {
-      body: `${name} - ${time}`,
-      icon: '💊',
-      vibrate: [500,200,500],
-      requireInteraction: true,
-      tag: 'medalarm'
-    });
-  }
-  
-  if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
-  
-  const now = new Date();
-  history.push({
-    name,
-    date: now.toLocaleDateString('pt-BR'),
-    time: now.toLocaleTimeString('pt-BR'),
-    timestamp: Date.now()
-  });
-  if (history.length > 200) history = history.slice(-200);
-  saveData();
-  
-  setStatus(`🚨 Alarme: ${name}`, 'error');
-  
-  setTimeout(() => { if (alarmActive) stopAlarm(); }, 120000);
-}
-
-function stopAlarm() {
-  alarmActive = false;
-  currentAlarm = null;
-  if (alarmTimer) { clearInterval(alarmTimer); alarmTimer = null; }
-  if (navigator.vibrate) navigator.vibrate(0);
-  document.getElementById('alarmOverlay').classList.remove('active');
-  setStatus('✅ Pronto', 'ok');
-}
-
-// ============ VERIFICAR ALARMES ============
-function checkAlarms() {
-  if (alarmActive) return;
-  
-  const now = new Date();
-  const currentTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  const today = now.toDateString();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  
-  for (const rem of reminders) {
-    let shouldFire = false;
-    let fireTime = '';
-    
-    if (!rem.interval) {
-      if (rem.time === currentTime) { shouldFire = true; fireTime = rem.time; }
-    } else {
-      const [h, m] = rem.startTime.split(':').map(Number);
-      const startMin = h * 60 + m;
-      let diff = currentMinutes - startMin;
-      if (diff < 0) diff += 1440;
-      if (diff % (rem.interval * 60) === 0) { shouldFire = true; fireTime = currentTime; }
-    }
-    
-    if (shouldFire) {
-      const key = `${rem.id}-${today}-${fireTime}`;
-      if (!firedAlarms[key]) {
-        firedAlarms[key] = true;
-        triggerAlarm(rem.name, fireTime);
-        break;
-      }
-    }
-  }
-  
-  for (const key in firedAlarms) {
-    if (!key.includes(today)) delete firedAlarms[key];
-  }
-}
-
-// ============ ADICIONAR ============
-function addReminder() {
-  const name = document.getElementById('medName').value.trim();
-  if (!name) return alert('Digite o nome do remédio!');
-  
-  let time, startTime = null, interval = null;
-  
-  if (currentMode === 'fixed') {
-    time = document.getElementById('timeFixed').value;
-    if (!time) return alert('Selecione o horário!');
-  } else {
-    startTime = document.getElementById('timeStart').value;
-    if (!startTime) return alert('Selecione o horário de início!');
-    time = startTime;
-    interval = currentInterval;
-  }
-  
-  reminders.push({
-    id: Date.now(),
-    name,
-    time,
-    startTime,
-    interval,
-    sound: currentSound,
-    created: new Date().toISOString()
-  });
-  
-  saveData();
-  renderList();
-  document.getElementById('medName').value = '';
-  setStatus('✅ Lembrete salvo!', 'ok');
-}
-
-// ============ LISTA ============
-function renderList() {
-  const div = document.getElementById('remindersList');
-  document.getElementById('countBadge').textContent = `(${reminders.length})`;
-  
-  if (!reminders.length) {
-    div.innerHTML = '<div class="empty-state">Nenhum lembrete salvo</div>';
-    return;
-  }
-  
-  reminders.sort((a,b) => a.time.localeCompare(b.time));
-  
-  div.innerHTML = reminders.map(r => `
-    <div class="reminder-item" onclick="showDetails(${r.id})">
-      <div class="reminder-info">
-        <h4>💊 ${r.name} ${r.interval ? '🔁' : ''}</h4>
-        ${r.interval ? 
-          `<span class="badge badge-time">🕐 ${r.startTime}</span><span class="badge badge-interval">⏱️ ${r.interval}h</span>` :
-          `<span class="badge badge-time">🕒 ${r.time}</span>`
+            async delete(id) {
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction(this.storeName, 'readwrite');
+                    const store = tx.objectStore(this.storeName);
+                    const req = store.delete(id);
+                    req.onsuccess = () => resolve();
+                    req.onerror = () => reject(req.error);
+                });
+            }
         }
-        <span class="badge badge-sound">🔊 ${r.sound}</span>
-      </div>
-      <div class="reminder-actions">
-        <button class="btn-icon btn-icon-edit" onclick="event.stopPropagation(); editReminder(${r.id})">✏️</button>
-        <button class="btn-icon btn-icon-delete" onclick="event.stopPropagation(); deleteReminder(${r.id})">🗑️</button>
-      </div>
-    </div>
-  `).join('');
-}
 
-// ============ DETALHES ============
-function showDetails(id) {
-  const r = reminders.find(x => x.id === id);
-  if (!r) return;
-  
-  const today = new Date().toLocaleDateString('pt-BR');
-  const medHistory = history.filter(h => h.name === r.name).slice(-10).reverse();
-  const todayCount = history.filter(h => h.name === r.name && h.date === today).length;
-  
-  let scheduleHtml = '';
-  if (r.interval && r.startTime) {
-    const [h, m] = r.startTime.split(':').map(Number);
-    const times = [];
-    const total = Math.floor(1440 / (r.interval * 60));
-    for (let i = 0; i < total; i++) {
-      const mins = (h*60+m + i*r.interval*60) % 1440;
-      times.push(`${Math.floor(mins/60).toString().padStart(2,'0')}:${(mins%60).toString().padStart(2,'0')}`);
-    }
-    scheduleHtml = `
-      <div class="detail-row"><span class="detail-label">⏱️ Intervalo</span><span class="detail-value">A cada ${r.interval}h</span></div>
-      <div style="background:#eff6ff; padding:12px; border-radius:8px; margin-bottom:8px;">
-        <strong style="font-size:13px;">📅 ${total} alarmes/dia:</strong>
-        <div class="time-chips" style="margin-top:6px;">${times.map(t => `<span class="time-chip">${t}</span>`).join('')}</div>
-      </div>
-    `;
-  }
-  
-  document.getElementById('modalTitle').textContent = '📋 ' + r.name;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="detail-row"><span class="detail-label">💊 Remédio</span><span class="detail-value">${r.name}</span></div>
-    <div class="detail-row"><span class="detail-label">🕐 Horário</span><span class="detail-value">${r.interval ? r.startTime + ' (início)' : r.time}</span></div>
-    ${scheduleHtml}
-    <div class="detail-row"><span class="detail-label">🔊 Som</span><span class="detail-value">${r.sound}</span></div>
-    <div class="detail-row"><span class="detail-label">📊 Hoje</span><span class="detail-value">${todayCount}x</span></div>
-    ${medHistory.length ? `
-      <div style="margin-top:12px;"><strong style="font-size:13px;">📜 Histórico</strong>
-        <div class="history-list">${medHistory.map(h => `<div class="history-item"><span>${h.date}</span><span>${h.time}</span></div>`).join('')}</div>
-      </div>
-    ` : ''}
-  `;
-  document.getElementById('modalBackdrop').classList.add('visible');
-}
+        // ==================== APLICATIVO PRINCIPAL ====================
+        class FinanceApp {
+            constructor() {
+                this.db = new DatabaseManager();
+                this.transactions = [];
+                this.recognition = null;
+                this.isRecording = false;
+                this.currentMonth = new Date().getMonth();
+                this.currentYear = new Date().getFullYear();
+                this.editingId = null;
+            }
 
-function closeModal() { document.getElementById('modalBackdrop').classList.remove('visible'); }
+            async init() {
+                try {
+                    await this.db.init();
+                    this.updateDBStatus(true);
+                    await this.loadTransactions();
+                    this.bindEvents();
+                    this.updateUI();
+                    
+                    // Inicializa o microfone por último com tratamento isolado
+                    await this.checkMicrophone();
+                    this.showToast('✅ Aplicativo pronto!', 'success');
+                } catch (error) {
+                    console.error('Erro na inicialização:', error);
+                    this.updateDBStatus(false);
+                    this.setStatus('error', 'Erro ao carregar banco de dados');
+                    this.showToast('❌ Erro crítico ao carregar', 'error');
+                }
+            }
 
-// ============ EDITAR / REMOVER ============
-function editReminder(id) {
-  const r = reminders.find(x => x.id === id);
-  if (!r) return;
-  const val = prompt('Novo horário (HH:MM):', r.startTime || r.time);
-  if (val && /^\d{2}:\d{2}$/.test(val)) {
-    if (r.interval) { r.startTime = val; r.time = val; }
-    else r.time = val;
-    saveData();
-    renderList();
-    setStatus('✅ Atualizado!', 'ok');
-  }
-}
+            updateDBStatus(ok) {
+                const dot = document.getElementById('dbStatusDot');
+                const text = document.getElementById('dbStatusText');
+                if(dot) dot.className = 'db-status-dot' + (ok ? '' : ' error');
+                if(text) text.textContent = ok ? 'Banco de dados conectado' : 'Erro no banco de dados';
+            }
 
-function deleteReminder(id) {
-  if (confirm('Remover este lembrete?')) {
-    reminders = reminders.filter(r => r.id !== id);
-    saveData();
-    renderList();
-    setStatus('🗑️ Removido', 'warn');
-  }
-}
+            async loadTransactions() {
+                this.transactions = await this.db.getAll();
+            }
 
-function clearAll() {
-  if (reminders.length && confirm('Remover TODOS os lembretes?')) {
-    reminders = [];
-    saveData();
-    renderList();
-    stopAlarm();
-    setStatus('🗑️ Todos removidos', 'warn');
-  }
-}
+            getFiltered() {
+                return this.transactions.filter(t => {
+                    const d = new Date(t.date);
+                    return d.getMonth() === this.currentMonth && d.getFullYear() === this.currentYear;
+                });
+            }
 
-// ============ INTERFACE ============
-function setMode(m) {
-  currentMode = m;
-  document.getElementById('modeFixedBtn').classList.toggle('active', m==='fixed');
-  document.getElementById('modeIntervalBtn').classList.toggle('active', m==='interval');
-  document.getElementById('panelFixed').classList.toggle('visible', m==='fixed');
-  document.getElementById('panelInterval').classList.toggle('visible', m==='interval');
-}
+            async checkMicrophone() {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition;
+                const micButton = document.getElementById('micButton');
+                const warningBanner = document.getElementById('permissionWarning');
 
-function setIntervalVal(h, btn) {
-  currentInterval = h;
-  document.querySelectorAll('.interval-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  updatePreview();
-}
+                if (!SR) {
+                    this.setStatus('error', 'Navegador incompatível com voz.');
+                    if (micButton) micButton.disabled = true;
+                    return;
+                }
 
-function setSound(s, btn) {
-  currentSound = s;
-  document.querySelectorAll('.sound-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
+                try {
+                    // Tenta requisitar acesso de forma limpa
+                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        stream.getTracks().forEach(t => t.stop()); // Libera o hardware após teste
+                    }
+                    
+                    if (warningBanner) warningBanner.style.display = 'none';
+                    if (micButton) micButton.disabled = false;
+                    this.setStatus('success', '✅ Microfone pronto! Clique para falar');
+                } catch (error) {
+                    console.warn('⚠️ Permissão de áudio negada ou indisponível:', error);
+                    if (warningBanner) warningBanner.style.display = 'flex';
+                    if (micButton) micButton.disabled = true;
+                    this.setStatus('error', '❌ Microfone não autorizado');
+                    return; // Retorna sem instanciar o reconhecedor
+                }
 
-function updatePreview() {
-  const start = document.getElementById('timeStart').value;
-  if (start && currentInterval) {
-    const [h, m] = start.split(':').map(Number);
-    const total = Math.floor(1440 / (currentInterval * 60));
-    const times = [];
-    for (let i = 0; i < total; i++) {
-      const mins = (h*60+m + i*currentInterval*60) % 1440;
-      times.push(`${Math.floor(mins/60).toString().padStart(2,'0')}:${(mins%60).toString().padStart(2,'0')}`);
-    }
-    document.getElementById('previewBox').style.display = 'block';
-    document.getElementById('previewChips').innerHTML = times.map(t => `<span class="time-chip">${t}</span>`).join('');
-  }
-}
+                // Instancia o motor de voz apenas se houver hardware/permissão garantida
+                this.recognition = new SR();
+                this.recognition.lang = 'pt-BR';
+                this.recognition.continuous = false;
+                this.recognition.interimResults = true;
+                this.recognition.maxAlternatives = 1;
 
-function testSound() { playSound(currentSound); }
+                this.recognition.onstart = () => {
+                    this.isRecording = true;
+                    const btn = document.getElementById('micButton');
+                    const display = document.getElementById('transcriptDisplay');
+                    const txt = document.getElementById('transcriptText');
+                    
+                    if (btn) btn.classList.add('recording');
+                    if (display) display.style.display = 'flex';
+                    if (txt) txt.textContent = 'Ouvindo...';
+                    this.setStatus('recording', '🎙️ Ouvindo... Fale agora!');
+                };
 
-function testAlarm() {
-  if (Notification.permission !== 'granted') Notification.requestPermission();
-  triggerAlarm('🧪 Teste', new Date().toLocaleTimeString('pt-BR'));
-}
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
 
-function setStatus(msg, type) {
-  const bar = document.getElementById('statusBar');
-  bar.textContent = msg;
-  bar.className = 'status-bar status-' + type;
-}
+                    const displayText = finalTranscript || interimTranscript;
+                    const txt = document.getElementById('transcriptText');
+                    if (txt && displayText) {
+                        txt.textContent = displayText;
+                    }
+                    
+                    if (finalTranscript && finalTranscript.trim().length > 0) {
+                        this.processInput(finalTranscript.trim());
+                        this.stopRecording();
+                    }
+                };
 
-// ============ INICIAR ============
-function init() {
-  const now = new Date();
-  const currentTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  document.getElementById('timeFixed').value = currentTime;
-  document.getElementById('timeStart').value = currentTime;
-  
-  Notification.requestPermission();
-  renderList();
-  
-  document.getElementById('modalBackdrop').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  
-  if ('wakeLock' in navigator) {
-    setInterval(() => { navigator.wakeLock.request('screen').catch(()=>{}); }, 60000);
-  }
-  
-  setStatus(`✅ ${reminders.length} lembrete(s) carregado(s)`, 'ok');
-}
+                this.recognition.onerror = (event) => {
+                    console.log('Aviso SpeechRecognition:', event.error);
+                    if (event.error === 'no-speech') {
+                        this.setStatus('success', '✅ Clique para tentar de novo.');
+                    } else {
+                        this.setStatus('error', `Erro de voz: ${event.error}`);
+                    }
+                    this.stopRecording();
+                };
 
-init();
-</script>
+                this.recognition.onend = () => {
+                    this.stopRecording();
+                };
+            }
+
+            bindEvents() {
+                document.getElementById('micButton').addEventListener('click', () => {
+                    if (this.isRecording) this.stopRecording();
+                    else this.startRecording();
+                });
+
+                document.getElementById('addButton').addEventListener('click', () => {
+                    const input = document.getElementById('manualInput');
+                    const text = input.value.trim();
+                    if (text) {
+                        this.processInput(text);
+                        input.value = '';
+                        input.focus();
+                    }
+                });
+
+                document.getElementById('manualInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const text = e.target.value.trim();
+                        if (text) {
+                            this.processInput(text);
+                            e.target.value = '';
+                        }
+                    }
+                });
+
+                document.getElementById('prevMonth').addEventListener('click', () => this.changeMonth(-1));
+                document.getElementById('nextMonth').addEventListener('click', () => this.changeMonth(1));
+
+                document.getElementById('exportData').addEventListener('click', () => this.exportData());
+                document.getElementById('importData').addEventListener('click', () => document.getElementById('importFile').click());
+                document.getElementById('importFile').addEventListener('change', (e) => this.importData(e));
+
+                document.getElementById('cancelEdit').addEventListener('click', () => this.closeModal());
+                document.getElementById('saveEdit').addEventListener('click', () => this.saveEdit());
+            }
+
+            changeMonth(delta) {
+                this.currentMonth += delta;
+                if (this.currentMonth < 0) {
+                    this.currentMonth = 11;
+                    this.currentYear--;
+                } else if (this.currentMonth > 11) {
+                    this.currentMonth = 0;
+                    this.currentYear++;
+                }
+                this.updateUI();
+            }
+
+            startRecording() {
+                if (!this.recognition) return;
+                try {
+                    this.recognition.start();
+                } catch (error) {
+                    this.stopRecording();
+                }
+            }
+
+            stopRecording() {
+                if (this.recognition && this.isRecording) {
+                    try { this.recognition.stop(); } catch (e) {}
+                }
+                
+                this.isRecording = false;
+                const micBtn = document.getElementById('micButton');
+                if (micBtn) micBtn.classList.remove('recording');
+                
+                setTimeout(() => {
+                    if (!this.isRecording) {
+                        const display = document.getElementById('transcriptDisplay');
+                        if (display) display.style.display = 'none';
+                        this.setStatus('success', '✅ Microfone pronto! Clique para falar');
+                    }
+                }, 2000);
+            }
+
+            setStatus(type, message) {
+                const statusText = document.getElementById('statusText');
+                const statusDot = document.getElementById('statusDot');
+                const badge = document.getElementById('statusBadge');
+                
+                if(!statusText || !statusDot || !badge) return;
+
+                statusText.textContent = message;
+                statusDot.className = 'status-dot';
+                badge.style.background = '#f9fafb';
+                badge.style.color = '#6b7280';
+                
+                if (type === 'recording') {
+                    statusDot.classList.add('active');
+                    badge.style.background = '#fef2f2';
+                    badge.style.color = '#dc2626';
+                } else if (type === 'success') {
+                    statusDot.classList.add('active');
+                    badge.style.background = '#f0fdf4';
+                    badge.style.color = '#16a34a';
+                } else if (type === 'error') {
+                    statusDot.classList.add('error');
+                    badge.style.background = '#fef2f2';
+                    badge.style.color = '#dc2626';
+                }
+            }
+
+            processInput(text) {
+                if (!text || text.trim().length < 2) {
+                    this.showToast('❌ Entrada inválida', 'error');
+                    return;
+                }
+
+                const result = this.parseText(text);
+                if (result) {
+                    this.addTransaction(result);
+                } else {
+                    this.showToast('❌ Não entendi o formato.', 'error');
+                }
+            }
+
+            parseText(text) {
+                const original = text.trim();
+                let t = original.toLowerCase();
+                
+                const date = this.extractDate(t);
+                const amountMatch = t.match(/(\d+(?:[.,]\d{1,2})?)/);
+                if (!amountMatch) return null;
+                
+                let amount = parseFloat(amountMatch[1].replace(',', '.'));
+                if (isNaN(amount) || amount <= 0) return null;
+                
+                let type = 'expense';
+                const entradaPalavras = ['recebi', 'ganhei', 'ganho', 'salário', 'salario', 'renda', 'rendeu', 'depositei', 'depósito', 'deposito', 'crédito', 'credito', 'entrada', 'lucro', 'vendi', 'venda', 'freelance', 'pix recebido', 'transferência recebida'];
+                const saidaPalavras = ['gastei', 'paguei', 'gasto', 'pago', 'comprei', 'comprado', 'pagar', 'gastar', 'comprar', 'desembolsei', 'quitei', 'transferi', 'pix', 'débito', 'debito', 'saída', 'saida', 'despesa', 'conta', 'boleto', 'fatura'];
+                
+                for (const palavra of entradaPalavras) {
+                    if (t.includes(palavra)) { type = 'income'; break; }
+                }
+                
+                let desc = original.replace(amountMatch[0], '');
+                const todasPalavras = [...entradaPalavras, ...saidaPalavras];
+                todasPalavras.forEach(palavra => {
+                    desc = desc.replace(new RegExp(`\\b${palavra}\\b`, 'gi'), '');
+                });
+                
+                desc = desc.replace(/\b(?:reais|real|r\$|conto|pila|contos|dinheiro|grana)\b/gi, '');
+                desc = desc.replace(/\b(?:em|para|de|com|no|na|do|da|por|pelo|pela)\b/gi, '');
+                desc = desc.replace(/\b(?:ontem|anteontem|hoje|semana\s+passada)\b/gi, '');
+                desc = desc.replace(/[,.;:!?()\[\]{}"']/g, ' ');
+                desc = desc.replace(/\s+/g, ' ').trim();
+                
+                if (desc.length > 0) {
+                    desc = desc.split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+                } else {
+                    desc = 'Transação';
+                }
+                
+                return {
+                    description: desc,
+                    amount: Math.abs(amount),
+                    type: type,
+                    date: date.toISOString(),
+                    category: this.categorize(desc)
+                };
+            }
+
+            extractDate(text) {
+                const d = new Date();
+                if (/\bontem\b/i.test(text)) d.setDate(d.getDate() - 1);
+                if (/\banteontem\b/i.test(text)) d.setDate(d.getDate() - 2);
+                return d;
+            }
+
+            categorize(desc) {
+                const d = desc.toLowerCase();
+                const cats = {
+                    'Alimentação': ['mercado','restaurante','comida','lanche','almoço','supermercado','padaria','ifood'],
+                    'Transporte': ['uber','ônibus','gasolina','combustível','metrô','estacionamento','moto'],
+                    'Moradia': ['aluguel','condomínio','luz','água','internet','telefone','gás'],
+                    'Lazer': ['cinema','festa','show','viagem','jogo','netflix','spotify'],
+                    'Saúde': ['farmácia','médico','hospital','remédio','dentista','academia'],
+                    'Renda': ['salário','pagamento','freelance','bônus','comissão','venda'],
+                    'Compras': ['roupa','shopping','eletrônico','celular','presente']
+                };
+                for (const [cat, keywords] of Object.entries(cats)) {
+                    if (keywords.some(k => d.includes(k))) return cat;
+                }
+                return 'Outros';
+            }
+
+            async addTransaction(data) {
+                try {
+                    const id = await this.db.add(data);
+                    data.id = id;
+                    this.transactions.unshift(data);
+                    
+                    const td = new Date(data.date);
+                    this.currentMonth = td.getMonth();
+                    this.currentYear = td.getFullYear();
+                    
+                    this.updateUI();
+                    this.showToast(`✅ Salvo: R$ ${data.amount.toFixed(2)}`, 'success');
+                } catch (error) {
+                    this.showToast('❌ Erro ao salvar', 'error');
+                }
+            }
+
+            openEditModal(index) {
+                const filtered = this.getFiltered();
+                const trans = filtered[index];
+                if (!trans) return;
+                
+                this.editingId = trans.id;
+                document.getElementById('editDescription').value = trans.description;
+                document.getElementById('editAmount').value = trans.amount;
+                document.getElementById('editType').value = trans.type;
+                document.getElementById('editCategory').value = trans.category;
+                
+                const d = new Date(trans.date);
+                document.getElementById('editDate').value = d.toISOString().slice(0, 16);
+                document.getElementById('editModal').style.display = 'flex';
+            }
+
+            closeModal() {
+                document.getElementById('editModal').style.display = 'none';
+                this.editingId = null;
+            }
+
+            async saveEdit() {
+                if (!this.editingId) return;
+                
+                const desc = document.getElementById('editDescription').value.trim();
+                const amount = parseFloat(document.getElementById('editAmount').value);
+                const type = document.getElementById('editType').value;
+                const category = document.getElementById('editCategory').value;
+                const date = document.getElementById('editDate').value;
+                
+                if (!desc || isNaN(amount) || amount <= 0) return;
+                
+                const updated = {
+                    id: this.editingId,
+                    description: desc,
+                    amount: amount,
+                    type: type,
+                    category: category,
+                    date: new Date(date).toISOString()
+                };
+                
+                try {
+                    await this.db.update(this.editingId, updated);
+                    const idx = this.transactions.findIndex(t => t.id === this.editingId);
+                    if (idx !== -1) this.transactions[idx] = updated;
+                    
+                    this.closeModal();
+                    this.updateUI();
+                    this.showToast('✅ Atualizado!', 'success');
+                } catch (error) {
+                    this.showToast('❌ Erro ao atualizar', 'error');
+                }
+            }
+
+            async deleteTransaction(index) {
+                const filtered = this.getFiltered();
+                const trans = filtered[index];
+                if (!trans) return;
+                
+                if (confirm(`Excluir "${trans.description}"?`)) {
+                    try {
+                        await this.db.delete(trans.id);
+                        const realIdx = this.transactions.findIndex(t => t.id === trans.id);
+                        if (realIdx !== -1) this.transactions.splice(realIdx, 1);
+                        this.updateUI();
+                        this.showToast('🗑️ Excluído!', 'success');
+                    } catch (error) {
+                        this.showToast('❌ Erro ao excluir', 'error');
+                    }
+                }
+            }
+
+            async exportData() {
+                const data = { app: 'FinVoice', date: new Date().toISOString(), transactions: this.transactions };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `finvoice-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            async importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    if (!data.transactions) throw new Error();
+                    
+                    for (const t of data.transactions) {
+                        const { id, ...clean } = t;
+                        await this.db.add(clean);
+                    }
+                    await this.loadTransactions();
+                    this.updateUI();
+                    this.showToast('✅ Importado com sucesso!', 'success');
+                } catch (error) {
+                    this.showToast('❌ Falha na importação', 'error');
+                }
+                event.target.value = '';
+            }
+
+            formatCurrency(value) {
+                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+            }
+
+            formatDate(dateStr) {
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }) + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+            }
+
+            updateUI() {
+                const filtered = this.getFiltered();
+                const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+                const shortMonths = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+                
+                document.getElementById('monthDisplay').textContent = `${months[this.currentMonth]} ${this.currentYear}`;
+                document.getElementById('balanceLabel').textContent = `Saldo - ${months[this.currentMonth]} ${this.currentYear}`;
+                
+                const prevM = this.currentMonth === 0 ? 11 : this.currentMonth - 1;
+                const nextM = this.currentMonth === 11 ? 0 : this.currentMonth + 1;
+                const prevY = this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear;
+                const nextY = this.currentMonth === 11 ? this.currentYear + 1 : this.currentYear;
+                
+                const chips = [
+                    { m: prevM, y: prevY, label: `${shortMonths[prevM]} ${prevY}` },
+                    { m: this.currentMonth, y: this.currentYear, label: `${shortMonths[this.currentMonth]} ${this.currentYear}` },
+                    { m: nextM, y: nextY, label: `${shortMonths[nextM]} ${nextY}` }
+                ];
+                
+                const qmEl = document.getElementById('quickMonths');
+                if (qmEl) {
+                    qmEl.innerHTML = chips.map(c => `
+                        <button class="month-chip ${c.m === this.currentMonth && c.y === this.currentYear ? 'active' : ''}" 
+                                data-m="${c.m}" data-y="${c.y}">${c.label}</button>
+                    `).join('');
+                    
+                    qmEl.querySelectorAll('.month-chip').forEach(chip => {
+                        chip.addEventListener('click', () => {
+                            this.currentMonth = parseInt(chip.dataset.m);
+                            this.currentYear = parseInt(chip.dataset.y);
+                            this.updateUI();
+                        });
+                    });
+                }
+                
+                const monthBalance = filtered.reduce((t, tr) => t + (tr.type === 'income' ? parseFloat(tr.amount) : -parseFloat(tr.amount)), 0);
+                const totalBalance = this.transactions.reduce((t, tr) => t + (tr.type === 'income' ? parseFloat(tr.amount) : -parseFloat(tr.amount)), 0);
+                
+                const balEl = document.getElementById('balance');
+                if (balEl) {
+                    balEl.textContent = this.formatCurrency(monthBalance);
+                    balEl.className = 'balance-amount ' + (monthBalance > 0 ? 'positive' : monthBalance < 0 ? 'negative' : 'zero');
+                }
+                
+                const trendEl = document.getElementById('balanceTrend');
+                if (trendEl) {
+                    if (this.transactions.length > 0) {
+                        trendEl.style.display = 'inline-flex';
+                        trendEl.className = 'balance-trend ' + (totalBalance >= 0 ? 'positive' : 'negative');
+                        trendEl.innerHTML = `${totalBalance >= 0 ? '📈' : '📉'} Total: ${this.formatCurrency(totalBalance)}`;
+                    } else {
+                        trendEl.style.display = 'none';
+                    }
+                }
+                
+                const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + parseFloat(t.amount), 0);
+                const expense = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + parseFloat(t.amount), 0);
+                
+                document.getElementById('monthIncome').textContent = this.formatCurrency(income);
+                document.getElementById('monthExpense').textContent = this.formatCurrency(expense);
+                
+                const mbEl = document.getElementById('monthBalance');
+                if (mbEl) {
+                    mbEl.textContent = this.formatCurrency(monthBalance);
+                    mbEl.className = 'summary-value ' + (monthBalance > 0 ? 'income' : monthBalance < 0 ? 'expense' : '');
+                }
+                
+                document.getElementById('transactionCount').textContent = `${filtered.length} registro${filtered.length !== 1 ? 's' : ''}`;
+                const listEl = document.getElementById('transactionsList');
+                
+                if (!listEl) return;
+                
+                if (this.transactions.length === 0) {
+                    listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">Nenhuma transação</div></div>`;
+                    return;
+                }
+                if (filtered.length === 0) {
+                    listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Nenhuma transação neste mês</div></div>`;
+                    return;
+                }
+                
+                listEl.innerHTML = filtered.map((tr, i) => `
+                    <div class="transaction-item" style="animation-delay:${i*0.05}s">
+                        <div class="transaction-icon ${tr.type}">${tr.type==='income'?'📥':'📤'}</div>
+                        <div class="transaction-content">
+                            <div class="transaction-description">${tr.description}</div>
+                            <div class="transaction-meta">
+                                <span>🕐 ${this.formatDate(tr.date)}</span>
+                                <span class="transaction-category">${tr.category}</span>
+                            </div>
+                        </div>
+                        <div class="transaction-amount ${tr.type}">
+                            ${tr.type==='income'?'+':'−'} ${this.formatCurrency(parseFloat(tr.amount))}
+                        </div>
+                        <div class="transaction-actions">
+                            <button class="action-btn edit" onclick="window.app.openEditModal(${i})" title="Editar">✏️</button>
+                            <button class="action-btn delete" onclick="window.app.deleteTransaction(${i})" title="Excluir">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            showToast(msg, type = '') {
+                const existing = document.querySelector('.toast');
+                if (existing) existing.remove();
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = msg;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        // Garante o carregamento linear sem travar a interface
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new FinanceApp();
+            window.app.init();
+        });
+    </script>
 </body>
 </html>
